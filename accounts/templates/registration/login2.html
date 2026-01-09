@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LearnLoop Mentor Registration</title>
+  <style>
+    /* Base styling */
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f3f6fb;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    /* Form container */
+    .form-container {
+      background: #fff;
+      padding: 40px 30px;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 500px;
+    }
+
+    .form-container h2 {
+      text-align: center;
+      color: #2e2e8a;
+      margin-bottom: 30px;
+      font-size: 28px;
+    }
+
+    /* Form fields */
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    label {
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 5px;
+    }
+
+    input, select, textarea {
+      padding: 12px 14px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+      width: 100%;
+      box-sizing: border-box;
+      transition: border 0.3s, box-shadow 0.3s;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: #2e2e8a;
+      box-shadow: 0 0 8px rgba(46,46,138,0.2);
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    /* Submit button */
+    button {
+      background: #2e2e8a;
+      color: #fff;
+      border: none;
+      padding: 14px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+    }
+
+    button:hover {
+      background: #23237a;
+      transform: translateY(-2px);
+    }
+
+    /* Small note text */
+    .note {
+      font-size: 12px;
+      color: #777;
+      text-align: center;
+      margin-top: 15px;
+    }
+
+    /* Responsive for small screens */
+    @media (max-width: 500px) {
+      .form-container {
+        padding: 30px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h2>Mentor Registration</h2>
+    <form action="/submit-mentor-form" method="POST">
+      <label for="fullname">Full Name</label>
+      <input type="text" id="fullname" name="fullname" placeholder="John Doe" required>
+
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" placeholder="you@example.com" required>
+
+      <label for="phone">Phone Number</label>
+      <input type="tel" id="phone" name="phone" placeholder="+1 555 555 5555" required>
+
+      <label for="expertise">Area of Expertise</label>
+      <input type="text" id="expertise" name="expertise" placeholder="e.g., Data Science, UI/UX, Marketing" required>
+
+      <label for="experience">Years of Experience</label>
+      <select id="experience" name="experience" required>
+        <option value="">Select...</option>
+        <option value="0-1">0–1 year</option>
+        <option value="2-4">2–4 years</option>
+        <option value="5-9">5–9 years</option>
+        <option value="10+">10+ years</option>
+      </select>
+
+      <label for="availability">Availability</label>
+      <select id="availability" name="availability" required>
+        <option value="">Select...</option>
+        <option value="weekdays">Weekdays</option>
+        <option value="weekends">Weekends</option>
+        <option value="flexible">Flexible</option>
+      </select>
+
+      <label for="bio">Short Bio</label>
+      <textarea id="bio" name="bio" rows="4" placeholder="Tell us about your background and mentoring goals..." required></textarea>
+
+      <label for="linkedin">LinkedIn Profile (optional)</label>
+      <input type="url" id="linkedin" name="linkedin" placeholder="https://linkedin.com/in/yourprofile">
+
+      <button type="submit">Register as Mentor</button>
+    </form>
+    <p class="note">By registering, you agree to LearnLoop’s Mentor Guidelines.</p>
+  </div>
+</body>
+</html>

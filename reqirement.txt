@@ -1,0 +1,4 @@
+django-jazzmin
+joblib
+numpy
+scikit-learn

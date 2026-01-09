@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ mentor.username }} - Mentor Profile</title>
+    
+<style>
+    /* --- Background Styling --- */
+    body {
+        background: radial-gradient(circle at top left, #283048, #1b1b2f 60%, #0f0f17);
+        color: #eaeaea;
+        font-family: "Poppins", sans-serif;
+        min-height: 100vh;
+    }
+
+    .mentor-wrapper {
+        max-width: 1200px;
+        margin: 60px auto;
+        padding: 20px;
+        animation: fadeIn 0.8s ease;
+    }
+
+    /* --- Glassmorphic Card --- */
+    .mentor-card {
+        backdrop-filter: blur(14px);
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 20px;
+        padding: 40px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 0 25px rgba(120, 80, 255, 0.25);
+        transition: 0.3s ease;
+        margin-bottom: 30px;
+    }
+
+    .mentor-photo img {
+        border-radius: 18px;
+        box-shadow: 0 0 18px rgba(120, 80, 255, 0.3);
+        width: 100%;
+        max-width: 280px;
+        height: auto;
+        object-fit: cover;
+        display: block;
+    }
+
+    /* --- Text Styling --- */
+    .mentor-name {
+        font-size: 2.2rem;
+        font-weight: 700;
+        color: #ffffff;
+        margin-bottom: 8px;
+    }
+
+    .mentor-role {
+        color: #b8b8ff;
+        font-size: 1.1rem;
+        margin-bottom: 20px;
+    }
+
+    .info-row {
+        margin-bottom: 12px;
+    }
+
+    .info-row strong {
+        color: #a594ff;
+    }
+
+    p {
+        color: #d7d7d7;
+        font-size: 1rem;
+        line-height: 1.6;
+    }
+
+    /* --- Stats Cards --- */
+    .stats-section {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 15px;
+        margin: 25px 0;
+    }
+
+    .stat-box {
+        background: rgba(165, 101, 255, 0.15);
+        border: 1px solid rgba(165, 101, 255, 0.3);
+        border-radius: 12px;
+        padding: 15px;
+        text-align: center;
+    }
+
+    .stat-box .number {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #a565ff;
+    }
+
+    .stat-box .label {
+        font-size: 0.9rem;
+        color: #c7c7c7;
+        margin-top: 5px;
+    }
+
+    /* --- Availability Section --- */
+    .availability-section {
+        background: rgba(106, 90, 249, 0.1);
+        border: 1px solid rgba(106, 90, 249, 0.3);
+        border-radius: 15px;
+        padding: 25px;
+    }
+
+    .availability-title {
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: #b8b8ff;
+        margin-bottom: 15px;
+    }
+
+    .slot-item {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        padding: 10px 15px;
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .slot-day {
+        font-weight: 600;
+        color: #ffffff;
+    }
+
+    .slot-time {
+        color: #b8b8ff;
+        font-family: 'Courier New', monospace;
+    }
+
+    /* --- Booked Sessions Section --- */
+    .sessions-section {
+        background: rgba(16, 185, 129, 0.1);
+        border: 1px solid rgba(16, 185, 129, 0.3);
+        border-radius: 15px;
+        padding: 25px;
+    }
+
+    .session-item {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 12px;
+    }
+
+    .session-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .session-date {
+        font-weight: 600;
+        color: #ffffff;
+        font-size: 1rem;
+    }
+
+    .status-badge {
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+
+    .status-pending {
+        background: rgba(255, 193, 7, 0.2);
+        color: #ffc107;
+    }
+
+    .status-accepted {
+        background: rgba(16, 185, 129, 0.2);
+        color: #6ee7b7;
+    }
+
+    .status-completed {
+        background: rgba(59, 130, 246, 0.2);
+        color: #60a5fa;
+    }
+
+    .session-details {
+        font-size: 0.9rem;
+        color: #c7c7c7;
+        line-height: 1.6;
+    }
+
+    .session-details strong {
+        color: #a594ff;
+    }
+
+    /* --- Buttons --- */
+    .btn-glow {
+        background: linear-gradient(90deg, #6a5af9, #a565ff);
+        border: none;
+        color: white;
+        padding: 14px 32px;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 1.05rem;
+        transition: 0.25s;
+        box-shadow: 0 0 12px rgba(130, 80, 255, 0.4);
+        text-decoration: none;
+        display: inline-block;
+        cursor: pointer;
+    }
+
+    .btn-glow:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 0 20px rgba(160, 100, 255, 0.7);
+        color: white;
+    }
+
+    .btn-secondary-glow {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: white;
+        padding: 12px 28px;
+        border-radius: 50px;
+        font-weight: 600;
+        transition: 0.25s;
+        text-decoration: none;
+        display: inline-block;
+        margin-left: 15px;
+    }
+
+    .btn-secondary-glow:hover {
+        background: rgba(255, 255, 255, 0.15);
+        border-color: rgba(255, 255, 255, 0.3);
+        color: white;
+    }
+
+    .linkedin-link {
+        margin-top: 20px;
+    }
+
+    .linkedin-link a {
+        color: #9f8cff;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 1rem;
+    }
+
+    .linkedin-link a:hover {
+        text-decoration: underline;
+        color: #b8b8ff;
+    }
+
+    /* Fee Badge */
+    .fee-badge {
+        display: inline-block;
+        background: rgba(16, 185, 129, 0.2);
+        border: 1px solid rgba(16, 185, 129, 0.4);
+        color: #6ee7b7;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        margin-right: 10px;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 20px;
+        color: #999;
+    }
+
+    /* Animation */
+    @keyframes fadeIn {
+        0% { opacity: 0; transform: translateY(20px); }
+        100% { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .mentor-photo img {
+            max-width: 200px;
+            margin: 0 auto 20px;
+        }
+        
+        .btn-secondary-glow {
+            margin-left: 0;
+            margin-top: 10px;
+            display: block;
+        }
+
+        .session-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 8px;
+        }
+    }
+</style>
+</head>
+<body>
+
+<div class="mentor-wrapper">
+
+    <div class="mentor-card">
+        <div class="row align-items-center">
+
+            <!-- Profile Photo -->
+            <div class="col-md-4 text-center">
+                <div class="mentor-photo">
+                    {% if mentor.profile_photo %}
+                    <img src="{{ mentor.profile_photo.url }}" class="img-fluid" alt="{{ mentor.username }}">
+                    {% else %}
+                    <div style="width: 280px; height: 280px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 18px; display: flex; align-items: center; justify-content: center; margin: 0 auto;">
+                        <span style="font-size: 5rem; color: white; font-weight: bold;">{{ mentor.username.0|upper }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Content -->
+            <div class="col-md-8">
+                <h2 class="mentor-name">{{ mentor.username }}</h2>
+                <h5 class="mentor-role">{{ mentor.profession|default:"Professional Mentor" }}</h5>
+
+                <div class="info-row">
+                    <p><strong>Expertise:</strong> {{ mentor_profile.expertise|default:mentor.expertise|default:"Various Technologies" }}</p>
+                </div>
+                
+                <div class="info-row">
+                    <p><strong>Experience:</strong> {{ mentor.experience_years|default:"N/A" }} years</p>
+                </div>
+
+                {% if mentor_profile.bio %}
+                <div class="info-row">
+                    <p>{{ mentor_profile.bio }}</p>
+                </div>
+                {% elif mentor.bio %}
+                <div class="info-row">
+                    <p>{{ mentor.bio }}</p>
+                </div>
+                {% endif %}
+
+                <!-- Stats Section -->
+                {% if mentor_profile %}
+                <div class="stats-section">
+                    <div class="stat-box">
+                        <div class="number">{{ mentor_profile.total_sessions }}</div>
+                        <div class="label">Sessions</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="number">{{ mentor_profile.rating|floatformat:1 }}★</div>
+                        <div class="label">Rating</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="number">{{ availability_slots.count }}</div>
+                        <div class="label">Slots Available</div>
+                    </div>
+                </div>
+
+                <!-- Fees -->
+                <div style="margin: 20px 0;">
+                    <span class="fee-badge">💰 30 min: {{ mentor_profile.fee_30min }} tokens</span>
+                    <span class="fee-badge">💰 60 min: {{ mentor_profile.fee_60min }} tokens</span>
+                </div>
+                {% endif %}
+
+                <!-- Action Buttons -->
+                <div style="margin-top: 25px;">
+                    <a href="{% url 'book_session' mentor.id %}" class="btn btn-glow">📅 Book Session</a>
+                    <a href="{% url 'mentor_list' %}" class="btn-secondary-glow">← Back to Mentors</a>
+                </div>
+
+                {% if mentor.linkedin %}
+                <div class="linkedin-link">
+                    <a href="{{ mentor.linkedin }}" target="_blank">
+                        <svg style="width: 18px; height: 18px; display: inline-block; vertical-align: middle;" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                        </svg>
+                        View LinkedIn Profile →
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Availability Section -->
+    {% if availability_slots %}
+    <div class="mentor-card availability-section">
+        <h3 class="availability-title">📅 Available Time Slots</h3>
+        
+        {% for slot in availability_slots %}
+        <div class="slot-item">
+            <span class="slot-day">{{ slot.get_day_of_week_display }}</span>
+            <span class="slot-time">{{ slot.start_time|time:"h:i A" }} - {{ slot.end_time|time:"h:i A" }}</span>
+        </div>
+        {% endfor %}
+        
+        <p style="margin-top: 15px; font-size: 0.9rem; color: #999;">
+            * These are recurring weekly slots. Book a session to choose your preferred date and time.
+        </p>
+    </div>
+    {% endif %}
+
+    <!-- Booked Sessions Section -->
+    {% if user_sessions %}
+    <div class="mentor-card sessions-section">
+        <h3 class="availability-title">📋 Your Booked Sessions with {{ mentor.username }}</h3>
+        
+        {% for session in user_sessions %}
+        <div class="session-item">
+            <div class="session-header">
+                <span class="session-date">
+                    📅 {{ session.scheduled_date|date:"M d, Y" }} at {{ session.scheduled_time|time:"h:i A" }}
+                </span>
+                <span class="status-badge status-{{ session.status }}">
+                    {% if session.status == 'pending' %}⏳ Pending
+                    {% elif session.status == 'accepted' %}✅ Confirmed
+                    {% elif session.status == 'completed' %}🎓 Completed
+                    {% elif session.status == 'declined' %}❌ Declined
+                    {% elif session.status == 'cancelled' %}🚫 Cancelled
+                    {% endif %}
+                </span>
+            </div>
+            <div class="session-details">
+                <strong>Duration:</strong> {{ session.duration }} minutes<br>
+                {% if session.topic %}
+                <strong>Topic:</strong> {{ session.topic }}<br>
+                {% endif %}
+                <strong>Fee:</strong> {{ session.token_fee }} tokens<br>
+                {% if session.meeting_link and session.status == 'accepted' %}
+                <strong>Meeting Link:</strong> <a href="{{ session.meeting_link }}" target="_blank" style="color: #6ee7b7;">Join Here</a><br>
+                {% endif %}
+                <strong>Booked on:</strong> {{ session.created_at|date:"M d, Y" }}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+</div>
+
+</body>
+</html>

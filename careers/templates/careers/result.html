@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Your Career Result</title>
+
+<style>
+    /* Keyframe Animations */
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeInScale {
+        from { opacity: 0; transform: scale(0.9); }
+        to { opacity: 1; transform: scale(1); }
+    }
+    @keyframes bounceIn {
+        0% { transform: scale(0.3); opacity: 0; }
+        50% { transform: scale(1.1); opacity: 1; }
+        70% { transform: scale(0.9); }
+        100% { transform: scale(1); }
+    }
+    @keyframes pulseGlow {
+        0% { box-shadow: 0 0 0 0 rgba(79, 70, 229, 0.7); }
+        70% { box-shadow: 0 0 0 10px rgba(79, 70, 229, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(79, 70, 229, 0); }
+    }
+    @keyframes backgroundGradientShift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+    @keyframes blobAnimate1 {
+        0%, 100% { transform: translate(0, 0) scale(1); }
+        25% { transform: translate(-20vw, 15vh) scale(1.2); }
+        50% { transform: translate(10vw, -10vh) scale(0.9); }
+        75% { transform: translate(-15vw, 5vh) scale(1.1); }
+    }
+    @keyframes blobAnimate2 {
+        0%, 100% { transform: translate(0, 0) scale(1); }
+        25% { transform: translate(10vw, -10vh) scale(0.8); }
+        50% { transform: translate(-10vw, 20vh) scale(1.1); }
+        75% { transform: translate(5vw, -15vh) scale(1.3); }
+    }
+
+    /* Basic Reset */
+    * {
+        box-sizing: border-box;
+    }
+    html, body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Inter', sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        color: #333;
+    }
+
+    /* Page Body Styling (Scrollable) */
+    body {
+        background: linear-gradient(135deg, #e0f2fe, #bfdbfe, #c7d2fe);
+        background-size: 400% 400%;
+        background-attachment: fixed;
+        animation: backgroundGradientShift 15s ease infinite;
+        min-height: 100vh;
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        padding: 3rem 1rem;
+        position: relative;
+    }
+
+    /* Animated Background Blobs (Fixed) */
+    .blob {
+        position: fixed;
+        border-radius: 50%;
+        opacity: 0.6;
+        filter: blur(80px);
+        z-index: 0;
+    }
+    .blob-1 {
+        background: linear-gradient(to right, #a78bfa, #818cf8);
+        width: 350px;
+        height: 350px;
+        top: -100px;
+        left: -100px;
+        animation: blobAnimate1 20s infinite alternate ease-in-out;
+    }
+    .blob-2 {
+        background: linear-gradient(to right, #38bdf8, #60a5fa);
+        width: 400px;
+        height: 400px;
+        bottom: -150px;
+        right: -150px;
+        animation: blobAnimate2 25s infinite alternate-reverse ease-in-out;
+    }
+
+    /* Main Content Card */
+    .card {
+        background-color: #ffffff;
+        width: 100%;
+        max-width: 48rem; /* A bit smaller for a result page */
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        border-radius: 1rem;
+        padding: 2.5rem;
+        position: relative;
+        z-index: 10;
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeIn 0.8s ease-out forwards;
+        animation-delay: 0.5s;
+        transform-style: preserve-3d;
+        perspective: 1000px;
+        transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
+        text-align: center;
+    }
+    .card:hover {
+        transform: scale(1.01) rotateX(2deg) rotateY(-2deg);
+        box-shadow: 0 35px 70px -12px rgba(0, 0, 0, 0.35);
+    }
+    
+    /* Form Header Section */
+    .form-header {
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+    .form-header h2 {
+        font-size: 2.5rem;
+        font-weight: 800;
+        letter-spacing: -0.05em;
+        color: #312e81;
+        margin-bottom: 0.75rem;
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeIn 0.8s ease-out forwards;
+        animation-delay: 1.0s;
+    }
+    .form-header p {
+        font-size: 1.125rem;
+        color: #6b7280;
+        max-width: 42rem;
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeIn 0.8s ease-out forwards;
+        animation-delay: 1.2s;
+        margin: 0 auto; /* Center the paragraph */
+    }
+
+    /* --- NEW: Result Box Styling --- */
+    .result-box {
+        background-color: #eef2ff; /* bg-indigo-50 */
+        border: 2px solid #c7d2fe; /* Lighter border */
+        border-radius: 1rem; /* rounded-lg */
+        padding: 2rem;
+        margin-bottom: 2.5rem; /* mb-8 */
+        opacity: 0;
+        animation: fadeInScale 0.7s ease-out forwards;
+        animation-delay: 1.5s;
+    }
+
+    .result-icon {
+        height: 3.5rem;
+        width: 3.5rem;
+        color: #4f46e5;
+        margin: 0 auto 1rem auto; /* Center the icon */
+    }
+
+    .result-box h3 {
+        font-size: 3rem; /* text-4xl */
+        font-weight: 800; /* font-extrabold */
+        letter-spacing: -0.025em; /* tracking-tight */
+        color: #312e81; /* Darker indigo text */
+    }
+    /* --- End Result Box Styling --- */
+
+
+    /* Button Container */
+    .button-container {
+        display: flex;
+        justify-content: center;
+        padding-top: 1rem; /* Reduced top padding */
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeIn 0.8s ease-out forwards;
+        animation-delay: 1.8s;
+    }
+    
+    /* Button Style (works on <a> tags too) */
+    .submit-button {
+        display: inline-flex;
+        align-items: center;
+        background-color: #4f46e5;
+        color: #ffffff;
+        font-weight: 700;
+        padding: 0.9rem 2.5rem;
+        border-radius: 0.75rem;
+        border: none;
+        cursor: pointer;
+        box-shadow: 0 8px 15px -3px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease-in-out;
+        position: relative;
+        overflow: hidden;
+        text-decoration: none; /* Add this for <a> tags */
+    }
+    .submit-button:hover {
+        background-color: #4338ca;
+        box-shadow: 0 15px 25px -3px rgba(0, 0, 0, 0.35);
+        transform: translateY(-3px) scale(1.02);
+    }
+    .submit-button:active {
+        transform: translateY(1px) scale(0.98);
+        box-shadow: 0 5px 10px -2px rgba(0, 0, 0, 0.2);
+    }
+    .submit-button svg {
+        height: 1.35rem;
+        width: 1.35rem;
+        margin-right: 0.75rem;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
+
+<div class="card">
+    
+    <div class="form-header">
+        <h2>
+            We've Analyzed Your Profile
+        </h2>
+        <p>
+            Based on your answers, a great career path for you could be:
+        </p>
+    </div>
+
+    <div class="result-box">
+        <svg class="result-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L1.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.25 12L17 14.188l-1.25-2.188L13.5 11l2.188-1.25L17 7.5l1.25 2.188L20.5 11l-2.188 1.25z" />
+        </svg>
+
+        <h3>
+            {{ career }}
+        </h3>
+    </div>
+
+    <div class="button-container">
+        <a href="{% url 'career_predict' %}" class="submit-button">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M15.312 11.424a5.5 5.5 0 01-9.201-4.42 5.5 5.5 0 0110.89 2.166l.287.86a.75.75 0 01-1.472.488l-.001-.002-1.498-4.495a.75.75 0 01.3-1.023A5.5 5.5 0 0115.5 8.5a.75.75 0 01-1.5 0A4 4 0 009.623 5.093l.318 1.91a.75.75 0 11-1.442.24l-.32-1.921A4 4 0 004.5 8.5a4 4 0 004.205 3.976l1.2.36a.75.75 0 01.289 1.448l-1.2.36A4 4 0 004.5 15.5a4 4 0 003.623 3.907l.318-1.91a.75.75 0 111.442-.24l-.32 1.921A4 4 0 0013.5 15.5a4 4 0 00-3.205-3.876l-1.2-.36a.75.75 0 01-.289-1.448l1.2-.36A4 4 0 0013.5 8.5a4 4 0 00-2.377-.907l-.318 1.91a.75.75 0 11-1.442-.24l.32-1.921A4 4 0 006.5 8.5a.75.75 0 01-1.5 0 5.5 5.5 0 019.201 4.42l1.498 4.495a.75.75 0 01-1.3 1.023l-1.5-4.5z" clip-rule="evenodd" />
+            </svg>
+            Try Again
+        </a>
+    </div>
+
+</div>
+
+</body>
+</html>

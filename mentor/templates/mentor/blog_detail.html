@@ -1,0 +1,244 @@
+{% extends 'dashboard/userbase.html' %}
+{% block style%}
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Poppins", "Inter", sans-serif;
+            background: radial-gradient(circle at top left, #283048, #1b1b2f 60%, #0f0f17);
+            color: #eaeaea;
+            min-height: 100vh;
+            line-height: 1.8;
+        }
+
+    
+        .blog-detail-wrapper {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #a565ff;
+            text-decoration: none;
+            font-weight: 600;
+            margin-bottom: 30px;
+            transition: 0.2s;
+        }
+
+        .back-link:hover {
+            color: #c763ff;
+            gap: 12px;
+        }
+
+        .article-card {
+            backdrop-filter: blur(14px);
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 25px rgba(120, 80, 255, 0.15);
+            margin-bottom: 40px;
+        }
+
+        .article-header {
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 25px;
+            margin-bottom: 30px;
+        }
+
+        .article-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .article-meta {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .author-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: white;
+        }
+
+        .author-name {
+            font-weight: 600;
+            color: #ffffff;
+            font-size: 1.1rem;
+        }
+
+        .article-stats {
+            display: flex;
+            gap: 20px;
+            color: #b8b8ff;
+            font-size: 0.95rem;
+        }
+
+        .article-body {
+            font-size: 1.05rem;
+            color: #e0e0e0;
+            line-height: 1.8;
+        }
+
+        .article-body p {
+            margin-bottom: 20px;
+        }
+
+        .related-posts {
+            margin-top: 50px;
+        }
+
+        .related-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 25px;
+        }
+
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .related-card {
+            backdrop-filter: blur(14px);
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .related-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 20px rgba(120, 80, 255, 0.2);
+        }
+
+        .related-card h4 {
+            color: #ffffff;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+
+        .related-card p {
+            color: #b8b8ff;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .article-card {
+                padding: 30px 20px;
+            }
+
+            .article-title {
+                font-size: 1.8rem;
+            }
+
+            .article-meta {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+    {% endblock %}
+{% block content%}
+
+<div class="blog-detail-wrapper">
+    <a href="{% url 'blog_list' %}" class="back-link">
+        <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+        </svg>
+        Back to Blog
+    </a>
+
+    <div class="article-card">
+        <div class="article-header">
+            <h1 class="article-title">{{ blog_post.title }}</h1>
+            
+            <div class="article-meta">
+                <div class="author-section">
+                    <div class="author-avatar">
+                        {% if blog_post.author.profile_photo %}
+                        <img src="{{ blog_post.author.profile_photo.url }}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+                        {% else %}
+                        {{ blog_post.author.username.0|upper }}
+                        {% endif %}
+                    </div>
+                    <div>
+                        <div class="author-name">{{ blog_post.author.username }}</div>
+                        <div style="color: #b8b8ff; font-size: 0.9rem;">
+                            {{ blog_post.author.profession|default:"Mentor" }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="article-stats">
+                    <span>
+                        📅 
+                        {% if blog_post.published_at %}
+                            {{ blog_post.published_at|date:"M d, Y" }}
+                        {% else %}
+                            {{ blog_post.created_at|date:"M d, Y" }}
+                        {% endif %}
+                    </span>
+                    <span>👁️ {{ blog_post.views_count|default:0 }} views</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="article-body">
+            {{ blog_post.body|linebreaks }}
+        </div>
+    </div>
+
+    {% if related_posts %}
+    <div class="related-posts">
+        <h2 class="related-title">More from {{ blog_post.author.username }}</h2>
+        <div class="related-grid">
+            {% for post in related_posts %}
+            <div class="related-card" onclick="window.location.href='{% url 'blog_detail' post.id %}'">
+                <h4>{{ post.title }}</h4>
+                <p>
+                    {% if post.published_at %}
+                        {{ post.published_at|date:"M d, Y" }}
+                    {% else %}
+                        {{ post.created_at|date:"M d, Y" }}
+                    {% endif %}
+                </p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}

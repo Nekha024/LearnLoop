@@ -1,0 +1,220 @@
+
+{% block content %}
+
+<style>
+    .sessions-container {
+        max-width: 1000px;
+        margin: 40px auto;
+        padding: 20px;
+    }
+
+    .page-title {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 30px;
+        color: #333;
+    }
+
+    .session-section {
+        background: white;
+        border-radius: 12px;
+        padding: 25px;
+        margin-bottom: 25px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .section-title {
+        font-size: 1.3rem;
+        font-weight: 600;
+        margin-bottom: 15px;
+        color: #4d79ff;
+    }
+
+    .session-item {
+        border: 1px solid #e6e6e6;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 15px;
+        transition: box-shadow 0.2s;
+    }
+
+    .session-item:hover {
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .session-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .mentor-name {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .status-badge {
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 500;
+    }
+
+    .status-pending {
+        background: #fff3cd;
+        color: #856404;
+    }
+
+    .status-accepted {
+        background: #d1f2eb;
+        color: #0c5460;
+    }
+
+    .status-completed {
+        background: #d4edda;
+        color: #155724;
+    }
+
+    .status-declined {
+        background: #f8d7da;
+        color: #721c24;
+    }
+
+    .session-details {
+        font-size: 0.95rem;
+        color: #666;
+        margin-bottom: 10px;
+    }
+
+    .btn-cancel {
+        padding: 6px 16px;
+        background: #dc3545;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 0.9rem;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .btn-cancel:hover {
+        background: #c82333;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 40px 20px;
+        color: #999;
+    }
+</style>
+
+<div class="sessions-container">
+    <h1 class="page-title">My Sessions</h1>
+
+    <!-- Messages -->
+    {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}" style="padding: 12px 20px; border-radius: 8px; margin-bottom: 20px; 
+             {% if message.tags == 'success' %}background: #d1fae5; color: #065f46;
+             {% elif message.tags == 'error' %}background: #fee2e2; color: #991b1b;
+             {% else %}background: #dbeafe; color: #1e40af;{% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Pending Sessions -->
+    <div class="session-section">
+        <h2 class="section-title">⏳ Pending Requests ({{ pending_sessions.count }})</h2>
+        {% if pending_sessions %}
+            {% for session in pending_sessions %}
+            <div class="session-item">
+                <div class="session-header">
+                    <div class="mentor-name">{{ session.mentor.username }}</div>
+                    <span class="status-badge status-pending">Pending</span>
+                </div>
+                <div class="session-details">
+                    <strong>Date:</strong> {{ session.scheduled_date|date:"M d, Y" }} at {{ session.scheduled_time|time:"h:i A" }}<br>
+                    <strong>Duration:</strong> {{ session.duration }} minutes<br>
+                    {% if session.topic %}<strong>Topic:</strong> {{ session.topic }}<br>{% endif %}
+                    <strong>Fee:</strong> {{ session.token_fee }} tokens
+                </div>
+                <a href="{% url 'cancel_session' session.id %}" onclick="return confirm('Cancel this booking?');" class="btn-cancel">Cancel Request</a>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty-state">No pending requests.</div>
+        {% endif %}
+    </div>
+
+    <!-- Upcoming Accepted Sessions -->
+    <div class="session-section">
+        <h2 class="section-title">📅 Upcoming Sessions ({{ upcoming_sessions.count }})</h2>
+        {% if upcoming_sessions %}
+            {% for session in upcoming_sessions %}
+            <div class="session-item">
+                <div class="session-header">
+                    <div class="mentor-name">{{ session.mentor.username }}</div>
+                    <span class="status-badge status-accepted">Confirmed</span>
+                </div>
+                <div class="session-details">
+                    <strong>Date:</strong> {{ session.scheduled_date|date:"M d, Y" }} at {{ session.scheduled_time|time:"h:i A" }}<br>
+                    <strong>Duration:</strong> {{ session.duration }} minutes<br>
+                    {% if session.topic %}<strong>Topic:</strong> {{ session.topic }}<br>{% endif %}
+                    {% if session.meeting_link %}<strong>Meeting Link:</strong> <a href="{{ session.meeting_link }}" target="_blank">Join Here</a><br>{% endif %}
+                    <strong>Fee:</strong> {{ session.token_fee }} tokens
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty-state">No upcoming sessions.</div>
+        {% endif %}
+    </div>
+
+    <!-- Past Completed Sessions -->
+    <div class="session-section">
+        <h2 class="section-title">✅ Completed Sessions ({{ past_sessions.count }})</h2>
+        {% if past_sessions %}
+            {% for session in past_sessions %}
+            <div class="session-item">
+                <div class="session-header">
+                    <div class="mentor-name">{{ session.mentor.username }}</div>
+                    <span class="status-badge status-completed">Completed</span>
+                </div>
+                <div class="session-details">
+                    <strong>Date:</strong> {{ session.scheduled_date|date:"M d, Y" }}<br>
+                    <strong>Duration:</strong> {{ session.duration }} minutes<br>
+                    {% if session.topic %}<strong>Topic:</strong> {{ session.topic }}<br>{% endif %}
+                    <strong>Completed:</strong> {{ session.completed_at|date:"M d, Y" }}
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty-state">No completed sessions yet.</div>
+        {% endif %}
+    </div>
+
+    <!-- Declined Sessions -->
+    {% if declined_sessions %}
+    <div class="session-section">
+        <h2 class="section-title">❌ Declined Requests</h2>
+        {% for session in declined_sessions %}
+        <div class="session-item">
+            <div class="session-header">
+                <div class="mentor-name">{{ session.mentor.username }}</div>
+                <span class="status-badge status-declined">Declined</span>
+            </div>
+            <div class="session-details">
+                <strong>Requested for:</strong> {{ session.scheduled_date|date:"M d, Y" }}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+</div>
+
+{% endblock %}

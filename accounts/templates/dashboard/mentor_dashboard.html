@@ -1,0 +1,876 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mentor Dashboard - {{ user.username }}</title>
+    
+    <style>
+        /* COMPLETE EMBEDDED CSS - NO CDN NEEDED */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            background-color: #f3f4f6;
+            min-height: 100vh;
+            line-height: 1.6;
+            color: #1f2937;
+        }
+        
+        /* Container & Layout */
+        .dashboard-container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        @media (min-width: 1024px) {
+            .dashboard-container {
+                flex-direction: row;
+            }
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: 100%;
+            background-color: white;
+            padding: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        @media (min-width: 1024px) {
+            .sidebar {
+                width: 16rem;
+                flex-shrink: 0;
+            }
+        }
+        
+        .sidebar-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #4f46e5;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #e5e7eb;
+        }
+        
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            color: #4b5563;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+        
+        .nav-link:hover {
+            background-color: #eef2ff;
+            color: #4f46e5;
+        }
+        
+        .nav-link.active {
+            background-color: #e0e7ff;
+            color: #4f46e5;
+            border-left: 4px solid #4f46e5;
+            padding-left: calc(1rem - 4px);
+        }
+        
+        .nav-link svg {
+            width: 1.25rem;
+            height: 1.25rem;
+            margin-right: 0.75rem;
+            flex-shrink: 0;
+        }
+        
+        /* Main Content */
+        .main-content {
+            flex-grow: 1;
+            padding: 1.5rem;
+            overflow-y: auto;
+        }
+        
+        @media (min-width: 768px) {
+            .main-content {
+                padding: 2rem;
+            }
+        }
+        
+        .content-wrapper {
+            max-width: 56rem;
+            margin: 0 auto;
+        }
+        
+        /* Typography */
+        h1 {
+            font-size: 1.875rem;
+            font-weight: 800;
+            color: #1f2937;
+            margin-bottom: 1.5rem;
+        }
+        
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 1.5rem;
+        }
+        
+        h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        /* Cards */
+        .card {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: 1px solid #f3f4f6;
+            margin-bottom: 1.5rem;
+        }
+        
+        .welcome-card {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            border: 1px solid rgba(79, 70, 229, 0.2);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        
+        @media (min-width: 768px) {
+            .welcome-card {
+                flex-direction: row;
+            }
+        }
+        
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            background-color: #10b981;
+            color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .badge svg {
+            width: 1rem;
+            height: 1rem;
+            margin-right: 0.5rem;
+        }
+        
+        /* Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+        
+        @media (min-width: 768px) {
+            .grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        /* Messages */
+        .messages {
+            margin-bottom: 1.5rem;
+        }
+        
+        .message {
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 0.75rem;
+            border: 1px solid;
+            display: flex;
+            align-items: center;
+        }
+        
+        .message svg {
+            width: 1.25rem;
+            height: 1.25rem;
+            margin-right: 0.5rem;
+            flex-shrink: 0;
+        }
+        
+        .message.success {
+            background-color: #d1fae5;
+            border-color: #10b981;
+            color: #065f46;
+        }
+        
+        .message.error {
+            background-color: #fee2e2;
+            border-color: #f87171;
+            color: #991b1b;
+        }
+        
+        .message.warning {
+            background-color: #fef3c7;
+            border-color: #fbbf24;
+            color: #92400e;
+        }
+        
+        .message.info {
+            background-color: #dbeafe;
+            border-color: #60a5fa;
+            color: #1e40af;
+        }
+        
+        /* Session Items */
+        .session-list {
+            margin-top: 1rem;
+        }
+        
+        .session-item {
+            border-bottom: 1px solid #e5e7eb;
+            padding: 0.75rem 0;
+        }
+        
+        .session-item:last-child {
+            border-bottom: none;
+        }
+        
+        .session-title {
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 0.25rem;
+        }
+        
+        .session-details {
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-bottom: 0.5rem;
+        }
+        
+        .session-actions {
+            margin-top: 0.5rem;
+        }
+        
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 0.375rem 0.875rem;
+            font-size: 0.875rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.15s;
+            font-weight: 500;
+            margin-right: 0.5rem;
+        }
+        
+        .btn-primary {
+            background-color: #4f46e5;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #4338ca;
+        }
+        
+        .btn-success {
+            background-color: #10b981;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: #059669;
+        }
+        
+        .btn-danger {
+            background-color: #fee2e2;
+            color: #b91c1c;
+        }
+        
+        .btn-danger:hover {
+            background-color: #fecaca;
+        }
+        
+        .btn-warning {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+        
+        .btn-warning:hover {
+            background-color: #fde68a;
+        }
+        
+        .btn-gray {
+            background-color: #e5e7eb;
+            color: #374151;
+        }
+        
+        .btn-gray:hover {
+            background-color: #d1d5db;
+        }
+        
+        .btn-large {
+            width: 100%;
+            padding: 0.875rem;
+            font-weight: 600;
+            border-radius: 0.75rem;
+            font-size: 1rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Forms */
+        .form-section {
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 0.5rem;
+        }
+        
+        input[type="text"],
+        input[type="number"],
+        input[type="time"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            font-family: inherit;
+            font-size: 0.95rem;
+            transition: border-color 0.15s;
+        }
+        
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+        
+        @media (min-width: 768px) {
+            .form-row {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        .form-row-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+        }
+        
+        /* Availability Slots */
+        .slot-list {
+            margin-bottom: 1rem;
+        }
+        
+        .slot-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            background-color: #f9fafb;
+            border-radius: 0.5rem;
+            border: 1px solid #e5e7eb;
+            margin-bottom: 0.5rem;
+        }
+        
+        .slot-time {
+            font-family: 'Courier New', monospace;
+            font-size: 0.875rem;
+            color: #374151;
+        }
+        
+        .slot-remove {
+            color: #ef4444;
+            font-size: 0.875rem;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .slot-remove:hover {
+            color: #dc2626;
+        }
+        
+        .add-slot-box {
+            padding: 1rem;
+            border: 2px dashed #d1d5db;
+            border-radius: 0.5rem;
+            background-color: #eef2ff;
+        }
+        
+        .add-slot-title {
+            font-weight: 600;
+            font-size: 0.875rem;
+            margin-bottom: 0.75rem;
+            color: #4f46e5;
+        }
+        
+        /* Content List */
+        .content-list {
+            list-style: none;
+        }
+        
+        .content-item {
+            border-bottom: 1px solid #e5e7eb;
+            padding: 1rem 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        
+        @media (min-width: 768px) {
+            .content-item {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+        }
+        
+        .content-item:last-child {
+            border-bottom: none;
+        }
+        
+        .content-info h4 {
+            font-weight: 500;
+            color: #1f2937;
+            margin-bottom: 0.25rem;
+        }
+        
+        .content-meta {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+        
+        /* Status Badges */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .status-badge.published {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+        
+        .status-badge.pending {
+            background-color: #dbeafe;
+            color: #1e40af;
+        }
+        
+        .status-badge.draft {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+        
+        .token-reward {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #10b981;
+        }
+        
+        .edit-link {
+            color: #4f46e5;
+            font-size: 0.875rem;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .edit-link:hover {
+            color: #4338ca;
+        }
+        
+        /* Icon Colors */
+        .icon-red {
+            color: #ef4444;
+        }
+        
+        .icon-primary {
+            color: #4f46e5;
+        }
+        
+        /* Utilities */
+        .hidden {
+            display: none !important;
+        }
+        
+        .text-center {
+            text-align: center;
+        }
+        
+        .text-sm {
+            font-size: 0.875rem;
+        }
+        
+        .text-xs {
+            font-size: 0.75rem;
+        }
+        
+        .text-gray-500 {
+            color: #6b7280;
+        }
+        
+        .text-gray-400 {
+            color: #9ca3af;
+        }
+        
+        .mb-4 {
+            margin-bottom: 1rem;
+        }
+        
+        .mt-3 {
+            margin-top: 0.75rem;
+        }
+        
+        .empty-state {
+            text-align: center;
+            color: #6b7280;
+            padding: 2rem 1rem;
+            font-size: 0.95rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Main Container -->
+    <div class="dashboard-container">
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-title">Mentor Hub</div>
+            
+            <nav>
+                <button data-target="dashboard" class="nav-link active">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                    </svg>
+                    Session Dashboard
+                </button>
+                
+                <button data-target="profile" class="nav-link">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.82 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.82 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.82-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.82-3.31 2.37-2.37h.003z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    </svg>
+                    Profile & Setup
+                </button>
+
+                <button data-target="content" class="nav-link">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5s3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18s-3.332.477-4.5 1.253"></path>
+                    </svg>
+                    Content Contribution
+                </button>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="content-wrapper">
+                
+                <h1>Mentor Dashboard</h1>
+                
+                <!-- Messages -->
+                {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                    <div class="message {% if message.tags == 'success' %}success{% elif message.tags == 'error' %}error{% elif message.tags == 'warning' %}warning{% else %}info{% endif %}">
+                        <svg fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                        </svg>
+                        <span>{{ message }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                
+                <!-- SESSION DASHBOARD -->
+                <div id="dashboard" class="content-view">
+                    <div class="card welcome-card">
+                        <h2 style="margin: 0;">{{ user.username }}</h2>
+                        <span class="badge">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 12c0 2.83 1.558 5.305 3.882 6.666A12.02 12.02 0 0012 21c2.83 0 5.305-1.558 6.666-3.882A12.02 12.02 0 0021 12c0-2.83-1.558-5.305-3.882-6.666z"></path>
+                            </svg>
+                            Dedicated Mentor Badge
+                        </span>
+                    </div>
+
+                    <div class="grid">
+                        <!-- Pending Requests -->
+                        <div class="card">
+                            <h3>
+                                <span class="icon-red" style="margin-right: 0.5rem;">
+                                    <svg style="width: 1.25rem; height: 1.25rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                                    </svg>
+                                </span>
+                                Review Requests ({{ pending_sessions.count }} Pending)
+                            </h3>
+                            
+                            <div class="session-list">
+                                {% if pending_sessions %}
+                                    {% for session in pending_sessions %}
+                                    <div class="session-item">
+                                        <div class="session-title">{{ session.student.username }} requested a {{ session.duration }}m session</div>
+                                        <div class="session-details">
+                                            {% if session.topic %}Topic: {{ session.topic }}<br>{% endif %}
+                                            Scheduled: {{ session.scheduled_date|date:"M d, Y" }} at {{ session.scheduled_time|time:"h:i A" }}
+                                        </div>
+                                        <div class="session-actions">
+                                            <a href="{% url 'accept_session' session.id %}" class="btn btn-success">Accept</a>
+                                            <a href="{% url 'decline_session' session.id %}" class="btn btn-danger">Decline</a>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                    <p class="text-xs text-gray-400 text-center mt-3">Total tokens pending: {% widthratio pending_sessions.count 1 10 %}</p>
+                                {% else %}
+                                    <div class="empty-state">No pending requests at the moment.</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <!-- Upcoming Sessions -->
+                        <div class="card">
+                            <h3>
+                                <span class="icon-primary" style="margin-right: 0.5rem;">
+                                    <svg style="width: 1.25rem; height: 1.25rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h.01M8 11h.01M12 11h.01M16 11h.01M9 15h.01M13 15h.01M17 15h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                                    </svg>
+                                </span>
+                                Upcoming Sessions
+                            </h3>
+                            
+                            <div class="session-list">
+                                {% if upcoming_sessions %}
+                                    {% for session in upcoming_sessions %}
+                                    <div class="session-item">
+                                        <div class="session-title">{{ session.student.username }} ({{ session.duration }} min){% if session.topic %} - {{ session.topic }}{% endif %}</div>
+                                        <div class="session-details">Time: {{ session.scheduled_date|date:"M d, Y" }} at {{ session.scheduled_time|time:"h:i A" }}</div>
+                                        <div class="session-actions">
+                                            {% if session.meeting_link %}
+                                            <a href="{{ session.meeting_link }}" target="_blank" class="btn btn-primary">Launch Call</a>
+                                            {% endif %}
+                                            <a href="{% url 'complete_session' session.id %}" onclick="return confirm('Mark as completed?');" class="btn btn-warning">Mark Completed</a>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                {% else %}
+                                    <div class="empty-state">No upcoming sessions scheduled.</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PROFILE & SETUP -->
+                <div id="profile" class="content-view hidden">
+                    <h2>Profile and Availability Setup</h2>
+
+                    <form method="POST" action="{% url 'mentor_dashboard' %}" class="card">
+                        {% csrf_token %}
+                        
+                        <div class="form-section">
+                            <h3 style="color: #4f46e5;">Mentor Identity</h3>
+                            <p class="text-sm text-gray-500 mb-4">Set your bio, skills, and token fees.</p>
+                            
+                            <div class="form-group">
+                                <label for="bio">Professional Bio (Max 500 characters)</label>
+                                <textarea id="bio" name="bio" rows="4" maxlength="500">{{ mentor_profile.bio|default:'' }}</textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="skills">Key Skills (Comma Separated)</label>
+                                <input type="text" id="skills" name="skills" value="{{ mentor_profile.expertise|default:'' }}" placeholder="Python, Django, PostgreSQL">
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="fee_30m">Token Fee (30 min)</label>
+                                    <input type="number" id="fee_30m" name="fee_30m" value="{{ mentor_profile.fee_30min }}" min="0">
+                                </div>
+                                <div class="form-group">
+                                    <label for="fee_60m">Token Fee (60 min)</label>
+                                    <input type="number" id="fee_60m" name="fee_60m" value="{{ mentor_profile.fee_60min }}" min="0">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3 style="color: #4f46e5;">Availability Slots</h3>
+                            <p class="text-sm text-gray-500 mb-4">Define recurring time blocks when you're available.</p>
+                            
+                            <div class="slot-list">
+                                {% for slot in availability_slots %}
+                                <div class="slot-item">
+                                    <span class="slot-time">{{ slot.get_day_of_week_display }}: {{ slot.start_time|time:'h:i A' }} - {{ slot.end_time|time:'h:i A' }}</span>
+                                    <a href="{% url 'remove_availability' slot.id %}" onclick="return confirm('Remove this slot?');" class="slot-remove">Remove</a>
+                                </div>
+                                {% empty %}
+                                <p class="text-sm text-gray-500">No availability slots added yet.</p>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-success btn-large">Save Profile Settings</button>
+                    </form>
+
+                    <!-- Add Slot Form -->
+                    <form method="POST" action="{% url 'add_availability' %}" class="card add-slot-box">
+                        {% csrf_token %}
+                        <div class="add-slot-title">Add New Availability Slot</div>
+                        <div class="form-row-3">
+                            <select name="day" required>
+                                <option value="">Day</option>
+                                <option value="monday">Monday</option>
+                                <option value="tuesday">Tuesday</option>
+                                <option value="wednesday">Wednesday</option>
+                                <option value="thursday">Thursday</option>
+                                <option value="friday">Friday</option>
+                                <option value="saturday">Saturday</option>
+                                <option value="sunday">Sunday</option>
+                            </select>
+                            <input type="time" name="time_from" required>
+                            <input type="time" name="time_to" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-large mt-3">Add Slot</button>
+                    </form>
+                </div>
+
+                <!-- CONTENT CONTRIBUTION -->
+                <div id="content" class="content-view hidden">
+                    <h2>Content Contribution</h2>
+
+                    <div class="card">
+                        <h3 style="color: #4f46e5;">Draft New Blog / Tutorial</h3>
+                        <form method="POST" action="{% url 'submit_content' %}">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="content_title">Title</label>
+                                <input type="text" id="content_title" name="title" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="content_body">Content Body (Markdown/HTML)</label>
+                                <textarea id="content_body" name="body" rows="10" required></textarea>
+                            </div>
+                            <div style="display: flex; gap: 1rem;">
+                                <button type="submit" name="submit_type" value="publish" class="btn btn-primary" style="flex: 1;">Submit for Review</button>
+                                <button type="submit" name="submit_type" value="draft" class="btn btn-gray">Save Draft</button>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <div class="card">
+                        <h3 style="color: #4f46e5;">My Submissions</h3>
+                        <ul class="content-list">
+                            {% for contrib in contributions %}
+                            <li class="content-item">
+                                <div class="content-info">
+                                    <h4>{{ contrib.title }}</h4>
+                                    <p class="text-sm text-gray-500">
+                                        {% if contrib.status == 'published' %}Published on: {{ contrib.published_at|date:"M d, Y" }}
+                                        {% else %}Last saved: {{ contrib.updated_at|date:"M d, Y" }}{% endif %}
+                                    </p>
+                                </div>
+                                <div class="content-meta">
+                                    {% if contrib.status == 'published' %}
+                                    <span class="status-badge published">Published</span>
+                                    <span class="token-reward">+{{ contrib.token_reward }} Tokens</span>
+                                    {% elif contrib.status == 'pending' %}
+                                    <span class="status-badge pending">Pending</span>
+                                    {% else %}
+                                    <span class="status-badge draft">Draft</span>
+                                    {% endif %}
+                                    <a href="{% url 'edit_content' contrib.id %}" class="edit-link">Edit</a>
+                                </div>
+                            </li>
+                            {% empty %}
+                            <li class="empty-state">No content contributions yet. Start writing!</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+
+    </div>
+
+    <script>
+        // Tab Navigation
+        const navLinks = document.querySelectorAll('.nav-link');
+        const contentViews = document.querySelectorAll('.content-view');
+
+        function showView(targetId) {
+            navLinks.forEach(link => {
+                if (link.dataset.target === targetId) {
+                    link.classList.add('active');
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+
+            contentViews.forEach(view => {
+                if (view.id === targetId) {
+                    view.classList.remove('hidden');
+                } else {
+                    view.classList.add('hidden');
+                }
+            });
+        }
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => showView(link.dataset.target));
+        });
+    </script>
+</body>
+</html>

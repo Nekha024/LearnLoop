@@ -1,0 +1,818 @@
+{% extends 'dashboard/userbase.html' %}
+{% block style %}    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    {% comment %} <link rel="stylesheet" href="{% static 'css/userpage.css' %}"> {% endcomment %}
+{% endblock %}
+{% block content %}
+    
+
+    <!-- Hero Section -->
+    <section class="careers-hero">
+        <div class="hero-overlay"></div>
+        <div class="container">
+            <div class="hero-content text-center">
+                <h1 class="hero-title fade-in">IT Career Fields & <span class="gradient-text">Roadmaps</span></h1>
+                <p class="hero-subtitle fade-in-delay-1">Explore detailed career paths, learning roadmaps, and skill requirements for 12+ IT specializations</p>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <i class="fas fa-chevron-down"></i>
+        </div>
+    </section>
+
+    <!-- Career Fields Grid -->
+    <section class="career-fields-section">
+        <div class="container">
+            <div class="section-header text-center">
+                <h2 class="section-title">Choose Your IT Career Path</h2>
+                <p class="section-subtitle">Click on any career field to view its detailed roadmap</p>
+            </div>
+            <div class="row g-4">
+                <!-- Software Development -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="career-field-card" data-career="software-dev">
+                        <div class="field-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <h4>Software Development</h4>
+                        <p>Build applications and software solutions</p>
+                        <div class="field-meta">
+                            <span><i class="fas fa-clock"></i> 6-12 months</span>
+                            <span><i class="fas fa-dollar-sign"></i> $70k-$150k</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cybersecurity -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="career-field-card" data-career="cybersecurity">
+                        <div class="field-icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h4>Cybersecurity</h4>
+                        <p>Protect systems and data from threats</p>
+                        <div class="field-meta">
+                            <span><i class="fas fa-clock"></i> 8-14 months</span>
+                            <span><i class="fas fa-dollar-sign"></i> $80k-$160k</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Data Science & Analytics -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="career-field-card" data-career="data-science">
+                        <div class="field-icon" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                            <i class="fas fa-database"></i>
+                        </div>
+                        <h4>Data Science & Analytics</h4>
+                        <p>Extract insights from complex data</p>
+                        <div class="field-meta">
+                            <span><i class="fas fa-clock"></i> 8-16 months</span>
+                            <span><i class="fas fa-dollar-sign"></i> $75k-$155k</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cloud Computing -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="career-field-card" data-career="cloud">
+                        <div class="field-icon" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+                            <i class="fas fa-cloud"></i>
+                        </div>
+                        <h4>Cloud Computing</h4>
+                        <p>Design and manage cloud infrastructure</p>
+                        <div class="field-meta">
+                            <span><i class="fas fa-clock"></i> 6-12 months</span>
+                            <span><i class="fas fa-dollar-sign"></i> $85k-$170k</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI & Machine Learning -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="career-field-card" data-career="ai-ml">
+                        <div class="field-icon" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <h4>AI & Machine Learning</h4>
+                        <p>Create intelligent, learning systems</p>
+                        <div class="field-meta">
+                            <span><i class="fas fa-clock"></i> 10-18 months</span>
+                            <span><i class="fas fa-dollar-sign"></i> $90k-$180k</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Network & Infrastructure -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="career-field-card" data-career="network">
+                        <div class="field-icon" style="background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);">
+                            <i class="fas fa-network-wired"></i>
+                        </div>
+                        <h4>Network & Infrastructure</h4>
+                        <p>Build and maintain IT backbone</p>
+                        <div class="field-meta">
+                            <span><i class="fas fa-clock"></i> 6-10 months</span>
+                            <span><i class="fas fa-dollar-sign"></i> $65k-$140k</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- UX/UI Design -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="career-field-card" data-career="ux-ui">
+                        <div class="field-icon" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);">
+                            <i class="fas fa-palette"></i>
+                        </div>
+                        <h4>UX/UI Design</h4>
+                        <p>Design intuitive user experiences</p>
+                        <div class="field-meta">
+                            <span><i class="fas fa-clock"></i> 6-10 months</span>
+                            <span><i class="fas fa-dollar-sign"></i> $65k-$130k</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Database Administration -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="career-field-card" data-career="dba">
+                        <div class="field-icon" style="background: linear-gradient(135deg, #ff9a56 0%, #ff6a88 100%);">
+                            <i class="fas fa-server"></i>
+                        </div>
+                        <h4>Database Administration</h4>
+                        <p>Manage and optimize databases</p>
+                        <div class="field-meta">
+                            <span><i class="fas fa-clock"></i> 6-12 months</span>
+                            <span><i class="fas fa-dollar-sign"></i> $70k-$145k</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DevOps Engineering -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="career-field-card" data-career="devops">
+                        <div class="field-icon" style="background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);">
+                            <i class="fas fa-infinity"></i>
+                        </div>
+                        <h4>DevOps Engineering</h4>
+                        <p>Automate development workflows</p>
+                        <div class="field-meta">
+                            <span><i class="fas fa-clock"></i> 8-14 months</span>
+                            <span><i class="fas fa-dollar-sign"></i> $85k-$165k</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mobile Development -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="career-field-card" data-career="mobile-dev">
+                        <div class="field-icon" style="background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%);">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <h4>Mobile Development</h4>
+                        <p>Build iOS and Android applications</p>
+                        <div class="field-meta">
+                            <span><i class="fas fa-clock"></i> 6-12 months</span>
+                            <span><i class="fas fa-dollar-sign"></i> $70k-$150k</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- QA/Testing -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="career-field-card" data-career="qa-testing">
+                        <div class="field-icon" style="background: linear-gradient(135deg, #f8cdda 0%, #1d2b64 100%);">
+                            <i class="fas fa-bug"></i>
+                        </div>
+                        <h4>QA & Testing</h4>
+                        <p>Ensure software quality and reliability</p>
+                        <div class="field-meta">
+                            <span><i class="fas fa-clock"></i> 4-8 months</span>
+                            <span><i class="fas fa-dollar-sign"></i> $55k-$120k</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- IT Project Management -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="career-field-card" data-career="project-mgmt">
+                        <div class="field-icon" style="background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);">
+                            <i class="fas fa-tasks"></i>
+                        </div>
+                        <h4>IT Project Management</h4>
+                        <p>Lead technology projects to success</p>
+                        <div class="field-meta">
+                            <span><i class="fas fa-clock"></i> 8-12 months</span>
+                            <span><i class="fas fa-dollar-sign"></i> $75k-$155k</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Roadmap Details Section (Initially hidden, shown when career card is clicked) -->
+    <section id="roadmap-section" class="roadmap-section" style="display: none;">
+        <div class="container">
+            <div class="roadmap-header text-center">
+                <button class="btn btn-outline-primary mb-4" id="back-btn">
+                    <i class="fas fa-arrow-left"></i> Back to All Careers
+                </button>
+                <h2 class="roadmap-title"></h2>
+                <p class="roadmap-subtitle"></p>
+            </div>
+
+            <div id="roadmap-content">
+                <!-- Roadmap content will be dynamically inserted here -->
+            </div>
+        </div>
+    </section>
+{% endblock %}
+    <!-- Footer -->
+    {% comment %} <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5><i class="fas fa-laptop-code"></i> IT Career Navigator</h5>
+                    <p>Empowering your journey in technology careers</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p>&copy; 2025 IT Career Navigator. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer> {% endcomment %}
+
+    <!-- Bootstrap JS -->
+{% block script %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JS for Careers Roadmap -->
+     <script>
+        // Careers Detail Page - Roadmap Functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const careerRoadmaps = {
+        'software-dev': {
+            title: 'Software Development',
+            subtitle: 'Build innovative applications and software solutions that power the digital world',
+            overview: { timeToEntry: '6-12 months', averageSalary: '$105k', jobGrowth: '25%', demandLevel: 'Very High' },
+            stages: [
+                { title: 'Foundation (0-3 months)', duration: '3 months', description: 'Master programming fundamentals, version control, and basic web development concepts.', skills: ['HTML/CSS', 'JavaScript Basics', 'Git & GitHub', 'Command Line', 'Problem Solving', 'Algorithms'], certifications: ['freeCodeCamp Responsive Web Design', 'Codecademy Learn JavaScript'] },
+                { title: 'Intermediate Development (3-6 months)', duration: '3 months', description: 'Dive deeper into modern frameworks, backend development, and database management.', skills: ['React/Vue/Angular', 'Node.js', 'REST APIs', 'SQL Databases', 'NoSQL (MongoDB)', 'Express.js'], certifications: ['Meta Front-End Developer Certificate', 'MongoDB Developer Certificate'] },
+                { title: 'Advanced Skills (6-9 months)', duration: '3 months', description: 'Learn advanced patterns, testing, deployment, and build complete full-stack applications.', skills: ['TypeScript', 'Testing (Jest/Cypress)', 'CI/CD', 'Docker', 'AWS/Azure Basics', 'Microservices'], certifications: ['AWS Certified Cloud Practitioner', 'Docker Certified Associate'] },
+                { title: 'Professional Specialization (9-12 months)', duration: '3 months', description: 'Specialize in your chosen path, build portfolio projects, and prepare for job interviews.', skills: ['System Design', 'Performance Optimization', 'Security Best Practices', 'Agile/Scrum', 'Code Review', 'Portfolio Projects'], certifications: ['Professional Scrum Developer', 'Industry-specific certifications'] }
+            ],
+            technologies: {
+                'Frontend': ['React', 'Vue.js', 'Angular', 'Next.js', 'Tailwind CSS', 'TypeScript'],
+                'Backend': ['Node.js', 'Python/Django', 'Java/Spring', 'Go', 'Ruby on Rails', 'PHP/Laravel'],
+                'Database': ['PostgreSQL', 'MongoDB', 'MySQL', 'Redis', 'Elasticsearch'],
+                'Tools & DevOps': ['Git', 'Docker', 'Kubernetes', 'Jenkins', 'AWS/Azure/GCP', 'Nginx']
+            },
+            careerPaths: [
+                { title: 'Full Stack Developer', description: 'Work on both frontend and backend systems' },
+                { title: 'Frontend Specialist', description: 'Focus on user interfaces and UX' },
+                { title: 'Backend Engineer', description: 'Build robust server-side applications' },
+                { title: 'Solutions Architect', description: 'Design large-scale system architectures' }
+            ],
+            salaryLevels: [
+                { level: 'Junior (0-2 years)', range: '$60k - $85k', experience: 'Entry level developer' },
+                { level: 'Mid-Level (3-5 years)', range: '$85k - $120k', experience: 'Solid development skills' },
+                { level: 'Senior (6-10 years)', range: '$120k - $160k', experience: 'Lead projects and mentor' },
+                { level: 'Principal/Staff (10+ years)', range: '$160k - $220k+', experience: 'Strategic technical leadership' }
+            ],
+            resources: {
+                'Learning Platforms': ['freeCodeCamp', 'The Odin Project', 'Udemy Web Development Bootcamp', 'Frontend Masters'],
+                'Documentation': ['MDN Web Docs', 'React Docs', 'Node.js Docs', 'W3Schools'],
+                'Practice': ['LeetCode', 'HackerRank', 'Codewars', 'Frontend Mentor'],
+                'Communities': ['Stack Overflow', 'Dev.to', 'Reddit r/webdev', 'Discord Developer Communities']
+            }
+        },
+        'cybersecurity': {
+            title: 'Cybersecurity',
+            subtitle: 'Protect organizations from cyber threats and secure critical digital infrastructure',
+            overview: { timeToEntry: '8-14 months', averageSalary: '$115k', jobGrowth: '35%', demandLevel: 'Extremely High' },
+            stages: [
+                { title: 'IT Fundamentals (0-3 months)', duration: '3 months', description: 'Build a strong foundation in networking, operating systems, and basic security concepts.', skills: ['Networking Basics (TCP/IP)', 'Linux Fundamentals', 'Windows Administration', 'Network Protocols', 'Command Line', 'Basic Scripting'], certifications: ['CompTIA A+', 'CompTIA Network+'] },
+                { title: 'Security Foundations (3-7 months)', duration: '4 months', description: 'Learn core security principles, tools, and defensive techniques.', skills: ['Security Principles', 'Firewalls & IDS/IPS', 'Cryptography', 'Risk Management', 'Security Policies', 'SIEM Tools'], certifications: ['CompTIA Security+', 'Cisco CyberOps Associate'] },
+                { title: 'Advanced Security (7-11 months)', duration: '4 months', description: 'Master penetration testing, threat detection, and incident response.', skills: ['Penetration Testing', 'Vulnerability Assessment', 'Malware Analysis', 'Threat Hunting', 'Forensics', 'Ethical Hacking'], certifications: ['CEH (Certified Ethical Hacker)', 'CompTIA CySA+'] },
+                { title: 'Specialization (11-14 months)', duration: '3 months', description: 'Choose your specialization and earn advanced certifications.', skills: ['Cloud Security', 'Application Security', 'Red Team Operations', 'Blue Team Defense', 'Security Architecture', 'Compliance (GDPR/HIPAA)'], certifications: ['CISSP', 'OSCP', 'GIAC Certifications'] }
+            ],
+            technologies: {
+                'Security Tools': ['Wireshark', 'Metasploit', 'Burp Suite', 'Nmap', 'Splunk', 'Nessus'],
+                'Operating Systems': ['Kali Linux', 'Parrot OS', 'Windows Server', 'Ubuntu', 'Red Hat'],
+                'Programming': ['Python', 'Bash', 'PowerShell', 'C/C++', 'JavaScript'],
+                'Cloud Security': ['AWS Security', 'Azure Security', 'Google Cloud Security', 'Security Groups', 'IAM']
+            },
+            careerPaths: [
+                { title: 'Security Analyst', description: 'Monitor and respond to security incidents' },
+                { title: 'Penetration Tester', description: 'Test systems for vulnerabilities' },
+                { title: 'Security Architect', description: 'Design secure infrastructure' },
+                { title: 'Incident Responder', description: 'Handle security breaches and attacks' }
+            ],
+            salaryLevels: [
+                { level: 'Junior Analyst (0-2 years)', range: '$65k - $90k', experience: 'SOC analyst, entry security' },
+                { level: 'Security Engineer (3-5 years)', range: '$90k - $130k', experience: 'Implement security solutions' },
+                { level: 'Senior Security (6-10 years)', range: '$130k - $170k', experience: 'Lead security initiatives' },
+                { level: 'CISO/Director (10+ years)', range: '$170k - $250k+', experience: 'Strategic security leadership' }
+            ],
+            resources: {
+                'Learning Platforms': ['TryHackMe', 'HackTheBox', 'Cybrary', 'PentesterLab'],
+                'Certifications': ['CompTIA', 'EC-Council', '(ISC)²', 'Offensive Security'],
+                'Practice Labs': ['VulnHub', 'OverTheWire', 'DVWA', 'WebGoat'],
+                'Communities': ['OWASP', 'Reddit r/netsec', 'InfoSec Twitter', 'Security BSides']
+            }
+        },
+        'data-science': {
+            title: 'Data Science & Analytics',
+            subtitle: 'Extract meaningful insights from complex data to drive business decisions',
+            overview: { timeToEntry: '8-16 months', averageSalary: '$112k', jobGrowth: '28%', demandLevel: 'Very High' },
+            stages: [
+                { title: 'Mathematics & Programming (0-4 months)', duration: '4 months', description: 'Build strong foundations in statistics, math, and Python programming.', skills: ['Python Programming', 'Statistics', 'Linear Algebra', 'Probability', 'Data Structures', 'SQL Basics'], certifications: ['Python for Data Science (Coursera)', 'Statistics Fundamentals'] },
+                { title: 'Data Analysis (4-8 months)', duration: '4 months', description: 'Learn data manipulation, visualization, and exploratory analysis.', skills: ['Pandas & NumPy', 'Data Visualization', 'Excel Advanced', 'Tableau/Power BI', 'SQL Advanced', 'Statistical Analysis'], certifications: ['Google Data Analytics Certificate', 'Tableau Desktop Specialist'] },
+                { title: 'Machine Learning (8-12 months)', duration: '4 months', description: 'Master machine learning algorithms and model building.', skills: ['Scikit-learn', 'Supervised Learning', 'Unsupervised Learning', 'Feature Engineering', 'Model Evaluation', 'TensorFlow/PyTorch Basics'], certifications: ['IBM Machine Learning Certificate', 'AWS ML Specialty'] },
+                { title: 'Advanced DS (12-16 months)', duration: '4 months', description: 'Deep learning, big data tools, and specialized applications.', skills: ['Deep Learning', 'NLP', 'Time Series', 'Big Data (Spark)', 'MLOps', 'A/B Testing'], certifications: ['TensorFlow Developer Certificate', 'Azure Data Scientist Associate'] }
+            ],
+            technologies: {
+                'Programming': ['Python', 'R', 'SQL', 'Scala', 'Julia'],
+                'Libraries': ['Pandas', 'NumPy', 'Scikit-learn', 'TensorFlow', 'PyTorch', 'Keras'],
+                'Visualization': ['Matplotlib', 'Seaborn', 'Plotly', 'Tableau', 'Power BI', 'D3.js'],
+                'Big Data': ['Apache Spark', 'Hadoop', 'Kafka', 'Airflow', 'Databricks']
+            },
+            careerPaths: [
+                { title: 'Data Analyst', description: 'Analyze data and create reports' },
+                { title: 'Data Scientist', description: 'Build predictive models and ML solutions' },
+                { title: 'ML Engineer', description: 'Deploy and maintain ML systems' },
+                { title: 'Data Engineer', description: 'Build data pipelines and infrastructure' }
+            ],
+            salaryLevels: [
+                { level: 'Data Analyst (0-2 years)', range: '$60k - $85k', experience: 'Entry-level analytics' },
+                { level: 'Data Scientist (3-5 years)', range: '$90k - $130k', experience: 'ML and modeling' },
+                { level: 'Senior DS (6-10 years)', range: '$130k - $170k', experience: 'Lead data projects' },
+                { level: 'Principal DS (10+ years)', range: '$170k - $230k+', experience: 'Strategic data leadership' }
+            ],
+            resources: {
+                'Learning Platforms': ['Kaggle', 'DataCamp', 'Coursera DS Specialization', 'Fast.ai'],
+                'Books': ['Python for Data Analysis', 'Hands-On ML', 'Deep Learning (Goodfellow)'],
+                'Practice': ['Kaggle Competitions', 'UCI ML Repository', 'DrivenData'],
+                'Communities': ['Kaggle Forums', 'Reddit r/datascience', 'Towards Data Science', 'KDnuggets']
+            }
+        },
+        'cloud': {
+            title: 'Cloud Computing',
+            subtitle: 'Design, deploy, and manage scalable cloud infrastructure and services',
+            overview: { timeToEntry: '6-12 months', averageSalary: '$122k', jobGrowth: '30%', demandLevel: 'Extremely High' },
+            stages: [
+                { title: 'Cloud Fundamentals (0-3 months)', duration: '3 months', description: 'Understand cloud concepts, networking, and basic AWS/Azure services.', skills: ['Cloud Concepts', 'Networking Basics', 'Linux Administration', 'AWS/Azure Basics', 'Virtualization', 'Storage Solutions'], certifications: ['AWS Cloud Practitioner', 'Azure Fundamentals (AZ-900)'] },
+                { title: 'Cloud Services (3-6 months)', duration: '3 months', description: 'Master core cloud services, databases, and serverless computing.', skills: ['EC2/VMs', 'S3/Blob Storage', 'RDS/Databases', 'Lambda/Functions', 'Load Balancers', 'Auto Scaling'], certifications: ['AWS Solutions Architect Associate', 'Azure Administrator (AZ-104)'] },
+                { title: 'DevOps & IaC (6-9 months)', duration: '3 months', description: 'Learn infrastructure as code, CI/CD, and containerization.', skills: ['Terraform', 'CloudFormation', 'Docker', 'Kubernetes', 'CI/CD Pipelines', 'GitLab/GitHub Actions'], certifications: ['Certified Kubernetes Administrator', 'HashiCorp Terraform Associate'] },
+                { title: 'Advanced Cloud (9-12 months)', duration: '3 months', description: 'Security, multi-cloud, monitoring, and cost optimization.', skills: ['Cloud Security', 'Monitoring (CloudWatch/Azure Monitor)', 'Cost Optimization', 'High Availability', 'Disaster Recovery', 'Multi-Cloud'], certifications: ['AWS Solutions Architect Professional', 'Azure Solutions Architect (AZ-305)'] }
+            ],
+            technologies: {
+                'Cloud Platforms': ['AWS', 'Microsoft Azure', 'Google Cloud', 'IBM Cloud', 'Oracle Cloud'],
+                'IaC Tools': ['Terraform', 'Ansible', 'CloudFormation', 'Pulumi', 'ARM Templates'],
+                'Containers': ['Docker', 'Kubernetes', 'ECS', 'AKS', 'GKE', 'Helm'],
+                'CI/CD': ['Jenkins', 'GitLab CI', 'GitHub Actions', 'Azure DevOps', 'CircleCI']
+            },
+            careerPaths: [
+                { title: 'Cloud Engineer', description: 'Build and maintain cloud infrastructure' },
+                { title: 'Cloud Architect', description: 'Design cloud solutions and strategies' },
+                { title: 'DevOps Engineer', description: 'Automate deployment and operations' },
+                { title: 'SRE (Site Reliability)', description: 'Ensure system reliability and performance' }
+            ],
+            salaryLevels: [
+                { level: 'Junior Cloud (0-2 years)', range: '$70k - $95k', experience: 'Cloud support and operations' },
+                { level: 'Cloud Engineer (3-5 years)', range: '$95k - $135k', experience: 'Build cloud solutions' },
+                { level: 'Senior Cloud (6-10 years)', range: '$135k - $180k', experience: 'Architect cloud systems' },
+                { level: 'Cloud Architect (10+ years)', range: '$180k - $250k+', experience: 'Strategic cloud leadership' }
+            ],
+            resources: {
+                'Learning Platforms': ['A Cloud Guru', 'Linux Academy', 'Pluralsight', 'Cloud Academy'],
+                'Certifications': ['AWS Training', 'Microsoft Learn', 'Google Cloud Skills Boost'],
+                'Practice': ['AWS Free Tier', 'Azure Free Account', 'GCP Free Credits', 'CloudSkills.io'],
+                'Communities': ['AWS re:Post', 'Reddit r/aws', 'Cloud Native Computing Foundation', 'DevOps Slack']
+            }
+        },
+        'ai-ml': {
+            title: 'Artificial Intelligence & Machine Learning',
+            subtitle: 'Create intelligent systems that learn and adapt to solve complex problems',
+            overview: { timeToEntry: '10-18 months', averageSalary: '$130k', jobGrowth: '40%', demandLevel: 'Explosive' },
+            stages: [
+                { title: 'Prerequisites (0-4 months)', duration: '4 months', description: 'Master mathematics, programming, and data fundamentals.', skills: ['Python Programming', 'Linear Algebra', 'Calculus', 'Statistics & Probability', 'Data Structures', 'Algorithms'], certifications: ['Mathematics for ML (Coursera)', 'Python Programming'] },
+                { title: 'ML Foundations (4-8 months)', duration: '4 months', description: 'Learn classical machine learning algorithms and techniques.', skills: ['Supervised Learning', 'Unsupervised Learning', 'Scikit-learn', 'Feature Engineering', 'Model Evaluation', 'Cross-Validation'], certifications: ['IBM ML Professional Certificate', 'Stanford ML Course'] },
+                { title: 'Deep Learning (8-13 months)', duration: '5 months', description: 'Master neural networks, CNNs, RNNs, and modern architectures.', skills: ['Neural Networks', 'TensorFlow/PyTorch', 'CNNs', 'RNNs/LSTMs', 'Transfer Learning', 'GANs'], certifications: ['Deep Learning Specialization (Coursera)', 'TensorFlow Developer Certificate'] },
+                { title: 'Specialization (13-18 months)', duration: '5 months', description: 'Specialize in NLP, Computer Vision, or Reinforcement Learning.', skills: ['NLP & Transformers', 'Computer Vision', 'Reinforcement Learning', 'MLOps', 'Model Deployment', 'Research Skills'], certifications: ['AWS ML Specialty', 'NVIDIA Deep Learning Certificate'] }
+            ],
+            technologies: {
+                'Frameworks': ['TensorFlow', 'PyTorch', 'Keras', 'JAX', 'Scikit-learn', 'Hugging Face'],
+                'Languages': ['Python', 'R', 'Julia', 'C++', 'CUDA'],
+                'Tools': ['Jupyter', 'MLflow', 'Weights & Biases', 'TensorBoard', 'Docker', 'Kubernetes'],
+                'Cloud ML': ['AWS SageMaker', 'Azure ML', 'Google AI Platform', 'Vertex AI']
+            },
+            careerPaths: [
+                { title: 'ML Engineer', description: 'Build and deploy ML systems at scale' },
+                { title: 'AI Research Scientist', description: 'Develop new AI algorithms' },
+                { title: 'NLP Engineer', description: 'Work on language understanding' },
+                { title: 'Computer Vision Engineer', description: 'Build vision-based systems' }
+            ],
+            salaryLevels: [
+                { level: 'Junior ML (0-2 years)', range: '$80k - $110k', experience: 'ML model development' },
+                { level: 'ML Engineer (3-5 years)', range: '$115k - $160k', experience: 'Production ML systems' },
+                { level: 'Senior ML (6-10 years)', range: '$160k - $200k', experience: 'Lead ML initiatives' },
+                { level: 'AI Researcher (10+ years)', range: '$200k - $300k+', experience: 'Research and innovation' }
+            ],
+            resources: {
+                'Learning Platforms': ['Fast.ai', 'DeepLearning.AI', 'Google ML Crash Course', 'Papers With Code'],
+                'Research': ['arXiv.org', 'Google Scholar', 'Papers With Code', 'AI Alignment Forum'],
+                'Practice': ['Kaggle', 'DrivenData', 'AIcrowd', 'Hugging Face Spaces'],
+                'Communities': ['AI Alignment Forum', 'Reddit r/MachineLearning', 'ML Twitter', 'Discord AI Communities']
+            }
+        },
+        'network': {
+            title: 'Network & Infrastructure',
+            subtitle: 'Build and maintain the backbone of enterprise IT systems and networks',
+            overview: { timeToEntry: '6-10 months', averageSalary: '$98k', jobGrowth: '20%', demandLevel: 'High' },
+            stages: [
+                { title: 'Networking Basics (0-3 months)', duration: '3 months', description: 'Learn fundamental networking concepts and protocols.', skills: ['OSI Model', 'TCP/IP', 'Subnetting', 'DNS & DHCP', 'Routing & Switching', 'Network Topology'], certifications: ['CompTIA Network+', 'Cisco CCENT'] },
+                { title: 'Infrastructure (3-6 months)', duration: '3 months', description: 'Master server administration and infrastructure management.', skills: ['Windows Server', 'Linux Server', 'Active Directory', 'Virtualization (VMware)', 'Storage Solutions', 'Backup & Recovery'], certifications: ['CompTIA Server+', 'MCSA', 'Linux+'] },
+                { title: 'Advanced Networking (6-8 months)', duration: '2 months', description: 'Advanced routing, security, and wireless technologies.', skills: ['VLAN Configuration', 'Network Security', 'Firewalls', 'VPN', 'QoS', 'Wireless Networks'], certifications: ['Cisco CCNA', 'CCNP'] },
+                { title: 'Specialization (8-10 months)', duration: '2 months', description: 'Choose specialization in security, cloud, or architecture.', skills: ['Network Architecture', 'SD-WAN', 'Cloud Networking', 'Network Automation', 'Monitoring Tools', 'Troubleshooting'], certifications: ['Cisco CCIE', 'Juniper JNCIA'] }
+            ],
+            technologies: {
+                'Network Equipment': ['Cisco', 'Juniper', 'Aruba', 'Fortinet', 'Palo Alto'],
+                'Protocols': ['BGP', 'OSPF', 'EIGRP', 'MPLS', 'STP', 'HSRP/VRRP'],
+                'Tools': ['Wireshark', 'SolarWinds', 'Nagios', 'PRTG', 'NetFlow', 'Ansible'],
+                'Virtualization': ['VMware ESXi', 'Hyper-V', 'Proxmox', 'KVM']
+            },
+            careerPaths: [
+                { title: 'Network Engineer', description: 'Design and manage networks' },
+                { title: 'Systems Administrator', description: 'Manage servers and infrastructure' },
+                { title: 'Network Architect', description: 'Design enterprise network solutions' },
+                { title: 'Infrastructure Engineer', description: 'Build scalable infrastructure' }
+            ],
+            salaryLevels: [
+                { level: 'Junior Network (0-2 years)', range: '$55k - $75k', experience: 'Network support and admin' },
+                { level: 'Network Engineer (3-5 years)', range: '$75k - $110k', experience: 'Network design and management' },
+                { level: 'Senior Network (6-10 years)', range: '$110k - $150k', experience: 'Complex network solutions' },
+                { level: 'Network Architect (10+ years)', range: '$150k - $200k+', experience: 'Enterprise architecture' }
+            ],
+            resources: {
+                'Learning Platforms': ['CBT Nuggets', 'INE', 'Cisco NetAcad', 'Pluralsight'],
+                'Certifications': ['Cisco', 'CompTIA', 'Juniper', 'VMware'],
+                'Practice Labs': ['Cisco Packet Tracer', 'GNS3', 'EVE-NG', 'Cisco DevNet Sandbox'],
+                'Communities': ['Reddit r/networking', 'Cisco Learning Network', 'NetworkEngineering.com']
+            }
+        },
+        'ux-ui': {
+            title: 'UX/UI Design',
+            subtitle: 'Create intuitive and engaging user experiences for digital products',
+            overview: { timeToEntry: '6-10 months', averageSalary: '$92k', jobGrowth: '23%', demandLevel: 'High' },
+            stages: [
+                { title: 'Design Fundamentals (0-3 months)', duration: '3 months', description: 'Learn design principles, color theory, and typography.', skills: ['Design Principles', 'Color Theory', 'Typography', 'Layout Design', 'Visual Hierarchy', 'Accessibility'], certifications: ['Google UX Design Certificate', 'Interaction Design Foundation'] },
+                { title: 'UX Research & Tools (3-6 months)', duration: '3 months', description: 'Master user research, wireframing, and design tools.', skills: ['User Research', 'Wireframing', 'Prototyping', 'Figma/Sketch', 'Adobe XD', 'InVision'], certifications: ['Nielsen Norman Group UX Certificate'] },
+                { title: 'UI Design (6-8 months)', duration: '2 months', description: 'Create polished user interfaces and design systems.', skills: ['UI Design', 'Design Systems', 'Responsive Design', 'Mobile Design', 'Micro-interactions', 'Branding'], certifications: ['UI Design Specialization (Coursera)'] },
+                { title: 'Professional Practice (8-10 months)', duration: '2 months', description: 'Build portfolio, learn collaboration, and prepare for work.', skills: ['Portfolio Development', 'User Testing', 'A/B Testing', 'Design Handoff', 'Presentation Skills', 'HTML/CSS Basics'], certifications: ['Portfolio projects and case studies'] }
+            ],
+            technologies: {
+                'Design Tools': ['Figma', 'Sketch', 'Adobe XD', 'InVision', 'Framer', 'Principle'],
+                'Prototyping': ['Figma', 'ProtoPie', 'Axure', 'Marvel', 'Adobe Animate'],
+                'Graphics': ['Adobe Illustrator', 'Adobe Photoshop', 'Affinity Designer'],
+                'Collaboration': ['Miro', 'FigJam', 'Notion', 'Slack', 'Jira']
+            },
+            careerPaths: [
+                { title: 'UX Designer', description: 'Focus on user research and experience' },
+                { title: 'UI Designer', description: 'Create visual interfaces' },
+                { title: 'Product Designer', description: 'End-to-end product design' },
+                { title: 'UX Researcher', description: 'Specialize in user research' }
+            ],
+            salaryLevels: [
+                { level: 'Junior Designer (0-2 years)', range: '$50k - $70k', experience: 'Entry-level design work' },
+                { level: 'UX/UI Designer (3-5 years)', range: '$70k - $105k', experience: 'Full product design' },
+                { level: 'Senior Designer (6-10 years)', range: '$105k - $140k', experience: 'Lead design projects' },
+                { level: 'Design Director (10+ years)', range: '$140k - $190k+', experience: 'Strategic design leadership' }
+            ],
+            resources: {
+                'Learning Platforms': ['Coursera UX Design', 'Interaction Design Foundation', 'Udemy Design Courses'],
+                'Inspiration': ['Dribbble', 'Behance', 'Awwwards', 'Pinterest'],
+                'Practice': ['Daily UI Challenge', 'UI/UX Design Challenges', 'Redesign popular apps'],
+                'Communities': ['Designer Hangout', 'UX Mastery', 'Reddit r/userexperience', 'Design Twitter']
+            }
+        },
+        'dba': {
+            title: 'Database Administration',
+            subtitle: 'Manage, optimize, and secure organizational data infrastructure',
+            overview: { timeToEntry: '6-12 months', averageSalary: '$102k', jobGrowth: '18%', demandLevel: 'High' },
+            stages: [
+                { title: 'Database Basics (0-3 months)', duration: '3 months', description: 'Learn SQL, relational database concepts, and basic administration.', skills: ['SQL Fundamentals', 'Database Design', 'Normalization', 'ER Diagrams', 'MySQL/PostgreSQL', 'Data Types'], certifications: ['Oracle Database SQL Certified Associate'] },
+                { title: 'DBA Essentials (3-6 months)', duration: '3 months', description: 'Master backup, recovery, security, and performance tuning.', skills: ['Backup & Recovery', 'Security Management', 'User Management', 'Performance Tuning', 'Indexing', 'Query Optimization'], certifications: ['Microsoft SQL Server Administrator', 'PostgreSQL DBA'] },
+                { title: 'Advanced DBA (6-9 months)', duration: '3 months', description: 'High availability, replication, and advanced optimization.', skills: ['Replication', 'High Availability', 'Clustering', 'Monitoring Tools', 'Disaster Recovery', 'Automation Scripts'], certifications: ['Oracle DBA Certified Professional', 'MySQL DBA'] },
+                { title: 'Specialization (9-12 months)', duration: '3 months', description: 'Cloud databases, NoSQL, and data architecture.', skills: ['Cloud Databases (RDS/Azure SQL)', 'NoSQL (MongoDB)', 'Data Warehousing', 'Big Data Basics', 'Data Modeling', 'ETL Processes'], certifications: ['AWS Database Specialty', 'MongoDB DBA'] }
+            ],
+            technologies: {
+                'RDBMS': ['Oracle', 'MySQL', 'PostgreSQL', 'Microsoft SQL Server', 'MariaDB'],
+                'NoSQL': ['MongoDB', 'Cassandra', 'Redis', 'Couchbase', 'DynamoDB'],
+                'Tools': ['SQL Server Management Studio', 'pgAdmin', 'MySQL Workbench', 'Oracle Enterprise Manager'],
+                'Cloud Databases': ['AWS RDS', 'Azure SQL', 'Google Cloud SQL', 'Amazon Aurora']
+            },
+            careerPaths: [
+                { title: 'Database Administrator', description: 'Manage database systems' },
+                { title: 'Data Architect', description: 'Design data solutions' },
+                { title: 'Database Developer', description: 'Build database applications' },
+                { title: 'Data Engineer', description: 'Build data pipelines' }
+            ],
+            salaryLevels: [
+                { level: 'Junior DBA (0-2 years)', range: '$60k - $80k', experience: 'Database support' },
+                { level: 'DBA (3-5 years)', range: '$80k - $115k', experience: 'Database administration' },
+                { level: 'Senior DBA (6-10 years)', range: '$115k - $155k', experience: 'Complex database systems' },
+                { level: 'Data Architect (10+ years)', range: '$155k - $200k+', experience: 'Data strategy leadership' }
+            ],
+            resources: {
+                'Learning Platforms': ['Udemy Database Courses', 'Pluralsight', 'LinkedIn Learning'],
+                'Documentation': ['PostgreSQL Docs', 'MySQL Docs', 'Oracle Documentation', 'MongoDB University'],
+                'Practice': ['SQLZoo', 'LeetCode SQL', 'HackerRank SQL'],
+                'Communities': ['DBA Stack Exchange', 'Reddit r/Database', 'Oracle Community', 'PostgreSQL Community']
+            }
+        },
+        'devops': {
+            title: 'DevOps Engineering',
+            subtitle: 'Automate development workflows and bridge development with operations',
+            overview: { timeToEntry: '8-14 months', averageSalary: '$118k', jobGrowth: '32%', demandLevel: 'Very High' },
+            stages: [
+                { title: 'Foundation (0-3 months)', duration: '3 months', description: 'Learn Linux, networking, and scripting fundamentals.', skills: ['Linux Administration', 'Networking Basics', 'Shell Scripting', 'Git Version Control', 'Python/Go Basics', 'Cloud Basics'], certifications: ['Linux Foundation Certified IT Associate', 'Git Certification'] },
+                { title: 'CI/CD & Automation (3-7 months)', duration: '4 months', description: 'Master continuous integration, deployment, and automation.', skills: ['Jenkins/GitLab CI', 'Docker', 'CI/CD Pipelines', 'Automation Scripts', 'Configuration Management', 'Ansible'], certifications: ['Docker Certified Associate', 'Jenkins Engineer'] },
+                { title: 'Container Orchestration (7-10 months)', duration: '3 months', description: 'Learn Kubernetes and advanced containerization.', skills: ['Kubernetes', 'Helm', 'Container Networking', 'Service Mesh', 'Monitoring & Logging', 'Prometheus & Grafana'], certifications: ['Certified Kubernetes Administrator (CKA)', 'Certified Kubernetes Application Developer'] },
+                { title: 'Advanced DevOps (10-14 months)', duration: '4 months', description: 'Infrastructure as Code, security, and cloud-native tools.', skills: ['Terraform', 'Infrastructure as Code', 'DevSecOps', 'GitOps (ArgoCD)', 'Cloud Platforms', 'SRE Principles'], certifications: ['HashiCorp Terraform Associate', 'AWS DevOps Professional'] }
+            ],
+            technologies: {
+                'CI/CD': ['Jenkins', 'GitLab CI/CD', 'GitHub Actions', 'Azure DevOps', 'CircleCI', 'Travis CI'],
+                'Containers': ['Docker', 'Kubernetes', 'Helm', 'Podman', 'containerd'],
+                'IaC': ['Terraform', 'Ansible', 'Puppet', 'Chef', 'CloudFormation', 'Pulumi'],
+                'Monitoring': ['Prometheus', 'Grafana', 'ELK Stack', 'Datadog', 'New Relic', 'Splunk']
+            },
+            careerPaths: [
+                { title: 'DevOps Engineer', description: 'Automate and optimize workflows' },
+                { title: 'Site Reliability Engineer', description: 'Ensure system reliability' },
+                { title: 'Platform Engineer', description: 'Build internal platforms' },
+                { title: 'Cloud DevOps', description: 'Cloud-native DevOps' }
+            ],
+            salaryLevels: [
+                { level: 'Junior DevOps (0-2 years)', range: '$70k - $95k', experience: 'DevOps support' },
+                { level: 'DevOps Engineer (3-5 years)', range: '$95k - $135k', experience: 'Full DevOps implementation' },
+                { level: 'Senior DevOps (6-10 years)', range: '$135k - $175k', experience: 'Lead DevOps initiatives' },
+                { level: 'DevOps Architect (10+ years)', range: '$175k - $230k+', experience: 'DevOps strategy' }
+            ],
+            resources: {
+                'Learning Platforms': ['A Cloud Guru', 'Linux Academy', 'Udemy DevOps', 'KodeKloud'],
+                'Documentation': ['Kubernetes Docs', 'Docker Docs', 'Terraform Docs', 'Jenkins Docs'],
+                'Practice': ['Katacoda', 'Play with Docker', 'Play with Kubernetes', 'GitHub Labs'],
+                'Communities': ['DevOps Subreddit', 'CNCF Slack', 'DevOps.com', 'SRE Weekly']
+            }
+        },
+        'mobile-dev': {
+            title: 'Mobile Development',
+            subtitle: 'Build native and cross-platform applications for iOS and Android',
+            overview: { timeToEntry: '6-12 months', averageSalary: '$106k', jobGrowth: '24%', demandLevel: 'High' },
+            stages: [
+                { title: 'Programming Basics (0-3 months)', duration: '3 months', description: 'Learn programming fundamentals and mobile concepts.', skills: ['JavaScript/Dart/Swift', 'OOP Concepts', 'Git Version Control', 'Mobile UI/UX Basics', 'API Consumption', 'Data Structures'], certifications: ['Meta iOS Developer', 'Google Associate Android Developer'] },
+                { title: 'Platform Development (3-6 months)', duration: '3 months', description: 'Choose iOS, Android, or cross-platform development.', skills: ['React Native/Flutter', 'iOS (Swift/SwiftUI)', 'Android (Kotlin)', 'UI Components', 'Navigation', 'State Management'], certifications: ['iOS App Development (Coursera)', 'Android Developer Nanodegree'] },
+                { title: 'Advanced Features (6-9 months)', duration: '3 months', description: 'Master advanced features and native capabilities.', skills: ['Native Modules', 'Push Notifications', 'Local Storage', 'Camera/Location', 'Animations', 'Performance Optimization'], certifications: ['Professional certificates in chosen platform'] },
+                { title: 'Production Ready (9-12 months)', duration: '3 months', description: 'Testing, deployment, and app store optimization.', skills: ['Testing (Jest/XCTest)', 'App Store Deployment', 'Analytics', 'Crash Reporting', 'CI/CD Mobile', 'App Marketing'], certifications: ['Complete portfolio apps on stores'] }
+            ],
+            technologies: {
+                'Cross-Platform': ['React Native', 'Flutter', 'Ionic', 'Xamarin', 'Cordova'],
+                'iOS': ['Swift', 'SwiftUI', 'UIKit', 'Xcode', 'CocoaPods', 'Combine'],
+                'Android': ['Kotlin', 'Java', 'Jetpack Compose', 'Android Studio', 'Gradle'],
+                'Tools': ['Firebase', 'Expo', 'Fastlane', 'Crashlytics', 'App Center']
+            },
+            careerPaths: [
+                { title: 'iOS Developer', description: 'Build Apple ecosystem apps' },
+                { title: 'Android Developer', description: 'Create Android applications' },
+                { title: 'React Native Developer', description: 'Cross-platform development' },
+                { title: 'Mobile Architect', description: 'Design mobile solutions' }
+            ],
+            salaryLevels: [
+                { level: 'Junior Mobile (0-2 years)', range: '$65k - $90k', experience: 'Entry mobile development' },
+                { level: 'Mobile Developer (3-5 years)', range: '$90k - $125k', experience: 'Full mobile apps' },
+                { level: 'Senior Mobile (6-10 years)', range: '$125k - $165k', experience: 'Lead mobile projects' },
+                { level: 'Mobile Architect (10+ years)', range: '$165k - $210k+', experience: 'Mobile strategy' }
+            ],
+            resources: {
+                'Learning Platforms': ['Ray Wenderlich', 'Udemy Mobile Courses', 'freeCodeCamp', 'Flutter Documentation'],
+                'Documentation': ['Apple Developer Docs', 'Android Developers', 'React Native Docs', 'Flutter Docs'],
+                'Practice': ['Build clone apps', 'HackerRank Mobile', 'LeetCode', 'Open source contributions'],
+                'Communities': ['Stack Overflow', 'Reddit r/iOSProgramming', 'r/androiddev', 'Flutter Community']
+            }
+        },
+        'qa-testing': {
+            title: 'QA & Testing',
+            subtitle: 'Ensure software quality through comprehensive testing and quality assurance',
+            overview: { timeToEntry: '4-8 months', averageSalary: '$82k', jobGrowth: '22%', demandLevel: 'High' },
+            stages: [
+                { title: 'Testing Fundamentals (0-2 months)', duration: '2 months', description: 'Learn testing principles, methodologies, and manual testing.', skills: ['Testing Principles', 'SDLC & STLC', 'Test Case Design', 'Bug Reporting', 'Manual Testing', 'Agile/Scrum'], certifications: ['ISTQB Foundation Level'] },
+                { title: 'Automation Basics (2-4 months)', duration: '2 months', description: 'Learn programming and test automation fundamentals.', skills: ['JavaScript/Python', 'Selenium WebDriver', 'Test Frameworks', 'Locators & Waits', 'Git Version Control', 'API Testing'], certifications: ['Selenium Certification', 'Test Automation University'] },
+                { title: 'Advanced Automation (4-6 months)', duration: '2 months', description: 'Master advanced frameworks and CI/CD integration.', skills: ['Cypress/Playwright', 'API Testing (Postman)', 'Performance Testing', 'CI/CD Integration', 'Page Object Model', 'Data-Driven Testing'], certifications: ['ISTQB Test Automation Engineer'] },
+                { title: 'Specialization (6-8 months)', duration: '2 months', description: 'Specialize in performance, security, or mobile testing.', skills: ['Performance Testing (JMeter)', 'Security Testing', 'Mobile Testing', 'Load Testing', 'Test Strategy', 'Reporting'], certifications: ['ISTQB Advanced Certificates', 'Performance Testing Certification'] }
+            ],
+            technologies: {
+                'Automation Tools': ['Selenium', 'Cypress', 'Playwright', 'TestCafe', 'Puppeteer'],
+                'API Testing': ['Postman', 'REST Assured', 'SoapUI', 'Karate'],
+                'Performance': ['JMeter', 'LoadRunner', 'Gatling', 'K6'],
+                'Mobile Testing': ['Appium', 'XCUITest', 'Espresso', 'Detox']
+            },
+            careerPaths: [
+                { title: 'QA Engineer', description: 'Manual and automated testing' },
+                { title: 'Automation Engineer', description: 'Build test automation frameworks' },
+                { title: 'Performance Tester', description: 'Test system performance' },
+                { title: 'QA Lead', description: 'Lead testing teams' }
+            ],
+            salaryLevels: [
+                { level: 'Junior QA (0-2 years)', range: '$45k - $65k', experience: 'Manual testing' },
+                { level: 'QA Engineer (3-5 years)', range: '$65k - $95k', experience: 'Automated testing' },
+                { level: 'Senior QA (6-10 years)', range: '$95k - $130k', experience: 'Test strategy and leadership' },
+                { level: 'QA Manager (10+ years)', range: '$130k - $170k+', experience: 'Quality assurance strategy' }
+            ],
+            resources: {
+                'Learning Platforms': ['Test Automation University', 'Udemy QA Courses', 'Pluralsight'],
+                'Certifications': ['ISTQB', 'Certified Selenium Professional'],
+                'Practice': ['Test automation projects', 'Open source testing', 'Bug bounty platforms'],
+                'Communities': ['Ministry of Testing', 'QA StackExchange', 'Reddit r/QualityAssurance', 'TestProject']
+            }
+        },
+        'project-mgmt': {
+            title: 'IT Project Management',
+            subtitle: 'Lead technology projects to successful delivery using proven methodologies',
+            overview: { timeToEntry: '8-12 months', averageSalary: '$108k', jobGrowth: '20%', demandLevel: 'High' },
+            stages: [
+                { title: 'PM Fundamentals (0-3 months)', duration: '3 months', description: 'Learn project management basics and methodologies.', skills: ['PM Principles', 'Project Lifecycle', 'Stakeholder Management', 'Risk Management', 'Budgeting', 'Communication'], certifications: ['CAPM (Certified Associate in Project Management)'] },
+                { title: 'Agile & Scrum (3-6 months)', duration: '3 months', description: 'Master Agile frameworks and Scrum practices.', skills: ['Scrum Framework', 'Agile Principles', 'Sprint Planning', 'User Stories', 'Jira/Azure DevOps', 'Retrospectives'], certifications: ['Certified Scrum Master (CSM)', 'Professional Scrum Master (PSM)'] },
+                { title: 'Advanced PM (6-9 months)', duration: '3 months', description: 'Learn advanced tools, techniques, and leadership.', skills: ['MS Project', 'Kanban', 'Change Management', 'Quality Management', 'Resource Planning', 'Leadership'], certifications: ['PMP (Project Management Professional)', 'SAFe Certification'] },
+                { title: 'IT Specialization (9-12 months)', duration: '3 months', description: 'Focus on IT-specific project management.', skills: ['Software Development Lifecycle', 'Technical Understanding', 'DevOps Practices', 'Cloud Projects', 'Vendor Management', 'IT Strategy'], certifications: ['PRINCE2', 'Agile Certified Practitioner (PMI-ACP)'] }
+            ],
+            technologies: {
+                'PM Tools': ['Jira', 'Asana', 'Monday.com', 'Trello', 'Microsoft Project', 'ClickUp'],
+                'Collaboration': ['Slack', 'Microsoft Teams', 'Zoom', 'Confluence', 'Notion'],
+                'Reporting': ['Tableau', 'Power BI', 'Excel', 'Google Data Studio'],
+                'Documentation': ['SharePoint', 'Google Workspace', 'Confluence', 'Notion']
+            },
+            careerPaths: [
+                { title: 'Project Coordinator', description: 'Support project execution' },
+                { title: 'Scrum Master', description: 'Facilitate Agile teams' },
+                { title: 'Project Manager', description: 'Lead IT projects' },
+                { title: 'Program Manager', description: 'Manage multiple projects' }
+            ],
+            salaryLevels: [
+                { level: 'Project Coordinator (0-2 years)', range: '$55k - $75k', experience: 'Project support' },
+                { level: 'Project Manager (3-5 years)', range: '$75k - $115k', experience: 'Lead projects' },
+                { level: 'Senior PM (6-10 years)', range: '$115k - $155k', experience: 'Complex project leadership' },
+                { level: 'Program Manager (10+ years)', range: '$155k - $200k+', experience: 'Strategic program management' }
+            ],
+            resources: {
+                'Learning Platforms': ['PMI', 'Scrum.org', 'LinkedIn Learning PM', 'Coursera PM Specialization'],
+                'Certifications': ['PMI', 'Scrum Alliance', 'Scaled Agile'],
+                'Books': ['PMBOK Guide', 'Scrum Guide', 'The Lean Startup', 'Agile Estimating and Planning'],
+                'Communities': ['PMI Chapters', 'Scrum Alliance', 'Reddit r/projectmanagement', 'PM Network']
+            }
+        }
+    };
+
+    // Career card click handlers
+    const careerCards = document.querySelectorAll('.career-field-card');
+    const roadmapSection = document.getElementById('roadmap-section');
+    const roadmapContent = document.getElementById('roadmap-content');
+    const roadmapTitle = document.querySelector('.roadmap-title');
+    const roadmapSubtitle = document.querySelector('.roadmap-subtitle');
+    const backBtn = document.getElementById('back-btn');
+
+    if (careerCards.length > 0) {
+        careerCards.forEach(card => {
+            card.addEventListener('click', function() {
+                const careerId = this.getAttribute('data-career');
+                const roadmap = careerRoadmaps[careerId];
+                
+                if (roadmap) {
+                    displayRoadmap(roadmap);
+                    roadmapSection.style.display = 'block';
+                    roadmapSection.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    }
+
+    if (backBtn) {
+        backBtn.addEventListener('click', function() {
+            roadmapSection.style.display = 'none';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    }
+
+    function displayRoadmap(roadmap) {
+        roadmapTitle.textContent = roadmap.title;
+        roadmapSubtitle.textContent = roadmap.subtitle;
+        
+        let html = `
+            <div class="roadmap-overview">
+                <h3><i class="fas fa-info-circle"></i> Career Overview</h3>
+                <div class="overview-grid">
+                    <div class="overview-item"><i class="fas fa-clock"></i><h4>${roadmap.overview.timeToEntry}</h4><p>Time to Entry</p></div>
+                    <div class="overview-item"><i class="fas fa-dollar-sign"></i><h4>${roadmap.overview.averageSalary}</h4><p>Average Salary</p></div>
+                    <div class="overview-item"><i class="fas fa-chart-line"></i><h4>${roadmap.overview.jobGrowth}</h4><p>Job Growth</p></div>
+                    <div class="overview-item"><i class="fas fa-fire"></i><h4>${roadmap.overview.demandLevel}</h4><p>Demand Level</p></div>
+                </div>
+            </div>
+
+            <div class="learning-path">
+                <h3><i class="fas fa-route"></i> Learning Roadmap</h3>
+                <div class="roadmap-timeline">
+                    ${roadmap.stages.map(stage => `
+                        <div class="timeline-stage">
+                            <div class="stage-header">
+                                <h4 class="stage-title">${stage.title}</h4>
+                                <span class="stage-duration"><i class="fas fa-clock"></i> ${stage.duration}</span>
+                            </div>
+                            <p class="stage-description">${stage.description}</p>
+                            <div class="skills-grid">
+                                ${stage.skills.map(skill => `<div class="skill-badge">${skill}</div>`).join('')}
+                            </div>
+                            ${stage.certifications.length > 0 ? `
+                                <div class="certifications-section">
+                                    <h5><i class="fas fa-certificate"></i> Recommended Certifications</h5>
+                                    <ul class="cert-list">
+                                        ${stage.certifications.map(cert => `<li><i class="fas fa-check"></i> ${cert}</li>`).join('')}
+                                    </ul>
+                                </div>
+                            ` : ''}
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+
+            <div class="key-technologies">
+                <h3><i class="fas fa-laptop-code"></i> Key Technologies & Tools</h3>
+                ${Object.entries(roadmap.technologies).map(([category, tools]) => `
+                    <div class="tech-category">
+                        <h5>${category}</h5>
+                        <div class="tech-tags">
+                            ${tools.map(tool => `<span class="tech-tag">${tool}</span>`).join('')}
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+
+            <div class="career-paths">
+                <h3><i class="fas fa-briefcase"></i> Career Paths</h3>
+                <div class="paths-grid">
+                    ${roadmap.careerPaths.map(path => `
+                        <div class="path-card">
+                            <h5>${path.title}</h5>
+                            <p>${path.description}</p>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+
+            <div class="salary-progression">
+                <h3><i class="fas fa-chart-bar"></i> Salary Progression</h3>
+                <div class="salary-levels">
+                    ${roadmap.salaryLevels.map(level => `
+                        <div class="salary-level-card">
+                            <div class="salary-level-info">
+                                <h5>${level.level}</h5>
+                                <p>${level.experience}</p>
+                            </div>
+                            <div class="salary-range">${level.range}</div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+
+            <div class="resources-roadmap">
+                <h3><i class="fas fa-book"></i> Learning Resources</h3>
+                ${Object.entries(roadmap.resources).map(([category, resources]) => `
+                    <div class="resource-category-roadmap">
+                        <h5>${category}</h5>
+                        <ul class="resource-links">
+                            ${resources.map(resource => `
+                                <li><i class="fas fa-external-link-alt"></i> ${resource}</li>
+                            `).join('')}
+                        </ul>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+        
+        roadmapContent.innerHTML = html;
+    }
+
+    console.log('IT Career Roadmaps initialized successfully!');
+});
+
+     </script>
+{% endblock %}

@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Authentication</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* --- Root Variables & Basic Styles --- */
+:root {
+    --primary-color: #00AEEF; 
+    --primary-hover: #0072F0;
+    --primary-gradient: linear-gradient(90deg, #00AEEF 0%, #0072F0 100%);
+    --background-color: #f6f5f7;
+    --card-background: #ffffff;
+    --text-color: #333333;
+    --subtle-text: #6b7280;
+    --border-color: #e5e7eb;
+    --input-bg: #f3f4f6;
+    --success-bg: #dcfce7;
+    --success-text: #166534;
+    --error-bg: #fee2e2;
+    --error-text: #991b1b;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 20px 10px;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* --- Message Styling --- */
+.message-container {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 900px;
+    padding: 0 16px;
+    z-index: 1000;
+}
+.message-list { list-style: none; padding: 0; margin: 0; }
+.message-list li {
+    padding: 12px 20px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    font-weight: 500;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    opacity: 1;
+    transition: opacity .5s, transform .5s;
+}
+.message-list li.fade-out { opacity: 0; transform: translateY(-20px); }
+.message-list li.success { background: var(--success-bg); color: var(--success-text); }
+.message-list li.error { background: var(--error-bg); color: var(--error-text); }
+
+/* --- Auth Container --- */
+.container {
+    background: var(--card-background);
+    border-radius: 12px;
+    box-shadow: 0 14px 28px rgba(0,0,0,0.2), 0 10px 10px rgba(0,0,0,0.18);
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    max-width: 850px;
+
+    /* FIX ADDED: allow content expansion */
+    height: auto;
+    max-height: none;
+    min-height: 600px;
+}
+
+/* Form containers */
+.form-container {
+    position: absolute;
+    top: 0;
+    width: 50%;
+    padding: 20px 0;
+    box-sizing: border-box;
+    
+    /* FIX ADDED: real scrolling + form height */
+    overflow-y: auto;
+    height: 100%;
+    min-height: 100%;
+}
+
+.sign-in-container {
+    left: 0; z-index: 2; 
+ }
+.sign-in-container form {
+height: 100%;
+justify-content: center;
+padding: 0 40px; /* Override padding for true centering */
+box-sizing: border-box; /* Include padding in height calculation */
+}
+.sign-up-container { 
+    left: 0; opacity: 0; z-index: 1; min-height: 100%; 
+}
+.sign-up-container label {
+    display: none;
+}
+.sign-in-container label {
+    display: none;
+}
+
+.form-container::-webkit-scrollbar {
+    display: none;
+}
+/* Buttons, text, inputs */
+form {
+    background: var(--card-background);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0 40px 50px;
+}
+form p { width: 100%; margin-bottom: 15px; }
+
+input {
+    width: 100%;
+    padding: 12px 15px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background: var(--input-bg);
+    margin-left: -10px;
+}
+button {
+    border-radius: 25px;
+    border: 1px solid var(--primary-color);
+    background: var(--primary-color);
+    color: white;
+    padding: 12px 45px;
+    cursor: pointer;
+}
+button:hover {
+    background: var(--primary-hover);
+    border-color: var(--primary-hover);
+}
+
+/* Overlay setup */
+.overlay-container {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 50%;
+    height: 100%;
+    overflow: hidden;
+    transition: .6s;
+    z-index: 100;
+}
+.overlay {
+    background: var(--primary-gradient);
+    color: white;
+    position: relative;
+    left: -100%;
+    width: 200%;
+    height: 100%;
+    transition: .6s;
+}
+.overlay-panel {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    padding: 0 40px;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 50%;
+}
+.overlay-left { transform: translateX(-8%); }
+.overlay-right { right: 0; transform: translateX(7%);}
+
+/* Animations */
+.container.right-panel-active .sign-in-container { transform: translateX(100%); }
+.container.right-panel-active .sign-up-container {
+    transform: translateX(100%);
+    opacity: 1;
+    z-index: 5;
+}
+.container.right-panel-active .overlay-container { transform: translateX(-100%); }
+.container.right-panel-active .overlay { transform: translateX(50%); }
+
+/* Mobile */
+@media (max-width: 768px) {
+    .container {
+        width: 95vw;
+        border-radius: 10px;
+        min-height: auto;
+    }
+    .form-container {
+        width: 100%;
+        position: relative;
+        overflow-y: auto;
+    }
+    .overlay-container { display: none; }
+    .container.right-panel-active .sign-in-container { opacity: 0; }
+    .container.right-panel-active .sign-up-container { opacity: 1; }
+}
+input[type="password"], input[type="text"] {
+    transition: 2s linear;
+}
+
+</style>
+</head>
+
+<body>
+<div class="message-container">
+{% if messages %}
+<ul class="message-list">
+{% for message in messages %}
+<li class="{% if message.tags == 'error' %}error{% else %}success{% endif %}">{{ message }}</li>
+{% endfor %}
+</ul>
+{% endif %}
+</div>
+
+<div class="container" id="container">
+
+<!-- Sign Up -->
+<div class="form-container sign-up-container" id="signupFormContainer">
+<form method="post" class="loginnn"">
+<h2>Create Account</h2>
+{% csrf_token %}
+{% if signup_form.non_field_errors %}
+<div class="non-field-errors">{{ signup_form.non_field_errors }}</div>
+{% endif %}
+{{ signup_form.as_p }}
+<button type="submit" name="signup_submit">Sign Up</button><br>
+<a href="#" class="mobile-toggle" id="mobileSignIn">Already have an account? Sign In</a>
+</form>
+</div>
+
+<!-- Sign In -->
+<div class="form-container sign-in-container" id="loginFormContainer">
+<form method="post">
+<h2>Login</h2>
+{% csrf_token %}
+{% if login_form.non_field_errors %}
+<div class="non-field-errors">{{ login_form.non_field_errors }}</div>
+{% endif %}
+{{ login_form.as_p }}
+<button type="submit" name="login_submit">Sign In</button><br>
+<a href="#" class="mobile-toggle" id="mobileSignUp">Create account</a><br>
+<a href="{% url 'mentor_auth' %}">Mentor Registration</a>
+</form>
+</div>
+
+<!-- Overlay -->
+<div class="overlay-container">
+<div class="overlay">
+<div class="overlay-panel overlay-left">
+<h1>Welcome Back!</h1>
+<button class="ghost" id="signIn">Sign In</button>
+</div>
+<div class="overlay-panel overlay-right">
+<h1>Hello!</h1>
+<button class="ghost" id="signUp">Sign Up</button>
+</div>
+</div>
+</div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const container = document.getElementById('container');
+    const signUpButton = document.getElementById('signUp');
+    const signInButton = document.getElementById('signIn');
+    const mobileSignUpButton = document.getElementById('mobileSignUp');
+    const mobileSignInButton = document.getElementById('mobileSignIn');
+
+    const togglePanel = (e) => {
+        e.preventDefault();
+        container.classList.toggle('right-panel-active');
+        document.getElementById('signupFormContainer').scrollTop = 0;
+        document.getElementById('loginFormContainer').scrollTop = 0;
+    };
+
+    signUpButton && signUpButton.addEventListener('click', togglePanel);
+    signInButton && signInButton.addEventListener('click', togglePanel);
+    mobileSignUpButton && mobileSignUpButton.addEventListener('click', togglePanel);
+    mobileSignInButton && mobileSignInButton.addEventListener('click', togglePanel);
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+    // Target all password fields from both forms
+    const passwordFields = document.querySelectorAll('input[type="password"]');
+
+    passwordFields.forEach(field => {
+        // Add hover-to-show behaviour
+        field.addEventListener("mouseenter", () => {
+            field.setAttribute("type", "text");
+        });
+        
+        field.addEventListener("mouseleave", () => {
+            field.setAttribute("type", "password");
+        });
+    });
+});
+</script>
+</body>
+</html>

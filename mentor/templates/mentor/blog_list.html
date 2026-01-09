@@ -1,0 +1,234 @@
+{% extends 'dashboard/userbase.html' %}
+{% block style %}
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Poppins", "Inter", sans-serif;
+            background: radial-gradient(circle at top left, #283048, #1b1b2f 60%, #0f0f17);
+            color: #eaeaea;
+            min-height: 100vh;
+        }
+
+       
+        .blog-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .page-title {
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, #6a5cff, #c763ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .page-subtitle {
+            font-size: 1.1rem;
+            color: #b8b8ff;
+        }
+
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .blog-card {
+            backdrop-filter: blur(14px);
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 25px rgba(120, 80, 255, 0.15);
+            transition: 0.3s ease;
+            cursor: pointer;
+        }
+
+        .blog-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 0 35px rgba(120, 80, 255, 0.3);
+            border-color: #a565ff;
+        }
+
+        .blog-meta {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .author-info h5 {
+            color: #ffffff;
+            font-size: 1rem;
+            margin-bottom: 3px;
+        }
+
+        .author-info p {
+            color: #b8b8ff;
+            font-size: 0.85rem;
+        }
+
+        .blog-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+
+        .blog-excerpt {
+            color: #d7d7d7;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .blog-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .blog-stats {
+            display: flex;
+            gap: 15px;
+            font-size: 0.9rem;
+            color: #b8b8ff;
+        }
+
+        .blog-stats span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .read-more {
+            color: #a565ff;
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: 0.2s;
+        }
+
+        .read-more:hover {
+            color: #c763ff;
+            gap: 8px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            color: #999;
+        }
+
+        .empty-state h3 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .blog-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+{% endblock %}
+{% block content %}
+
+
+<div class="blog-wrapper">
+    <div class="page-header">
+        <h1 class="page-title">Mentor Insights & Articles</h1>
+        <p class="page-subtitle">Learn from industry experts and experienced mentors</p>
+    </div>
+
+    {% if blog_posts %}
+    <div class="blog-grid">
+        {% for post in blog_posts %}
+        <div class="blog-card" onclick="window.location.href='{% url 'blog_detail' post.id %}'">
+            <div class="blog-meta">
+                <div class="author-avatar">
+                    {% if post.author.profile_photo %}
+                    <img src="{{ post.author.profile_photo.url }}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+                    {% else %}
+                    {{ post.author.username.0|upper }}
+                    {% endif %}
+                </div>
+                <div class="author-info">
+                    <h5>{{ post.author.username }}</h5>
+                    <p>
+                        {% if post.published_at %}
+                            {{ post.published_at|date:"M d, Y" }}
+                        {% else %}
+                            {{ post.created_at|date:"M d, Y" }}
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+
+            <h3 class="blog-title">{{ post.title }}</h3>
+            <p class="blog-excerpt">{{ post.body|truncatewords:30|striptags }}</p>
+
+            <div class="blog-footer">
+                <div class="blog-stats">
+                    <span>
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"/>
+                            <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/>
+                        </svg>
+                        {{ post.views_count|default:0 }}
+                    </span>
+                </div>
+                <a href="{% url 'blog_detail' post.id %}" class="read-more">
+                    Read More
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <h3>📝 No articles published yet</h3>
+        <p>Mentors haven't published any blog posts yet. Check back soon!</p>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}

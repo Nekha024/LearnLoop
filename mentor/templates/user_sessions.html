@@ -1,11 +1,12 @@
-
-{% block content %}
+{% extends 'dashboard/userbase.html' %}
+{% block style %}
 
 <style>
     .sessions-container {
         max-width: 1000px;
         margin: 40px auto;
         padding: 20px;
+        padding-top:40px;
     }
 
     .page-title {
@@ -110,7 +111,8 @@
         color: #999;
     }
 </style>
-
+{% endblock %}
+{% block content %}
 <div class="sessions-container">
     <h1 class="page-title">My Sessions</h1>
 

@@ -1,10 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ mentor.username }} - Mentor Profile</title>
-    
+{% extends 'dashboard/userbase.html' %}
+{% block style %}
 <style>
     /* --- Background Styling --- */
     body {
@@ -296,11 +291,10 @@
             align-items: flex-start;
             gap: 8px;
         }
-    }
-</style>
-</head>
-<body>
+    </style>
+{% endblock %}
 
+{% block content %}
 <div class="mentor-wrapper">
 
     <div class="mentor-card">
@@ -443,5 +437,4 @@
 
 </div>
 
-</body>
-</html>
+{% endblock %}

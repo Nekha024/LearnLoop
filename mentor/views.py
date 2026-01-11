@@ -110,7 +110,126 @@ def mentor_dashboard(request):
         messages.error(request, "⏳ You must be approved by admin to access the mentor dashboard.")
         return redirect('home')
     
-    # Get or create mentor profile
+    # # Get or create mentor profile
+    # mentor_profile, created = MentorProfile.objects.get_or_create(
+    #     user=request.user,
+    #     defaults={
+    #         'bio': getattr(request.user, 'bio', ''),
+    #         'expertise': getattr(request.user, 'expertise', ''),
+    #         'fee_30min': 10,
+    #         'fee_60min': 20,
+    #     }
+    # )
+    
+    # # Handle profile update form submission
+    # if request.method == 'POST':
+    #     bio = request.POST.get('bio', '').strip()
+    #     skills = request.POST.get('skills', '').strip()
+    #     fee_30m = request.POST.get('fee_30m', 10)
+    #     fee_60m = request.POST.get('fee_60m', 20)
+        
+    #     if len(bio) > 500:
+    #         messages.error(request, "❌ Bio must be 500 characters or less.")
+    #         return redirect('mentor_dashboard')
+        
+    #     try:
+    #         mentor_profile.bio = bio
+    #         mentor_profile.expertise = skills
+    #         mentor_profile.fee_30min = int(fee_30m) if fee_30m else 10
+    #         mentor_profile.fee_60min = int(fee_60m) if fee_60m else 20
+    #         mentor_profile.save()
+            
+    #         if hasattr(request.user, 'bio'):
+    #             request.user.bio = bio
+    #         if hasattr(request.user, 'expertise'):
+    #             request.user.expertise = skills
+    #         request.user.save()
+            
+    #         messages.success(request, "✅ Profile updated successfully!")
+    #         return redirect('mentor_dashboard')
+            
+    #     except ValueError as e:
+    #         messages.error(request, "❌ Invalid fee values. Please enter valid numbers.")
+    #         return redirect('mentor_dashboard')
+    #     except Exception as e:
+    #         messages.error(request, f"❌ Error updating profile: {str(e)}")
+    #         return redirect('mentor_dashboard')
+    
+    # Get pending session requests
+    pending_sessions = MentorshipSession.objects.filter(
+        mentor=request.user,
+        status='pending'
+    ).select_related('student').order_by('scheduled_date', 'scheduled_time')[:10]
+    
+    # Get upcoming accepted sessions
+    today = timezone.now().date()
+    upcoming_sessions = MentorshipSession.objects.filter(
+        mentor=request.user,
+        status='accepted',
+        scheduled_date__gte=today
+    ).select_related('student').order_by('scheduled_date', 'scheduled_time')[:10]
+    
+    # Get old appointments
+    old_appointments = Appointment.objects.filter(
+        mentor=request.user
+    ).select_related('user').order_by('-created_at')[:5]
+    
+    # Get availability slots
+    # availability_slots = AvailabilitySlot.objects.filter(
+    #     mentor=request.user,
+    #     is_active=True
+    # ).order_by('day_of_week', 'start_time')
+    
+    # Get content contributions
+    # contributions = ContentContribution.objects.filter(
+    #     author=request.user
+    # ).order_by('-created_at')[:10]
+    
+    # Calculate stats
+    total_pending = pending_sessions.count()
+    completed_sessions_count = MentorshipSession.objects.filter(
+        mentor=request.user,
+        status='completed'
+    ).count()
+    
+    context = {
+        # 'mentor_profile': mentor_profile,
+        'pending_sessions': pending_sessions,
+        'upcoming_sessions': upcoming_sessions,
+        'old_appointments': old_appointments,
+        # 'availability_slots': availability_slots,
+        # 'contributions': contributions,
+        'total_pending': total_pending,
+        'completed_sessions_count': completed_sessions_count,
+    }
+    
+    return render(request, 'dashboard/mentor_dashboard.html', context)
+
+
+@login_required
+def mentor_content(request):
+    if request.user.role !='mentor':
+        messages.error(request,"⛔ Only mentors can add availability slots.")
+        return redirect('home')
+    if not request.user.is_approved:
+        messages.error(request,"⏳ You must be approved by admin to access the mentor dashboard.")
+        return redirect('home')
+    contributions = ContentContribution.objects.filter(
+        author=request.user
+    ).order_by('-created_at')[:10]
+    
+    context={'contributions':contributions,}
+    return render(request,'mentor/content.html',context)
+
+
+@login_required
+def mentor_profile(request):
+    if request.user.role !='mentor':
+        messages.error(request,"⛔ Only mentors can add availability slots.")
+        return redirect('home')
+    if not request.user.is_approved:
+        messages.error(request,"⏳ You must be approved by admin to access the mentor dashboard.")
+        return redirect('home')
     mentor_profile, created = MentorProfile.objects.get_or_create(
         user=request.user,
         defaults={
@@ -154,56 +273,17 @@ def mentor_dashboard(request):
         except Exception as e:
             messages.error(request, f"❌ Error updating profile: {str(e)}")
             return redirect('mentor_dashboard')
-    
-    # Get pending session requests
-    pending_sessions = MentorshipSession.objects.filter(
-        mentor=request.user,
-        status='pending'
-    ).select_related('student').order_by('scheduled_date', 'scheduled_time')[:10]
-    
-    # Get upcoming accepted sessions
-    today = timezone.now().date()
-    upcoming_sessions = MentorshipSession.objects.filter(
-        mentor=request.user,
-        status='accepted',
-        scheduled_date__gte=today
-    ).select_related('student').order_by('scheduled_date', 'scheduled_time')[:10]
-    
-    # Get old appointments
-    old_appointments = Appointment.objects.filter(
-        mentor=request.user
-    ).select_related('user').order_by('-created_at')[:5]
-    
-    # Get availability slots
+     # Get availability slots
     availability_slots = AvailabilitySlot.objects.filter(
         mentor=request.user,
         is_active=True
     ).order_by('day_of_week', 'start_time')
-    
-    # Get content contributions
-    contributions = ContentContribution.objects.filter(
-        author=request.user
-    ).order_by('-created_at')[:10]
-    
-    # Calculate stats
-    total_pending = pending_sessions.count()
-    completed_sessions_count = MentorshipSession.objects.filter(
-        mentor=request.user,
-        status='completed'
-    ).count()
-    
-    context = {
+
+    context={
         'mentor_profile': mentor_profile,
-        'pending_sessions': pending_sessions,
-        'upcoming_sessions': upcoming_sessions,
-        'old_appointments': old_appointments,
         'availability_slots': availability_slots,
-        'contributions': contributions,
-        'total_pending': total_pending,
-        'completed_sessions_count': completed_sessions_count,
     }
-    
-    return render(request, 'dashboard/mentor_dashboard.html', context)
+    return render(request,'mentor/profile.html',context)
 
 
 @login_required
@@ -420,6 +500,7 @@ def delete_content(request, content_id):
     
     messages.success(request, f"✅ Deleted: {title}")
     return redirect('mentor_dashboard')
+
 
 
 # ==================== STUDENT/USER BOOKING VIEWS ====================

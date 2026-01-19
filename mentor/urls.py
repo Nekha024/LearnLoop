@@ -13,7 +13,9 @@ urlpatterns = [
     
     # Mentor Dashboard (main view)
     path('dashboard/', views.mentor_dashboard, name='mentor_dashboard'),
-    path('dashboard/profile/', views.mentor_profile, name='mentor_profile_setup'),
+    # path('dashboard/profile/', views.mentor_profile, name='mentor_profile_setup'),
+        path('dashboard/profile/', views.mentor_profile, name='mentor_profile_setup'),
+
     path('dashboard/content', views.mentor_content, name='mentor_content'),
     # Availability Management (Mentor)
     path('availability/add/', views.add_availability_slot, name='add_availability'),

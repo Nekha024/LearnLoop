@@ -113,32 +113,32 @@ input, textarea, select{
     </h1>
 
     <!-- PROFILE FORM -->
-    <form method="POST" action="{% url 'mentor_dashboard' %}" class="card">
-        {% csrf_token %}
+    <form method="POST" class="card">
+    {% csrf_token %}
 
+    <div class="form-group">
+        <label>Bio</label>
+        <textarea name="bio">{{ mentor_profile.bio|default:'' }}</textarea>
+    </div>
+
+    <div class="form-group">
+        <label>Skills</label>
+        <input name="skills" value="{{ mentor_profile.expertise|default:'' }}">
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
         <div class="form-group">
-            <label>Bio</label>
-            <textarea name="bio">{{ mentor_profile.bio|default:'' }}</textarea>
+            <label>30 min fee</label>
+            <input type="number" name="fee_30m" value="{{ mentor_profile.fee_30min }}">
         </div>
-
         <div class="form-group">
-            <label>Skills</label>
-            <input name="skills" value="{{ mentor_profile.expertise|default:'' }}">
+            <label>60 min fee</label>
+            <input type="number" name="fee_60m" value="{{ mentor_profile.fee_60min }}">
         </div>
+    </div>
 
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
-            <div class="form-group">
-                <label>30 min fee</label>
-                <input type="number" name="fee_30m" value="{{ mentor_profile.fee_30min }}">
-            </div>
-            <div class="form-group">
-                <label>60 min fee</label>
-                <input type="number" name="fee_60m" value="{{ mentor_profile.fee_60min }}">
-            </div>
-        </div>
-
-        <button class="btn btn-primary">Save Profile</button>
-    </form>
+    <button class="btn btn-primary">Save Profile</button>
+</form>
 
     <!-- AVAILABILITY -->
     <div class="card">

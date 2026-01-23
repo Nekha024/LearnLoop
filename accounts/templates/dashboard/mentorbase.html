@@ -116,7 +116,7 @@ body{
     <a href="{% url 'mentor_dashboard' %}" class="nav-link {% if request.resolver_match.url_name == 'mentor_dashboard' %}active{% endif %}">Session Dashboard</a>
     <a href="{% url 'mentor_profile_setup' %}" class="nav-link {% if request.resolver_match.url_name == 'mentor_profile_setup' %}active{% endif %}">Profile & Setup</a>
     <a href="{% url 'mentor_content' %}" class="nav-link {% if request.resolver_match.url_name == 'mentor_content' %}active{% endif %}">Content Contribution</a>
-    <a href="{% url 'auth' %}" class="nav-link btn ">Logout</a>
+    <a href="{% url 'logout' %}" class="nav-link btn ">Logout</a>
 </div>
 
 </nav>

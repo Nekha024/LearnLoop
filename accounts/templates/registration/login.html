@@ -190,7 +190,7 @@ button:hover {
 .container.right-panel-active .overlay { transform: translateX(50%); }
 
 /* Mobile */
-@media (max-width: 768px) {
+{% comment %} @media (max-width: 768px) {
     .container {
         width: 95vw;
         border-radius: 10px;
@@ -207,7 +207,83 @@ button:hover {
 }
 input[type="password"], input[type="text"] {
     transition: 2s linear;
+} {% endcomment %}
+
+/* =========================
+   MOBILE RESPONSIVE FIX
+   ========================= */
+@media (max-width: 582px) {
+
+    body {
+        padding: 10px;
+        height: auto;
+    }
+
+    .container {
+        position: relative;
+        width: 100%;
+        max-width: 100%;
+        min-height: auto;
+        height: auto;
+        box-shadow: none;
+    }
+
+    /* Make forms stack instead of absolute split */
+    .form-container {
+        position: relative;
+        width: 100%;
+        height: auto;
+        min-height: auto;
+        padding: 20px 0;
+        overflow: visible;
+        transform: none !important;
+        opacity: 1;
+        z-index: 1;
+    }
+
+    /* Hide signup by default */
+    .sign-up-container {
+        display: none;
+    }
+
+    /* When toggled, show signup & hide signin */
+    .container.right-panel-active .sign-in-container {
+        display: none;
+    }
+
+    .container.right-panel-active .sign-up-container {
+        display: block;
+    }
+
+    /* Overlay is removed for mobile */
+    .overlay-container {
+        display: none;
+    }
+
+    /* Forms spacing */
+    form {
+        padding: 0 25px 30px;
+    }
+
+    input {
+        margin-left: 0;
+    }
+
+    button {
+        width: 100%;
+        max-width: 280px;
+    }
+
+    .mobile-toggle {
+        display: block;
+        margin-top: 15px;
+        font-size: 14px;
+        color: var(--primary-color);
+        text-decoration: none;
+        font-weight: 500;
+    }
 }
+
 
 </style>
 </head>
@@ -227,7 +303,7 @@ input[type="password"], input[type="text"] {
 
 <!-- Sign Up -->
 <div class="form-container sign-up-container" id="signupFormContainer">
-<form method="post" class="loginnn"">
+<form method="post" class="loginnn">
 <h2>Create Account</h2>
 {% csrf_token %}
 {% if signup_form.non_field_errors %}
@@ -235,7 +311,7 @@ input[type="password"], input[type="text"] {
 {% endif %}
 {{ signup_form.as_p }}
 <button type="submit" name="signup_submit">Sign Up</button><br>
-<a href="#" class="mobile-toggle" id="mobileSignIn">Already have an account? Sign In</a>
+<a href="#" class="mobile-toggle" id="mobileSignIn">Sign In</a>
 </form>
 </div>
 

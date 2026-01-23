@@ -10,70 +10,107 @@ import numpy as np
 from django.shortcuts import render
 from .forms import CareerForm
 
-# Load ML model and encoders once
+# Load model & encoders once
 model = joblib.load("careers/ml/career_model.pkl")
 encoders = joblib.load("careers/ml/encoders.pkl")
+
+
+# UI range → dataset mappings
+YESNO_MAP = {
+    "Not at all": "no",
+    "Maybe": "no",
+    "Average": "yes",
+    "Sometimes": "yes",
+    "Of course": "yes",
+}
+
+SCALE_MAP = {
+    "Not at all": "poor",
+    "Maybe": "poor",
+    "Average": "medium",
+    "Sometimes": "medium",
+    "Of course": "excellent",
+}
+
+# Django field → dataset column mapping
+FIELD_MAP = {
+    # Categorical fields
+    "Interested_subjects": "Interested subjects",
+    "interested_career_area": "interested career area",
+    "Type_company_settle": "Type of company want to settle in?",
+    "Interested_type_of_books": "Interested Type of Books",
+    "Management_or_Technical": "Management or Technical",
+    "hard_smart_worker": "hard/smart worker",
+
+    # Yes / No style fields
+    "self_learning_capability": "self-learning capability?", # Matches your CSV exactly
+    "Extra_courses_did": "Extra-courses did",                 # Matches your CSV exactly
+    "Taken_inputs_from_seniors": "Taken inputs from seniors or elders",
+    "worked_in_teams": "worked in teams ever?",
+    "Introvert": "Introvert",
+
+    # Scale fields
+    "reading_and_writing_skills": "reading and writing skills",
+    "memory_capability_score": "memory capability score",
+}
 
 
 def career_predict(request):
     if request.method == "POST":
         form = CareerForm(request.POST)
+
         if form.is_valid():
             user_data = []
 
             # Loop through form fields and encode
             for field, value in form.cleaned_data.items():
-                if field in encoders:
-                    value = encoders[field].transform([value])[0]
-                else:
-                    # Handle yes/no or boolean-like
-                    if isinstance(value, str):
-                        v = value.strip().lower()
+                encoder_key = FIELD_MAP.get(field, field)
 
-                        if v in ["yes", "true", "1", "on"]:
-                            value = 1
-                        elif v in ["no", "false", "0", "off"]:
-                            value = 0
-                        else:
-                            # Try to match encoder by *value type* (catch 'poor', 'good', etc.)
-                            for enc_name, enc in encoders.items():
-                                try:
-                                    # If this encoder can handle it, use it
-                                    value = enc.transform([value])[0]
-                                    break
-                                except Exception:
-                                    continue
-                            else:
-                                # Last resort: try numeric conversion
-                                try:
-                                    value = float(value)
-                                except ValueError:
-                                    print(f"⚠️ Could not encode field '{field}' with value '{value}'")
-                    else:
-                        # Numeric already, just append
-                        pass
+                # Numeric inputs
+                if isinstance(value, int):
+                    user_data.append(value)
+                    continue
 
-                user_data.append(value)
+                # Yes / No style ranges
+                if field in [
+                    "self_learning_capability",
+                    "Extra_courses_did",
+                    "Taken_inputs_from_seniors",
+                    "worked_in_teams",
+                    "Introvert",
+                ]:
+                    mapped = YESNO_MAP.get(value, "no")
+                    encoded = encoders[encoder_key].transform([mapped])[0]
+                    user_data.append(encoded)
+                    continue
 
-            # Debugging: see what’s going into the model
-            print("Encoded input data:", user_data)
-            print("Data types:", [type(v) for v in user_data])
+                # Skill scale ranges
+                if field in [
+                    "reading_and_writing_skills",
+                    "memory_capability_score",
+                ]:
+                    mapped = SCALE_MAP.get(value, "medium")
+                    encoded = encoders[encoder_key].transform([mapped])[0]
+                    user_data.append(encoded)
+                    continue
 
-            # Make sure everything is numeric
-            try:
-                prediction = model.predict([user_data])[0]
-            except Exception as e:
-                print("Model prediction failed:", e)
-                return render(
-                    request,
-                    "careers/result.html",
-                    {"career": "Error: invalid input — check encoding."},
-                )
+                # Normal categorical fields
+                encoded = encoders[encoder_key].transform([value])[0]
+                user_data.append(encoded)
 
-            # Decode the prediction back to human-readable job title
-            predicted_job = encoders["Suggested Job Role"].inverse_transform([prediction])[0]
+            print("Final encoded input:", user_data)
 
-            return render(request, "careers/result.html", {"career": predicted_job})
+            prediction = model.predict([user_data])[0]
+
+            predicted_job = encoders[
+                "Suggested Job Role"
+            ].inverse_transform([prediction])[0]
+
+            return render(
+                request,
+                "careers/result.html",
+                {"career": predicted_job},
+            )
 
     else:
         form = CareerForm()

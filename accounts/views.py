@@ -7,6 +7,7 @@ from django.http import HttpResponseForbidden
 from django.views.decorators.cache import never_cache
 from .models import CustomUser
 from django.shortcuts import get_object_or_404
+from django.contrib.auth import logout
 
 
 def auth_view(request):
@@ -141,3 +142,7 @@ def delete_mentor(request, mentor_id):
     mentor.delete()
     messages.success(request, f"Mentor '{mentor_username}' has been deleted successfully!")
     return redirect('admin_dashboard')
+
+def log_out(request):
+    logout(request)
+    return redirect('auth')

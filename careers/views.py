@@ -216,16 +216,17 @@ def careers_view(request):
 
 
 #api key and code snippet
-
-from django.shortcuts import render
 from .services import get_code_rating
-
 def code_evaluation_view(request):
     result = None
     if request.method == "POST":
         question = request.POST.get("question")
         code = request.POST.get("code_input")
-        # Call Gemini service
+        
+        print(f"DEBUG: Received Question: {question}") # Step 1
+        
         result = get_code_rating(question, code)
+        
+        print(f"DEBUG: Result from Gemini: {result}") # Step 2
         
     return render(request, "evaluate_code.html", {"result": result})

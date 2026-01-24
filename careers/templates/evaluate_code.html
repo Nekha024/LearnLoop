@@ -10,14 +10,12 @@
 </form>
 
 {% if result %}
-<hr>
-<h3>Evaluation Results</h3>
-<p><strong>Score:</strong> {{ result.score }}/10</p>
-<p><strong>Level:</strong> {{ result.skills_level }}</p>
-<p><strong>Feedback:</strong> {{ result.feedback }}</p>
-<ul>
-    {% for tip in result.improvements %}
-    <li>{{ tip }}</li>
-    {% endfor %}
-</ul>
+    {% if result.error %}
+        <div style="color: red; border: 1px solid red; padding: 10px;">
+            <strong>Error:</strong> {{ result.error }}
+        </div>
+    {% else %}
+        <h3>Evaluation Results</h3>
+        <p><strong>Score:</strong> {{ result.score }}/10</p>
+        {% endif %}
 {% endif %}

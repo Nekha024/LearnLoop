@@ -15,6 +15,7 @@ model = joblib.load("careers/ml/career_model.pkl")
 encoders = joblib.load("careers/ml/encoders.pkl")
 
 
+
 # UI range → dataset mappings
 YESNO_MAP = {
     "Not at all": "no",

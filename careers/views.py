@@ -82,6 +82,7 @@ CSV_TO_FIELD = {v: k for k, v in FIELD_TO_CSV.items()}
 
 
 def career_predict(request):
+    RADIO_OPTIONS = ["Strongly Disagree", "Not Sure", "Average", "Maybe", "Strongly Agree"]
     if request.method == "POST":
         form = CareerForm(request.POST)
 
@@ -210,3 +211,21 @@ def career_predict(request):
 
 def careers_view(request):
     return render(request, 'roadmap.html')
+
+
+
+
+#api key and code snippet
+
+from django.shortcuts import render
+from .services import get_code_rating
+
+def code_evaluation_view(request):
+    result = None
+    if request.method == "POST":
+        question = request.POST.get("question")
+        code = request.POST.get("code_input")
+        # Call Gemini service
+        result = get_code_rating(question, code)
+        
+    return render(request, "evaluate_code.html", {"result": result})

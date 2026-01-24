@@ -1,0 +1,23 @@
+<form method="POST">
+    {% csrf_token %}
+    <label>Coding Question:</label>
+    <input type="text" name="question" required>
+    
+    <label>Paste your code here:</label>
+    <textarea name="code_input" rows="10" style="width:100%; font-family: monospace;"></textarea>
+    
+    <button type="submit">Evaluate My Skills</button>
+</form>
+
+{% if result %}
+<hr>
+<h3>Evaluation Results</h3>
+<p><strong>Score:</strong> {{ result.score }}/10</p>
+<p><strong>Level:</strong> {{ result.skills_level }}</p>
+<p><strong>Feedback:</strong> {{ result.feedback }}</p>
+<ul>
+    {% for tip in result.improvements %}
+    <li>{{ tip }}</li>
+    {% endfor %}
+</ul>
+{% endif %}

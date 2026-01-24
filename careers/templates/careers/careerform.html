@@ -2,149 +2,396 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Career Assessment</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Executive Career Assessment</title>
+<link href="https://fonts.googleapis.com/css2?family=Baskervville&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
-  * { box-sizing: border-box; font-family: 'Inter', sans-serif; }
-  body {
+  :root {
+    --gold: #c5a059;
+    --gold-light: #e2cfab;
+    --slate: #1a1c1e;
+    --slate-light: #2d3135;
+    --white: #ffffff;
+    --bg-light: #fcfdfe;
+    --text-main: #1a1c1e;
+    --border-color: #eee;
+  }
+
+  /* Dark Mode Variables */
+  [data-theme="dark"] {
+    --bg-light: #121416;
+    --white: #1a1c1e;
+    --text-main: #f8f9fa;
+    --slate: #0a0b0c;
+    --border-color: #2d3135;
+  }
+
+  * { box-sizing: border-box; transition: background-color 0.3s ease, color 0.3s ease; }
+
+  body, html {
     margin: 0;
-    min-height: 100vh;
-    background: radial-gradient(circle at top left, #1e1b4b, transparent 60%), radial-gradient(circle at bottom right, #020617, #000000);
+    height: 100%;
+    font-family: 'Inter', sans-serif;
+    color: var(--text-main);
+    overflow: hidden;
+  }
+
+  .container {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+  }
+
+  /* LEFT SIDE: Updated Image */
+  .visual-pane {
+    flex: 1.2; /* Slightly wider for better visual impact */
+    position: relative;
+    background: #000;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 1rem;
-    color: #e5e7eb;
+    overflow: hidden;
   }
-  .assessment-card {
+
+  .visual-pane::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    /* Updated image to reflect Tech & Professional Analysis */
+    background-image: url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=2070');
+    background-size: cover;
+    background-position: center;
+    opacity: 0.6;
+  }
+
+  .visual-pane::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(26, 28, 30, 0.8) 0%, rgba(197, 160, 89, 0.2) 100%);
+  }
+
+  .pane-content {
+    position: relative;
+    z-index: 2;
+    padding: 4rem;
+    color: white;
+    max-width: 500px;
+  }
+
+  .pane-content h2 {
+    font-family: 'Baskervville', serif;
+    font-size: 2.8rem;
+    line-height: 1.1;
+    margin: 0;
+  }
+
+  .pane-content p {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    color: var(--gold-light);
+    margin-bottom: 1.5rem;
+  }
+
+  /* RIGHT SIDE: FORM */
+  .form-pane {
+    flex: 1;
+    background: var(--bg-light);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow-y: auto;
+  }
+
+  /* DARK MODE TOGGLE */
+  .theme-toggle {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    z-index: 20;
+    background: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    padding: 0.5rem 1rem;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    border-radius: 20px;
+  }
+
+  #loader {
+    position: fixed;
+    inset: 0;
+    background: #1a1c1e;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.8s ease;
+  }
+  .loader-circle {
+    width: 40px;
+    height: 40px;
+    border: 2px solid #333;
+    border-top: 2px solid var(--gold);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+
+  .top-progress {
+    position: sticky;
+    top: 0;
+    height: 4px;
     width: 100%;
-    max-width: 520px;
-    background: rgba(15, 23, 42, 0.85);
-    backdrop-filter: blur(14px);
-    border-radius: 1.5rem;
-    padding: 2.5rem;
-    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
-    border: 1px solid rgba(99, 102, 241, 0.25);
-    animation: fadeIn 0.6s ease;
+    background: var(--border-color);
+    z-index: 10;
   }
-  .header { text-align: center; margin-bottom: 2rem; }
-  .header h1 { font-size: 2rem; font-weight: 800; color: #c7d2fe; }
-  .header p { font-size: 0.95rem; opacity: 0.8; }
+  .progress-fill {
+    height: 100%;
+    width: 0%;
+    background: var(--gold);
+    transition: width 0.6s ease;
+  }
 
-  .progress-text { text-align: center; font-size: 0.85rem; color: #94a3b8; margin-bottom: 1.5rem; }
-  .progress-bar { height: 5px; background: #020617; border-radius: 999px; overflow: hidden; margin-bottom: 2rem; }
-  .progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #6366f1, #22d3ee); transition: width 0.4s ease; }
+  .content-padding {
+    padding: 10% 12%;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 100%;
+  }
 
-  .step { display: none; animation: slideUp 0.4s ease; }
-  .step.active { display: block; margin-bottom: 1.5rem; }
-  .step label { display: block; font-size: 1.1rem; font-weight: 600; margin-bottom: 1rem; color: #e0e7ff; }
+  header { margin-bottom: 3.5rem; }
+  header span { 
+    font-size: 0.7rem; 
+    color: var(--gold); 
+    text-transform: uppercase; 
+    letter-spacing: 2px;
+  }
+  header h1 { 
+    font-family: 'Baskervville', serif; 
+    font-size: 2rem; 
+    margin: 0.5rem 0 0; 
+  }
 
-  .radio-group { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-  .radio-group input[type="radio"] { display: none; }
-  .radio-group label {
-    flex: 1 1 48%;
-    padding: 0.8rem 1rem;
-    border-radius: 0.75rem;
-    background: #020617;
-    border: 1px solid #334155;
+  .step { display: none; }
+  .step.active { display: block; animation: fadeUp 0.6s ease forwards; }
+
+  .question-text {
+    font-size: 1.3rem;
+    margin-bottom: 2.5rem;
+    line-height: 1.5;
+    font-weight: 300;
+  }
+
+  /* FORM STYLES */
+  .options-container { display: grid; gap: 0.5rem; }
+  .options-container input[type="radio"] { display: none; }
+  .options-container label {
+    padding: 1.2rem;
+    border-bottom: 1px solid var(--border-color);
+    cursor: pointer;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+  }
+  .options-container label::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border: 1px solid var(--gold);
+    margin-right: 1.2rem;
+    border-radius: 50%;
+  }
+  .options-container input[type="radio"]:checked + label {
+    color: var(--gold);
+    background: rgba(197, 160, 89, 0.05);
+  }
+  .options-container input[type="radio"]:checked + label::before { background: var(--gold); }
+
+  .range-box { padding: 1.5rem 0; }
+  input[type="range"] {
+    width: 100%;
+    -webkit-appearance: none;
+    height: 1px;
+    background: var(--gold-light);
+    outline: none;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 30px;
+    height: 30px;
+    background: var(--white);
+    border: 1px solid var(--gold);
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  .range-label {
+    display: block;
+    margin-top: 1.5rem;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--gold);
     text-align: center;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .radio-group input[type="radio"]:checked + label {
-    background: linear-gradient(135deg, #6366f1, #22d3ee);
-    color: #020617;
-    border-color: #6366f1;
-    font-weight: 700;
   }
 
-  input[type="range"] { width: 100%; }
-  .scale-label { display: block; text-align: center; margin-top: 0.3rem; font-size: 0.9rem; }
-
-  .field-error { color: #f87171; font-size: 0.85rem; margin-top: 0.5rem; }
-
-  .action-area { margin-top: 2.5rem; }
-  button {
-    width: 100%;
-    background: linear-gradient(135deg, #6366f1, #22d3ee);
-    color: #020617;
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 2.5rem;
+    margin-top: 4rem;
+  }
+  .btn-next {
+    background: var(--slate);
+    color: white;
     border: none;
-    padding: 0.9rem;
-    font-size: 1rem;
-    font-weight: 700;
-    border-radius: 0.9rem;
+    padding: 1.1rem 2.8rem;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
     cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
   }
-  button:hover { transform: translateY(-2px); box-shadow: 0 15px 40px rgba(99, 102, 241, 0.4); }
+  .btn-next:hover { background: var(--gold); }
+  
+  .btn-prev {
+    background: none;
+    border: none;
+    color: #888;
+    text-transform: uppercase;
+    font-size: 0.65rem;
+    cursor: pointer;
+  }
 
-  @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
-  @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes spin { 100% { transform: rotate(360deg); } }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 1024px) {
+    .visual-pane { display: none; }
+  }
 </style>
 </head>
 <body>
-<div class="assessment-card">
-  <div class="header">
-    <h1>Career Assessment</h1>
-    <p>Answer honestly. One step at a time.</p>
+
+<div id="loader"><div class="loader-circle"></div></div>
+
+<div class="container">
+  <div class="visual-pane">
+    <div class="pane-content">
+      <p>Precision Analysis</p>
+      <h2>Skillsets, Logic & Strategic Potential.</h2>
+    </div>
   </div>
 
-  <div class="progress-text" id="progressText"></div>
-  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="form-pane">
+    <button class="theme-toggle" id="themeToggle">Dark Mode</button>
+    <div class="top-progress"><div class="progress-fill" id="progressFill"></div></div>
 
-  <form method="post">
-    {% csrf_token %}
+    <div class="content-padding">
+      <header>
+        <span id="stepCount">Module 01</span>
+        <h1>Career Mapping</h1>
+      </header>
 
-    {% for field in form %}
-      <div class="step">
-        <label>{{ field.label }}</label>
+      <form method="post" id="careerForm">
+        {% csrf_token %}
+        
+        {% for field in form %}
+        <div class="step">
+          <div class="question-text">{{ field.label }}</div>
 
-        {% if field.field.widget.input_type == 'number' %}
-          <input type="range" name="{{ field.name }}" min="1" max="5" value="3" oninput="this.nextElementSibling.textContent = scaleLabels[this.value]" />
-          <span class="scale-label">Average</span>
-        {% else %}
-          <div class="radio-group">
-            {% for choice_value, choice_label in field.field.choices %}
-              <input type="radio" id="{{ field.id_for_label }}_{{ forloop.counter }}" name="{{ field.name }}" value="{{ choice_value }}" {% if forloop.first %}checked{% endif %}>
-              <label for="{{ field.id_for_label }}_{{ forloop.counter }}">{{ choice_label }}</label>
-            {% endfor %}
-          </div>
-        {% endif %}
+          {% if field.field.widget.input_type == 'number' %}
+            <div class="range-box">
+              <input type="range" name="{{ field.name }}" min="1" max="5" value="3" 
+                     oninput="this.nextElementSibling.textContent = getProficiency(this.value)" />
+              <span class="range-label">Competent</span>
+            </div>
+          {% else %}
+            <div class="options-container">
+              {% for choice_value, choice_label in field.field.choices %}
+                <div class="option-row">
+                  <input type="radio" id="q_{{ forloop.parentloop.counter }}_{{ forloop.counter }}" 
+                         name="{{ field.name }}" value="{{ choice_value }}" 
+                         {% if forloop.first %}checked{% endif %}>
+                  <label for="q_{{ forloop.parentloop.counter }}_{{ forloop.counter }}">{{ choice_label }}</label>
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+        {% endfor %}
 
-        {% if field.errors %}
-          <div class="field-error">{{ field.errors|join:', ' }}</div>
-        {% endif %}
-      </div>
-    {% endfor %}
-
-    <div class="action-area">
-      <button type="button" id="actionBtn">Continue</button>
+        <div class="nav-actions">
+          <button type="button" class="btn-prev" id="prevBtn">Previous</button>
+          <button type="button" class="btn-next" id="nextBtn">Continue</button>
+        </div>
+      </form>
     </div>
-  </form>
+  </div>
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-  const steps = document.querySelectorAll('.step')
-  const actionBtn = document.getElementById('actionBtn')
-  const progressFill = document.getElementById('progressFill')
-  const progressText = document.getElementById('progressText')
+const profMap = { 1: "Foundational", 2: "Intermediate", 3: "Competent", 4: "Advanced", 5: "Expert" };
+function getProficiency(v) { return profMap[v]; }
 
-  let currentStep = 0
-  function showStep() {
-    steps.forEach(step => step.classList.remove('active'))
-    steps[currentStep].classList.add('active')
-    progressFill.style.width = ((currentStep + 1) / steps.length) * 100 + '%'
-    progressText.textContent = `Question ${currentStep + 1} of ${steps.length}`
-    actionBtn.textContent = currentStep === steps.length - 1 ? 'Submit & Predict' : 'Continue'
+document.addEventListener('DOMContentLoaded', () => {
+  const steps = document.querySelectorAll('.step');
+  const nextBtn = document.getElementById('nextBtn');
+  const prevBtn = document.getElementById('prevBtn');
+  const loader = document.getElementById('loader');
+  const themeToggle = document.getElementById('themeToggle');
+  
+  let currentStep = 0;
+
+  // Dark Mode Toggle Logic
+  themeToggle.addEventListener('click', () => {
+    const isDark = document.body.getAttribute('data-theme') === 'dark';
+    document.body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    themeToggle.textContent = isDark ? 'Dark Mode' : 'Light Mode';
+  });
+
+  setTimeout(() => {
+    loader.style.opacity = '0';
+    setTimeout(() => { loader.style.display = 'none'; }, 800);
+  }, 1200);
+
+  function update() {
+    steps.forEach((s, i) => s.classList.toggle('active', i === currentStep));
+    const progress = ((currentStep + 1) / steps.length) * 100;
+    document.getElementById('progressFill').style.width = progress + '%';
+    document.getElementById('stepCount').textContent = `Module ${String(currentStep + 1).padStart(2, '0')}`;
+    prevBtn.style.visibility = currentStep === 0 ? 'hidden' : 'visible';
+    nextBtn.textContent = currentStep === steps.length - 1 ? 'Execute Prediction' : 'Continue';
   }
 
-  actionBtn.addEventListener('click', () => {
-    if (currentStep < steps.length - 1) { currentStep++; showStep() }
-    else { actionBtn.type = 'submit'; actionBtn.click() }
-  })
+  nextBtn.addEventListener('click', () => {
+    if (currentStep < steps.length - 1) {
+      currentStep++;
+      update();
+      document.querySelector('.form-pane').scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      nextBtn.textContent = "Analyzing Data...";
+      document.getElementById('careerForm').submit();
+    }
+  });
 
-  showStep()
-})
+  prevBtn.addEventListener('click', () => {
+    if (currentStep > 0) {
+      currentStep--;
+      update();
+    }
+  });
+
+  update();
+});
+
+
 </script>
 </body>
 </html>

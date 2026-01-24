@@ -110,50 +110,50 @@ def mentor_dashboard(request):
         messages.error(request, "⏳ You must be approved by admin to access the mentor dashboard.")
         return redirect('home')
     
-    # Get or create mentor profile
-    mentor_profile, created = MentorProfile.objects.get_or_create(
-        user=request.user,
-        defaults={
-            'bio': getattr(request.user, 'bio', ''),
-            'expertise': getattr(request.user, 'expertise', ''),
-            'fee_30min': 10,
-            'fee_60min': 20,
-        }
-    )
+    # # Get or create mentor profile
+    # mentor_profile, created = MentorProfile.objects.get_or_create(
+    #     user=request.user,
+    #     defaults={
+    #         'bio': getattr(request.user, 'bio', ''),
+    #         'expertise': getattr(request.user, 'expertise', ''),
+    #         'fee_30min': 10,
+    #         'fee_60min': 20,
+    #     }
+    # )
     
-    # Handle profile update form submission
-    if request.method == 'POST':
-        bio = request.POST.get('bio', '').strip()
-        skills = request.POST.get('skills', '').strip()
-        fee_30m = request.POST.get('fee_30m', 10)
-        fee_60m = request.POST.get('fee_60m', 20)
+    # # Handle profile update form submission
+    # if request.method == 'POST':
+    #     bio = request.POST.get('bio', '').strip()
+    #     skills = request.POST.get('skills', '').strip()
+    #     fee_30m = request.POST.get('fee_30m', 10)
+    #     fee_60m = request.POST.get('fee_60m', 20)
         
-        if len(bio) > 500:
-            messages.error(request, "❌ Bio must be 500 characters or less.")
-            return redirect('mentor_dashboard')
+    #     if len(bio) > 500:
+    #         messages.error(request, "❌ Bio must be 500 characters or less.")
+    #         return redirect('mentor_dashboard')
         
-        try:
-            mentor_profile.bio = bio
-            mentor_profile.expertise = skills
-            mentor_profile.fee_30min = int(fee_30m) if fee_30m else 10
-            mentor_profile.fee_60min = int(fee_60m) if fee_60m else 20
-            mentor_profile.save()
+    #     try:
+    #         mentor_profile.bio = bio
+    #         mentor_profile.expertise = skills
+    #         mentor_profile.fee_30min = int(fee_30m) if fee_30m else 10
+    #         mentor_profile.fee_60min = int(fee_60m) if fee_60m else 20
+    #         mentor_profile.save()
             
-            if hasattr(request.user, 'bio'):
-                request.user.bio = bio
-            if hasattr(request.user, 'expertise'):
-                request.user.expertise = skills
-            request.user.save()
+    #         if hasattr(request.user, 'bio'):
+    #             request.user.bio = bio
+    #         if hasattr(request.user, 'expertise'):
+    #             request.user.expertise = skills
+    #         request.user.save()
             
-            messages.success(request, "✅ Profile updated successfully!")
-            return redirect('mentor_dashboard')
+    #         messages.success(request, "✅ Profile updated successfully!")
+    #         return redirect('mentor_dashboard')
             
-        except ValueError as e:
-            messages.error(request, "❌ Invalid fee values. Please enter valid numbers.")
-            return redirect('mentor_dashboard')
-        except Exception as e:
-            messages.error(request, f"❌ Error updating profile: {str(e)}")
-            return redirect('mentor_dashboard')
+    #     except ValueError as e:
+    #         messages.error(request, "❌ Invalid fee values. Please enter valid numbers.")
+    #         return redirect('mentor_dashboard')
+    #     except Exception as e:
+    #         messages.error(request, f"❌ Error updating profile: {str(e)}")
+    #         return redirect('mentor_dashboard')
     
     # Get pending session requests
     pending_sessions = MentorshipSession.objects.filter(
@@ -175,15 +175,15 @@ def mentor_dashboard(request):
     ).select_related('user').order_by('-created_at')[:5]
     
     # Get availability slots
-    availability_slots = AvailabilitySlot.objects.filter(
-        mentor=request.user,
-        is_active=True
-    ).order_by('day_of_week', 'start_time')
+    # availability_slots = AvailabilitySlot.objects.filter(
+    #     mentor=request.user,
+    #     is_active=True
+    # ).order_by('day_of_week', 'start_time')
     
     # Get content contributions
-    contributions = ContentContribution.objects.filter(
-        author=request.user
-    ).order_by('-created_at')[:10]
+    # contributions = ContentContribution.objects.filter(
+    #     author=request.user
+    # ).order_by('-created_at')[:10]
     
     # Calculate stats
     total_pending = pending_sessions.count()
@@ -193,17 +193,143 @@ def mentor_dashboard(request):
     ).count()
     
     context = {
-        'mentor_profile': mentor_profile,
+        # 'mentor_profile': mentor_profile,
         'pending_sessions': pending_sessions,
         'upcoming_sessions': upcoming_sessions,
         'old_appointments': old_appointments,
-        'availability_slots': availability_slots,
-        'contributions': contributions,
+        # 'availability_slots': availability_slots,
+        # 'contributions': contributions,
         'total_pending': total_pending,
         'completed_sessions_count': completed_sessions_count,
     }
     
     return render(request, 'dashboard/mentor_dashboard.html', context)
+
+
+@login_required
+def mentor_content(request):
+    if request.user.role !='mentor':
+        messages.error(request,"⛔ Only mentors can add availability slots.")
+        return redirect('home')
+    if not request.user.is_approved:
+        messages.error(request,"⏳ You must be approved by admin to access the mentor dashboard.")
+        return redirect('home')
+    contributions = ContentContribution.objects.filter(
+        author=request.user
+    ).order_by('-created_at')[:10]
+    
+    context={'contributions':contributions,}
+    return render(request,'mentor/content.html',context)
+
+
+# @login_required
+# def mentor_profile(request):
+#     if request.user.role !='mentor':
+#         messages.error(request,"⛔ Only mentors can add availability slots.")
+#         return redirect('home')
+#     if not request.user.is_approved:
+#         messages.error(request,"⏳ You must be approved by admin to access the mentor dashboard.")
+#         return redirect('home')
+#     mentor_profile, created = MentorProfile.objects.get_or_create(
+#         user=request.user,
+#         defaults={
+#             'bio': getattr(request.user, 'bio', ''),
+#             'expertise': getattr(request.user, 'expertise', ''),
+#             'fee_30min': 10,
+#             'fee_60min': 20,
+#         }
+#     )
+    
+#     # Handle profile update form submission
+#     if request.method == 'POST':
+#         bio = request.POST.get('bio', '').strip()
+#         skills = request.POST.get('skills', '').strip()
+#         fee_30m = request.POST.get('fee_30m', 10)
+#         fee_60m = request.POST.get('fee_60m', 20)
+        
+#         if len(bio) > 500:
+#             messages.error(request, "❌ Bio must be 500 characters or less.")
+#             return redirect('mentor_dashboard')
+        
+#         try:
+#             mentor_profile.bio = bio
+#             mentor_profile.expertise = skills
+#             mentor_profile.fee_30min = int(fee_30m) if fee_30m else 10
+#             mentor_profile.fee_60min = int(fee_60m) if fee_60m else 20
+#             mentor_profile.save()
+            
+#             if hasattr(request.user, 'bio'):
+#                 request.user.bio = bio
+#             if hasattr(request.user, 'expertise'):
+#                 request.user.expertise = skills
+#             request.user.save()
+            
+#             messages.success(request, "✅ Profile updated successfully!")
+#             return redirect('mentor_dashboard')
+            
+#         except ValueError as e:
+#             messages.error(request, "❌ Invalid fee values. Please enter valid numbers.")
+#             return redirect('mentor_dashboard')
+#         except Exception as e:
+#             messages.error(request, f"❌ Error updating profile: {str(e)}")
+#             return redirect('mentor_dashboard')
+#      # Get availability slots
+#     availability_slots = AvailabilitySlot.objects.filter(
+#         mentor=request.user,
+#         is_active=True
+#     ).order_by('day_of_week', 'start_time')
+
+#     context={
+#         'mentor_profile': mentor_profile,
+#         'availability_slots': availability_slots,
+#     }
+#     return render(request,'mentor/profile.html',context)
+
+@login_required
+def mentor_profile(request):
+    if request.user.role != 'mentor':
+        messages.error(request, "⛔ Only mentors can access this page.")
+        return redirect('home')
+
+    if not request.user.is_approved:
+        messages.error(request, "⏳ You must be approved by admin.")
+        return redirect('home')
+
+    mentor_profile, created = MentorProfile.objects.get_or_create(
+        user=request.user,
+        defaults={
+            'bio': '',
+            'expertise': '',
+            'fee_30min': 10,
+            'fee_60min': 20,
+        }
+    )
+
+    if request.method == 'POST':
+        mentor_profile.bio = request.POST.get('bio', '').strip()
+        mentor_profile.expertise = request.POST.get('skills', '').strip()
+        mentor_profile.fee_30min = request.POST.get('fee_30m') or 10
+        mentor_profile.fee_60min = request.POST.get('fee_60m') or 20
+
+        if len(mentor_profile.bio) > 500:
+            messages.error(request, "❌ Bio must be under 500 characters.")
+        else:
+            mentor_profile.save()
+            messages.success(request, "✅ Profile updated successfully!")
+
+        # 🔥 THIS LINE SOLVES YOUR ERROR
+        return redirect(request.path)
+
+    availability_slots = AvailabilitySlot.objects.filter(
+        mentor=request.user,
+        is_active=True
+    ).order_by('day_of_week', 'start_time')
+
+    return render(request, 'mentor/profile.html', {
+        'mentor_profile': mentor_profile,
+        'availability_slots': availability_slots,
+    })
+
 
 
 @login_required
@@ -406,7 +532,6 @@ def edit_content(request, content_id):
     
     return redirect('mentor_dashboard')
 
-
 @login_required
 def delete_content(request, content_id):
     """Delete content contribution"""
@@ -420,6 +545,7 @@ def delete_content(request, content_id):
     
     messages.success(request, f"✅ Deleted: {title}")
     return redirect('mentor_dashboard')
+
 
 
 # ==================== STUDENT/USER BOOKING VIEWS ====================

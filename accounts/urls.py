@@ -16,4 +16,5 @@ urlpatterns = [
     path('dashboard/admin/approve/<int:mentor_id>/', views.approve_mentor, name='approve_mentor'),
     # Delete mentor URL
     path('dashboard/admin/delete/<int:mentor_id>/', views.delete_mentor, name='delete_mentor'),
+    path('logout/',views.log_out,name='logout')
 ]

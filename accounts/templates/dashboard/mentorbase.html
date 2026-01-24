@@ -1,0 +1,154 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Mentor Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+<style>
+{% block style %}
+{% endblock %}
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI',sans-serif;
+}
+
+/* Dark background */
+body{
+    background:radial-gradient(circle at top,#0f172a,#020617);
+    color:#e5e7eb;
+}
+
+/* ---------- TOP NAV ---------- */
+.top-nav{
+    background:#020617;
+    border-bottom:1px solid rgba(255,255,255,0.08);
+    padding:15px 40px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.brand{
+    font-size:22px;
+    font-weight:bold;
+    color:#818cf8;
+}
+
+/* Navigation buttons */
+.nav-links{
+    display:flex;
+    gap:15px;
+}
+
+/* ===== Premium Nav Buttons ===== */
+.nav-link{
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(99,102,241,0.05));
+    border: 1px solid rgba(99,102,241,0.25);
+    color: #c7d2fe;
+    padding: 10px 20px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.35s ease;
+    backdrop-filter: blur(6px);
+}
+
+/* Neon glow border */
+.nav-link::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    border-radius:12px;
+    padding:1px;
+    background: linear-gradient(120deg,#6366f1,#22d3ee,#6366f1);
+    -webkit-mask:
+        linear-gradient(#000 0 0) content-box,
+        linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity:0;
+    transition:0.4s;
+}
+
+/* Hover effect */
+.nav-link:hover{
+    color:#fff;
+    background: linear-gradient(135deg, rgba(99,102,241,0.4), rgba(34,211,238,0.2));
+    box-shadow: 0 0 18px rgba(99,102,241,0.6);
+    transform: translateY(-2px);
+}
+
+.nav-link:hover::before{
+    opacity:1;
+}
+
+/* Active button */
+.nav-link.active{
+    background: linear-gradient(135deg,#6366f1,#22d3ee);
+    color:#020617;
+    box-shadow: 0 0 25px rgba(99,102,241,0.9);
+    font-weight:600;
+}
+
+/* Main content */
+.main-content{
+    padding:40px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- TOP NAV BAR -->
+<nav class="top-nav">
+    <div class="brand">Mentor Hub</div>
+
+   <div class="nav-links">
+    <a href="{% url 'mentor_dashboard' %}" class="nav-link {% if request.resolver_match.url_name == 'mentor_dashboard' %}active{% endif %}">Session Dashboard</a>
+    <a href="{% url 'mentor_profile_setup' %}" class="nav-link {% if request.resolver_match.url_name == 'mentor_profile_setup' %}active{% endif %}">Profile & Setup</a>
+    <a href="{% url 'mentor_content' %}" class="nav-link {% if request.resolver_match.url_name == 'mentor_content' %}active{% endif %}">Content Contribution</a>
+    <a href="{% url 'logout' %}" class="nav-link btn ">Logout</a>
+</div>
+
+</nav>
+
+<!-- PAGE CONTENT -->
+<main class="main-content">
+    {% block content %}
+    {% endblock %}
+</main>
+
+<!-- SCRIPT (Kept & Working) -->
+ <script>
+const navLinks = document.querySelectorAll('.nav-link');
+const contentViews = document.querySelectorAll('.content-view');
+
+function showView(targetId){
+    navLinks.forEach(link=>{
+        link.classList.toggle('active', link.dataset.target === targetId);
+    });
+
+    contentViews.forEach(view=>{
+        view.style.display = (view.id === targetId) ? "block" : "none";
+    });
+}
+
+// Only buttons with data-target toggle views
+navLinks.forEach(link=>{
+    if(link.dataset.target){
+        link.addEventListener('click',()=>showView(link.dataset.target));
+    }
+});
+</script>
+
+</body>
+</html>

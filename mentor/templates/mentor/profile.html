@@ -1,0 +1,180 @@
+{% extends 'dashboard/mentorbase.html'%}
+{% block style %}
+
+/* ---------- NAV ---------- */
+.nav{
+    display:flex;
+    background:#020617;
+    padding:15px 30px;
+    border-bottom:1px solid rgba(255,255,255,0.08);
+}
+
+.nav-link{
+    margin-right:25px;
+    cursor:pointer;
+    color:#9ca3af;
+}
+
+.nav-link.active{
+    color:#818cf8;
+    border-bottom:2px solid #818cf8;
+}
+
+/* ---------- CONTENT ---------- */
+.content-view{
+    padding:40px;
+}
+
+
+
+/* ---------- CARDS ---------- */
+.card{
+    background:rgba(15,23,42,0.85);
+    backdrop-filter:blur(10px);
+    padding:30px;
+    border-radius:18px;
+    border:1px solid rgba(255,255,255,0.06);
+    box-shadow:0 20px 40px rgba(0,0,0,.6);
+    margin-bottom:25px;
+}
+
+/* ---------- FORMS ---------- */
+.form-group{
+    margin-bottom:18px;
+}
+
+label{
+    display:block;
+    margin-bottom:6px;
+    color:#c7d2fe;
+}
+
+input, textarea, select{
+    width:100%;
+    padding:12px;
+    border-radius:10px;
+    background:#020617;
+    border:1px solid rgba(255,255,255,0.1);
+    color:white;
+}
+
+/* ---------- BUTTONS ---------- */
+.btn{
+    padding:14px 22px;
+    border:none;
+    border-radius:12px;
+    cursor:pointer;
+    font-size:15px;
+}
+
+.btn-primary{
+    background:#6366f1;
+    color:white;
+}
+
+.btn-primary:hover{
+    background:#4f46e5;
+}
+
+.btn-gray{
+    background:rgba(255,255,255,0.06);
+    color:white;
+}
+
+.btn-gray:hover{
+    background:rgba(255,255,255,0.1);
+}
+
+/* ---------- SLOTS ---------- */
+.slot-item{
+    display:flex;
+    justify-content:space-between;
+    background:rgba(2,6,23,.6);
+    padding:14px;
+    border-radius:12px;
+    border:1px solid rgba(255,255,255,0.08);
+    margin-bottom:10px;
+}
+
+.slot-item a{
+    color:#f87171;
+    text-decoration:none;
+}
+{% endblock %}
+{% block content %}
+<!-- PROFILE -->
+<div id="profile" class="content-view">
+
+    <h1 style="font-size:32px;
+               background:linear-gradient(90deg,#a5b4fc,#6366f1);
+               -webkit-background-clip:text;
+               -webkit-text-fill-color:transparent;">
+        Mentor Profile
+    </h1>
+
+    <!-- PROFILE FORM -->
+    <form method="POST" class="card">
+    {% csrf_token %}
+
+    <div class="form-group">
+        <label>Bio</label>
+        <textarea name="bio">{{ mentor_profile.bio|default:'' }}</textarea>
+    </div>
+
+    <div class="form-group">
+        <label>Skills</label>
+        <input name="skills" value="{{ mentor_profile.expertise|default:'' }}">
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+        <div class="form-group">
+            <label>30 min fee</label>
+            <input type="number" name="fee_30m" value="{{ mentor_profile.fee_30min }}">
+        </div>
+        <div class="form-group">
+            <label>60 min fee</label>
+            <input type="number" name="fee_60m" value="{{ mentor_profile.fee_60min }}">
+        </div>
+    </div>
+
+    <button class="btn btn-primary">Save Profile</button>
+</form>
+
+    <!-- AVAILABILITY -->
+    <div class="card">
+        <h3 style="color:#818cf8;">Availability</h3>
+
+        {% for slot in availability_slots %}
+        <div class="slot-item">
+            <span>{{ slot.get_day_of_week_display }} :
+            {{ slot.start_time|time:'h:i A' }} - {{ slot.end_time|time:'h:i A' }}</span>
+
+            <a href="{% url 'remove_availability' slot.id %}"
+               onclick="return confirm('Remove?')">Remove</a>
+        </div>
+        {% empty %}
+        <p>No slots added yet</p>
+        {% endfor %}
+    </div>
+
+    <!-- ADD SLOT -->
+    <form method="POST" action="{% url 'add_availability' %}" class="card">
+        {% csrf_token %}
+        <h3 style="color:#818cf8;">Add Slot</h3>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:15px;">
+            <select name="day">
+                <option value="">Day</option>
+                <option>monday</option><option>tuesday</option>
+                <option>wednesday</option><option>thursday</option>
+                <option>friday</option><option>saturday</option><option>sunday</option>
+            </select>
+            <input type="time" name="time_from">
+            <input type="time" name="time_to">
+        </div>
+
+        <button class="btn btn-gray" style="margin-top:15px;">Add Slot</button>
+    </form>
+
+</div>
+{% endblock %}

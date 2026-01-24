@@ -1,81 +1,212 @@
 from django.shortcuts import render
-
-# Create your views here.
-def careers_view(request):
-    return render(request, 'roadmap.html')
-
-
 import joblib
 import numpy as np
-from django.shortcuts import render
 from .forms import CareerForm
 
-# Load ML model and encoders once
+# Load model & encoders once
 model = joblib.load("careers/ml/career_model.pkl")
 encoders = joblib.load("careers/ml/encoders.pkl")
+
+# UI range → dataset mappings
+YESNO_MAP = {
+    "Not at all": "no",
+    "Maybe": "no",
+    "Average": "yes",
+    "Sometimes": "yes",
+    "Of course": "yes",
+}
+
+SCALE_MAP = {
+    "Not at all": "poor",
+    "Maybe": "poor",
+    "Average": "medium",
+    "Sometimes": "medium",
+    "Of course": "excellent",
+}
+
+# ✅ CRITICAL: Define the EXACT order of features as in your training CSV
+FEATURE_ORDER = [
+    'Logical quotient rating',
+    'hackathons',
+    'coding skills rating',
+    'public speaking points',
+    'self-learning capability?',
+    'Extra-courses did',
+    'certifications',
+    'workshops',
+    'reading and writing skills',
+    'memory capability score',
+    'Interested subjects',
+    'interested career area',  # ✅ Remove trailing space if you retrained
+    'Type of company want to settle in?',
+    'Taken inputs from seniors or elders',
+    'Interested Type of Books',
+    'Management or Technical',
+    'hard/smart worker',
+    'worked in teams ever?',
+    'Introvert',
+]
+
+# Django field → dataset column mapping
+FIELD_TO_CSV = {
+    # Numeric fields
+    'Logical_quotient_rating': 'Logical quotient rating',
+    'hackathons': 'hackathons',
+    'coding_skills_rating': 'coding skills rating',
+    'public_speaking_points': 'public speaking points',
+    
+    # Categorical fields
+    'certifications': 'certifications',
+    'workshops': 'workshops',
+    'Interested_subjects': 'Interested subjects',
+    'interested_career_area': 'interested career area',
+    'Type_company_settle': 'Type of company want to settle in?',
+    'Interested_type_of_books': 'Interested Type of Books',
+    'Management_or_Technical': 'Management or Technical',
+    'hard_smart_worker': 'hard/smart worker',
+    
+    # Yes/No fields
+    'self_learning_capability': 'self-learning capability?',
+    'Extra_courses_did': 'Extra-courses did',
+    'Taken_inputs_from_seniors': 'Taken inputs from seniors or elders',
+    'worked_in_teams': 'worked in teams ever?',
+    'Introvert': 'Introvert',
+    
+    # Scale fields
+    'reading_and_writing_skills': 'reading and writing skills',
+    'memory_capability_score': 'memory capability score',
+}
+
+# Create reverse mapping: CSV column → form field
+CSV_TO_FIELD = {v: k for k, v in FIELD_TO_CSV.items()}
 
 
 def career_predict(request):
     if request.method == "POST":
         form = CareerForm(request.POST)
+
         if form.is_valid():
             user_data = []
+            
+            # ✅ CRITICAL: Process features in the exact CSV order
+            for csv_column in FEATURE_ORDER:
+                # Find corresponding form field
+                form_field = CSV_TO_FIELD.get(csv_column)
+                
+                if not form_field:
+                    print(f"⚠️ Warning: No form field mapped to CSV column '{csv_column}'")
+                    user_data.append(0)
+                    continue
+                
+                # Get the value from cleaned form data
+                value = form.cleaned_data.get(form_field)
+                
+                if value is None:
+                    print(f"⚠️ Warning: No value for form field '{form_field}'")
+                    user_data.append(0)
+                    continue
 
-            # Loop through form fields and encode
-            for field, value in form.cleaned_data.items():
-                if field in encoders:
-                    value = encoders[field].transform([value])[0]
-                else:
-                    # Handle yes/no or boolean-like
-                    if isinstance(value, str):
-                        v = value.strip().lower()
+                # ✅ Handle numeric inputs (int fields)
+                if isinstance(value, int):
+                    user_data.append(value)
+                    print(f"✓ {csv_column}: {value} (numeric)")
+                    continue
 
-                        if v in ["yes", "true", "1", "on"]:
-                            value = 1
-                        elif v in ["no", "false", "0", "off"]:
-                            value = 0
-                        else:
-                            # Try to match encoder by *value type* (catch 'poor', 'good', etc.)
-                            for enc_name, enc in encoders.items():
-                                try:
-                                    # If this encoder can handle it, use it
-                                    value = enc.transform([value])[0]
-                                    break
-                                except Exception:
-                                    continue
-                            else:
-                                # Last resort: try numeric conversion
-                                try:
-                                    value = float(value)
-                                except ValueError:
-                                    print(f"⚠️ Could not encode field '{field}' with value '{value}'")
+                # ✅ Handle Yes/No style fields
+                if form_field in [
+                    "self_learning_capability",
+                    "Extra_courses_did",
+                    "Taken_inputs_from_seniors",
+                    "worked_in_teams",
+                    "Introvert",
+                ]:
+                    mapped = YESNO_MAP.get(value, "no")
+                    try:
+                        encoded = encoders[csv_column].transform([mapped])[0]
+                        user_data.append(encoded)
+                        print(f"✓ {csv_column}: '{value}' → '{mapped}' → {encoded}")
+                    except KeyError as e:
+                        print(f"❌ Encoder missing: {csv_column} - {e}")
+                        user_data.append(0)
+                    except ValueError as e:
+                        print(f"❌ Value error for {csv_column}: '{mapped}' - {e}")
+                        user_data.append(0)
+                    continue
+
+                # ✅ Handle skill scale fields
+                if form_field in [
+                    "reading_and_writing_skills",
+                    "memory_capability_score",
+                ]:
+                    mapped = SCALE_MAP.get(value, "medium")
+                    try:
+                        encoded = encoders[csv_column].transform([mapped])[0]
+                        user_data.append(encoded)
+                        print(f"✓ {csv_column}: '{value}' → '{mapped}' → {encoded}")
+                    except KeyError as e:
+                        print(f"❌ Encoder missing: {csv_column} - {e}")
+                        user_data.append(0)
+                    except ValueError as e:
+                        print(f"❌ Value error for {csv_column}: '{mapped}' - {e}")
+                        user_data.append(0)
+                    continue
+
+                # ✅ Handle normal categorical fields
+                try:
+                    encoded = encoders[csv_column].transform([str(value)])[0]
+                    user_data.append(encoded)
+                    print(f"✓ {csv_column}: '{value}' → {encoded}")
+                except KeyError as e:
+                    print(f"❌ Encoder missing: {csv_column} - {e}")
+                    user_data.append(0)
+                except ValueError as e:
+                    print(f"❌ Unknown value for {csv_column}: '{value}' - {e}")
+                    # Try to use first class as default
+                    if csv_column in encoders:
+                        user_data.append(0)
                     else:
-                        # Numeric already, just append
-                        pass
+                        user_data.append(0)
 
-                user_data.append(value)
+            print(f"\n✅ Final encoded input ({len(user_data)} features):")
+            print(user_data)
+            print(f"Expected features: {len(FEATURE_ORDER)}")
 
-            # Debugging: see what’s going into the model
-            print("Encoded input data:", user_data)
-            print("Data types:", [type(v) for v in user_data])
-
-            # Make sure everything is numeric
-            try:
-                prediction = model.predict([user_data])[0]
-            except Exception as e:
-                print("Model prediction failed:", e)
+            # ✅ Validate feature count
+            if len(user_data) != len(FEATURE_ORDER):
                 return render(
                     request,
                     "careers/result.html",
-                    {"career": "Error: invalid input — check encoding."},
+                    {
+                        "career": "Error: Feature mismatch",
+                        "error": f"Expected {len(FEATURE_ORDER)} features, got {len(user_data)}"
+                    },
                 )
 
-            # Decode the prediction back to human-readable job title
-            predicted_job = encoders["Suggested Job Role"].inverse_transform([prediction])[0]
+            # Make prediction
+            try:
+                prediction = model.predict([user_data])[0]
+                predicted_job = encoders["Suggested Job Role"].inverse_transform([prediction])[0]
 
-            return render(request, "careers/result.html", {"career": predicted_job})
+                print(f"✅ Prediction: {predicted_job}")
+
+                return render(
+                    request,
+                    "careers/result.html",
+                    {"career": predicted_job},
+                )
+            except Exception as e:
+                print(f"❌ Prediction error: {e}")
+                return render(
+                    request,
+                    "careers/result.html",
+                    {"career": "Prediction failed", "error": str(e)},
+                )
 
     else:
         form = CareerForm()
 
     return render(request, "careers/careerform.html", {"form": form})
+
+
+def careers_view(request):
+    return render(request, 'roadmap.html')

@@ -42,8 +42,7 @@
                 <!-- ✅ NEW: Blog Link -->
                 <li class="nav-item"><a class="nav-link" href="{% url 'blog_list' %}">Blog</a></li>
                  <li class="nav-item"><a class="nav-link" href="{% url 'user_sessions' %}">My session</a></li>
-                {% comment %} <li class="nav-item"><a class="nav-link" href="#skills">Skills</a></li> {% endcomment %}
-                {% comment %} <li class="nav-item"><a class="nav-link" href="#resources">Resources</a></li> {% endcomment %}
+                 <li class="nav-item"><a class="nav-link" href="{% url 'codearena' %}">Code Test</a></li>
                 <li class="nav-item"><p>{{ request.user.username }}</p></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Logout</a></li>
             </ul>

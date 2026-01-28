@@ -216,16 +216,71 @@ def careers_view(request):
 
 
 #api key and code snippet
-
+import json
+import random
 from django.shortcuts import render
-from .services import get_code_rating
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+from groq import Groq  # Import the correct library
+from .models import CodingQuestion, UserCodingProfile
+import os
+from groq import Groq
 
-def code_evaluation_view(request):
-    result = None
+# Initialize the Groq client with your key
+client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+
+@login_required
+def code_arena(request):
+    questions = CodingQuestion.objects.all()
+    question = random.choice(questions) if questions.exists() else None
+    
+    stats, _ = UserCodingProfile.objects.get_or_create(user=request.user)
+    return render(request, 'careers/arena.html', {
+        'question': question, 
+        'stats': stats
+    })
+
+@login_required
+def evaluate_code(request):
     if request.method == "POST":
-        question = request.POST.get("question")
-        code = request.POST.get("code_input")
-        # Call Gemini service
-        result = get_code_rating(question, code)
-        
-    return render(request, "evaluate_code.html", {"result": result})
+        try:
+            user_code = request.POST.get('code')
+            q_id = request.POST.get('question_id')
+            question = CodingQuestion.objects.get(id=q_id)
+
+            # Groq implementation using llama-3.3-70b-versatile
+            completion = client.chat.completions.create(
+                model="llama-3.3-70b-versatile",
+                messages=[
+                    {
+                        "role": "system", 
+                        "content": "You are a code judge. Return ONLY a JSON object with these keys: 'score' (int 0-100), 'feedback' (string), 'rating' ('Good', 'Average', 'Low')."
+                    },
+                    {
+                        "role": "user", 
+                        "content": f"Problem: {question.description}\nUser Code: {user_code}"
+                    }
+                ],
+                response_format={"type": "json_object"} # Forces valid JSON output
+            )
+
+            # No more complex cleaning needed; Groq JSON mode handles it
+            result = json.loads(completion.choices[0].message.content)
+
+            # Update User Statistics
+            profile, _ = UserCodingProfile.objects.get_or_create(user=request.user)
+            profile.total_score += result.get('score', 0)
+            profile.attempts += 1
+            profile.save()
+
+            return JsonResponse({
+                'score': result.get('score'),
+                'feedback': result.get('feedback'),
+                'rating': profile.skill_rating,
+                'attempts': profile.attempts
+            })
+        except Exception as e:
+            print(f"Evaluation Error: {e}")
+            return JsonResponse({'error': f'AI Evaluation failed: {str(e)}'}, status=500)
+            
+    return JsonResponse({'error': 'Unauthorized'}, status=403)

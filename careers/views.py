@@ -216,6 +216,7 @@ def careers_view(request):
 
 
 #api key and code snippet
+
 import json
 import random
 from django.shortcuts import render

@@ -4,7 +4,9 @@ from django.contrib import messages
 from django.views.decorators.cache import never_cache
 from django.utils import timezone
 from django.db.models import Q
+from httpcore import request
 from accounts.models import CustomUser
+from django.views.decorators.http import require_POST
 from .models import (
     Appointment, 
     MentorProfile, 
@@ -457,12 +459,18 @@ def complete_session(request, session_id):
 
 @login_required
 def submit_content(request):
-    """Submit new blog/tutorial content"""
     if request.user.role != 'mentor':
         messages.error(request, "⛔ Only mentors can submit content.")
         return redirect('home')
-    
+
     if request.method == 'POST':
+        # --- NEW: Check existing content count ---
+        existing_count = ContentContribution.objects.filter(author=request.user).count()
+        if existing_count >= 5:
+            messages.error(request, "❌ Limit reached! You can only have 5 contributions.")
+            return redirect('mentor_content')
+        # ------------------------------------------
+
         title = request.POST.get('title', '').strip()
         body = request.POST.get('body', '').strip()
         submit_type = request.POST.get('submit_type', 'draft')
@@ -492,23 +500,25 @@ def submit_content(request):
         
         content.save()
         
-        if status == 'published':
-            messages.success(request, "✅ Content published successfully!")
-        else:
-            messages.success(request, "✅ Draft saved successfully!")
-    
-    return redirect('mentor_dashboard')
-
+    if status == 'published':
+        messages.success(request, "✅ Content published successfully!")
+    else:
+        messages.success(request, "✅ Draft saved successfully!")
+    return redirect('mentor_content')
 
 @login_required
 def edit_content(request, content_id):
-    """Edit existing content contribution"""
+    """View to load the edit form and handle the update logic."""
+    
+    # 1. Role Security Check
     if request.user.role != 'mentor':
         messages.error(request, "⛔ Only mentors can edit content.")
         return redirect('home')
     
+    # 2. Ownership Security Check
     content = get_object_or_404(ContentContribution, id=content_id, author=request.user)
     
+    # 3. Handle Form Submission (POST)
     if request.method == 'POST':
         title = request.POST.get('title', '').strip()
         body = request.POST.get('body', '').strip()
@@ -517,34 +527,45 @@ def edit_content(request, content_id):
         if title and body:
             content.title = title
             content.body = body
-            # ✅ FIXED: Changed from 'pending' to 'published'
-            content.status = 'published' if submit_type == 'publish' else 'draft'
             
-            # ✅ FIXED: Set published_at when publishing
-            if content.status == 'published' and not content.published_at:
-                content.published_at = timezone.now()
+            # Logic for publishing vs drafting
+            if submit_type == 'publish':
+                content.status = 'published'
+                if not content.published_at:
+                    content.published_at = timezone.now()
+            else:
+                content.status = 'draft'
             
             content.save()
-            
             messages.success(request, "✅ Content updated successfully!")
+            return redirect('mentor_dashboard')
         else:
             messages.error(request, "❌ Title and body are required.")
+            # Fall through to render the form again with error
     
-    return redirect('mentor_dashboard')
+    # 4. Handle Initial Load (GET)
+    # This renders a template where the user actually types the changes
+    return render(request, 'mentor/edit_content_form.html', {
+        'content': content
+    })
 
 @login_required
+@require_POST
 def delete_content(request, content_id):
-    """Delete content contribution"""
+    """Securely delete a content contribution"""
+    # Ensure the user is a mentor
     if request.user.role != 'mentor':
-        messages.error(request, "⛔ Only mentors can delete content.")
+        messages.error(request, "⛔ Unauthorized action.")
         return redirect('home')
-    
+
+    # Ensure the content exists AND belongs to the user
     content = get_object_or_404(ContentContribution, id=content_id, author=request.user)
-    title = content.title
+    
+    title = content.title # Store title for the message
     content.delete()
     
-    messages.success(request, f"✅ Deleted: {title}")
-    return redirect('mentor_dashboard')
+    messages.success(request, f"🗑️ '{title}' has been deleted.")
+    return redirect('mentor_content')
 
 
 

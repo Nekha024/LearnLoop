@@ -203,7 +203,7 @@ input:focus, textarea:focus{
     <h2>Content Contribution</h2>
 
     <div class="card">
-        <form method="POST">
+        <form method="POST" action="{% url 'submit_content' %}">
             {% csrf_token %}
             <div class="form-group">
                 <label>Title</label>

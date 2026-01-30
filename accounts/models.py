@@ -40,8 +40,9 @@ class CustomUser(AbstractUser):
             ('other', 'Other'),
             ('prefer_not_to_say', 'Prefer not to say'),
         ],
-        blank=True
+        blank=False,
     )
+        
     profile_photo = models.ImageField(upload_to='mentor_photos/', blank=False, null=True)
 
     # Professional info

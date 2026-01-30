@@ -91,12 +91,22 @@ class MentorCreationForm(UserCreationForm):
         self.fields['username'].widget.attrs.update(
             {'placeholder': 'Username'}
         )
+        
+        self.fields['gender'].widget.attrs.update(
+            {'placeholder': 'Gender'}
+        )   
         self.fields['email'].widget.attrs.update(
             {'placeholder': 'Email address'}
         )
         self.fields['phone_number'].widget.attrs.update(
             {'placeholder': 'Phone number'}
         )
+        
+        
+        self.fields['gender'].choices = [
+            ('', 'Select gender'),
+        ] + list(self.fields['gender'].choices)
+        
         self.fields['previous_experience'].widget.attrs.update(
             {'placeholder': 'Previous Experience'}
         )

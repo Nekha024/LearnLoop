@@ -86,6 +86,16 @@
 
 <!-- MAIN -->
  {% block content %}
+
+ <div class="message-container">
+{% if messages %}
+<ul class="message-list">
+{% for message in messages %}
+<li class="{% if message.tags == 'error' %}error{% else %}success{% endif %}">{{ message }}</li>
+{% endfor %}
+</ul>
+{% endif %}
+</div>
 <main class="main-content">
 <div class="content-wrapper">
 

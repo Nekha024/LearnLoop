@@ -223,7 +223,6 @@ def mentor_content(request):
     context={'contributions':contributions,}
     return render(request,'mentor/content.html',context)
 
-
 # @login_required
 # def mentor_profile(request):
 #     if request.user.role !='mentor':

@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import Appointment, MentorProfile, AvailabilitySlot, MentorshipSession, ContentContribution
+from django.utils.html import format_html
 
 
 # EXISTING APPOINTMENT ADMIN
@@ -67,16 +68,46 @@ class MentorshipSessionAdmin(admin.ModelAdmin):
     )
 
 
+# @admin.register(ContentContribution)
+# class ContentContributionAdmin(admin.ModelAdmin):
+#     list_display = ['title', 'author', 'status', 'token_reward', 'views_count', 'created_at', 'published_at']
+#     list_filter = ['status', 'created_at', 'published_at']
+#     search_fields = ['title', 'author__username', 'body']
+#     readonly_fields = ['created_at', 'updated_at', 'published_at', 'views_count']
+    
+#     fieldsets = (
+#         ('Content', {
+#             'fields': ('author', 'title', 'body')
+#         }),
+#         ('Status & Rewards', {
+#             'fields': ('status', 'token_reward', 'views_count')
+#         }),
+#         ('Timestamps', {
+#             'fields': ('created_at', 'updated_at', 'published_at')
+#         }),
+#     )
+
+
 @admin.register(ContentContribution)
 class ContentContributionAdmin(admin.ModelAdmin):
-    list_display = ['title', 'author', 'status', 'token_reward', 'views_count', 'created_at', 'published_at']
+    list_display = [
+        'title', 'author', 'status',
+        'token_reward', 'views_count',
+        'created_at', 'published_at'
+    ]
+
     list_filter = ['status', 'created_at', 'published_at']
     search_fields = ['title', 'author__username', 'body']
-    readonly_fields = ['created_at', 'updated_at', 'published_at', 'views_count']
-    
+
+    readonly_fields = [
+        'created_at', 'updated_at',
+        'published_at', 'views_count',
+        'images_preview'   # 👈 renamed
+    ]
+
     fieldsets = (
         ('Content', {
-            'fields': ('author', 'title', 'body')
+            'fields': ('author', 'title', 'body', 'images')  # 👈 renamed
         }),
         ('Status & Rewards', {
             'fields': ('status', 'token_reward', 'views_count')
@@ -84,4 +115,17 @@ class ContentContributionAdmin(admin.ModelAdmin):
         ('Timestamps', {
             'fields': ('created_at', 'updated_at', 'published_at')
         }),
+        ('Preview', {
+            'fields': ('images_preview',),
+        }),
     )
+
+    def images_preview(self, obj):
+        if obj.images:
+            return format_html(
+                '<img src="{}" style="max-height: 200px; border-radius: 6px;" />',
+                obj.images.url
+            )
+        return "No Image"
+
+    images_preview.short_description = "Image Preview"

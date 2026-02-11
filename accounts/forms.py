@@ -102,11 +102,6 @@ class MentorCreationForm(UserCreationForm):
             {'placeholder': 'Phone number'}
         )
         
-        
-        self.fields['gender'].choices = [
-            ('', 'Select gender'),
-        ] + list(self.fields['gender'].choices)
-        
         self.fields['previous_experience'].widget.attrs.update(
             {'placeholder': 'Previous Experience'}
         )
@@ -134,6 +129,7 @@ class MentorCreationForm(UserCreationForm):
         self.fields['portfolio'].widget.attrs.update(
             {'placeholder': 'Portfolio URL'}
         )
+        
     def save(self, commit=True):
         user = super().save(commit=False)
         user.role = 'mentor'
@@ -179,3 +175,21 @@ class MentorProfileForm(forms.ModelForm):
             'available_from': 'Available From',
             'available_to': 'Available To',
         }
+
+class CustomUserForm(forms.ModelForm):
+
+    class Meta:
+        model = CustomUser
+        fields = "__all__"
+        widgets = {
+            "gender": forms.Select(
+                choices=CustomUser.GENDER_CHOICES
+            )
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # 🔥 THIS LINE KILLS THE '---------' OPTION
+        self.fields["gender"].choices = CustomUser.GENDER_CHOICES
+        self.fields["gender"].required = True

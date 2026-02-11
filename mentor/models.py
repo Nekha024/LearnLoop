@@ -165,6 +165,7 @@ class ContentContribution(models.Model):
     )
     title = models.CharField(max_length=200)
     body = models.TextField()
+    images=models.ImageField(upload_to='contributions/images/', blank=True, null=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='draft')
     token_reward = models.IntegerField(default=0)
     views_count = models.IntegerField(default=0)

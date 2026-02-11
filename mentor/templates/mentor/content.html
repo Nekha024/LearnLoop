@@ -203,23 +203,33 @@ input:focus, textarea:focus{
     <h2>Content Contribution</h2>
 
     <div class="card">
-        <form method="POST" action="{% url 'submit_content' %}">
-            {% csrf_token %}
-            <div class="form-group">
-                <label>Title</label>
-                <input type="text" name="title" required>
-            </div>
+       <form method="POST" action="{% url 'submit_content' %}" enctype="multipart/form-data">
+    {% csrf_token %}
 
-            <div class="form-group">
-                <label>Content</label>
-                <textarea rows="8" name="body" required></textarea>
-            </div>
+    <div class="form-group">
+        <label>Title</label>
+        <input type="text" name="title" required>
+    </div>
 
-            <div style="display:flex;gap:15px;">
-                <button class="btn btn-primary" type="submit" name="submit_type" value="publish">Submit</button>
-                <button class="btn btn-gray" type="submit" name="submit_type" value="draft">Save Draft</button>
-            </div>
-        </form>
+    <div class="form-group">
+        <label>Content</label>
+        <textarea rows="8" name="body" required></textarea>
+    </div>
+
+    <div class="form-group">
+        <label>Image</label>
+        <input type="file" name="images" accept="image/*">
+    </div>
+
+    <div style="display:flex;gap:15px;">
+        <button class="btn btn-primary" type="submit" name="submit_type" value="publish">
+            Submit
+        </button>
+        <button class="btn btn-gray" type="submit" name="submit_type" value="draft">
+            Save Draft
+        </button>
+    </div>
+</form>
     </div>
 
     <div class="card">

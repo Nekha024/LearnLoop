@@ -32,15 +32,18 @@ class CustomUser(AbstractUser):
     
     
     #Mentor related fields
+    GENDER_CHOICES = [
+        ('male', 'Male'),
+        ('female', 'Female'),
+        ('other', 'Other'),
+        ('prefer_not_to_say', 'Prefer not to say'),
+    ]
+
     gender = models.CharField(
         max_length=20,
-        choices=[
-            ('male', 'Male'),
-            ('female', 'Female'),
-            ('other', 'Other'),
-            ('prefer_not_to_say', 'Prefer not to say'),
-        ],
+        choices=GENDER_CHOICES,
         blank=False,
+        null=False
     )
         
     profile_photo = models.ImageField(upload_to='mentor_photos/', blank=False, null=True)

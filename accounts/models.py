@@ -26,7 +26,7 @@ class CustomUser(AbstractUser):
         help_text='Enter 10 digit phone number'
     )
         
-    previous_experience = models.BooleanField(blank=True, null=True)
+    previous_experience = models.BooleanField(blank=True, null=True,verbose_name="Previous Experience")
 
     is_approved=models.BooleanField(default=False)
     
@@ -52,7 +52,8 @@ class CustomUser(AbstractUser):
     profession = models.CharField(max_length=100, blank=False, null=True)
     experience_years = models.PositiveIntegerField(
         null=True,
-        blank=False
+        blank=False,
+
     )
     expertise = models.CharField(
         blank=False,

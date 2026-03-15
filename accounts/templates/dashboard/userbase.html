@@ -41,12 +41,12 @@
                     <li class="nav-item"><a class="nav-link" href="{% url 'user_dashboard' %}">Home</a></li>
                     <li class="nav-item"><a class="nav-link" href="#questionnaire">Take Quiz</a></li>
                     <li class="nav-item"><a class="nav-link" href="#careers">IT Careers</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'careers' %}">Career Roadmaps</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'careers:roads' %}">Career Roadmaps</a></li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'mentor_list' %}">Mentor</a></li>
                     <!-- ✅ NEW: Blog Link -->
                     <li class="nav-item"><a class="nav-link" href="{% url 'blog_list' %}">Blog</a></li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'user_sessions' %}">My session</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'codearena' %}">Code Test</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'careers:codearena' %}">Code Test</a></li>
                     <li class="nav-item ms-lg-3 d-flex align-items-center user-controls">
                         <span class="nav-username">
                             <i class="far fa-user-circle"></i> {{ request.user.username }}

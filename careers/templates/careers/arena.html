@@ -485,7 +485,7 @@
         formData.append('code', code);
         formData.append('question_id', '{{ question.id }}');
 
-        fetch("{% url 'evaluate_code' %}", {
+        fetch("{% url 'careers:evaluate_code' %}", {
             method: "POST",
             headers: {
                 "X-CSRFToken": "{{ csrf_token }}",

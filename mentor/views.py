@@ -64,11 +64,16 @@ def mentor_detail(request, id):
             student=request.user
         ).order_by('-scheduled_date', '-scheduled_time')[:5]
     
+    # Pre-split expertise string into a list for the template
+    raw_expertise = (mentor_profile.expertise if mentor_profile and mentor_profile.expertise else mentor.expertise) or ''
+    expertise_tags = [tag.strip() for tag in raw_expertise.split(',') if tag.strip()]
+
     context = {
         'mentor': mentor,
         'mentor_profile': mentor_profile,
         'availability_slots': availability_slots,
         'user_sessions': user_sessions,
+        'expertise_tags': expertise_tags,
     }
     return render(request, 'mentor_detail.html', context)
 
@@ -312,13 +317,17 @@ def mentor_profile(request):
         mentor_profile.fee_30min = request.POST.get('fee_30m') or 10
         mentor_profile.fee_60min = request.POST.get('fee_60m') or 20
 
+        # Handle profile photo upload
+        if request.FILES.get('profile_photo'):
+            request.user.profile_photo = request.FILES['profile_photo']
+            request.user.save()
+
         if len(mentor_profile.bio) > 500:
             messages.error(request, "❌ Bio must be under 500 characters.")
         else:
             mentor_profile.save()
             messages.success(request, "✅ Profile updated successfully!")
 
-        # 🔥 THIS LINE SOLVES YOUR ERROR
         return redirect(request.path)
 
     availability_slots = AvailabilitySlot.objects.filter(
@@ -449,10 +458,10 @@ def complete_session(request, session_id):
     session.save()
     
     mentor_profile.total_sessions += 1
-    mentor_profile.total_earnings += session.token_fee
+    mentor_profile.total_earnings += session.fee_amount
     mentor_profile.save()
     
-    messages.success(request, "✅ Session marked as completed! Tokens processed.")
+    messages.success(request, "✅ Session marked as completed!")
     return redirect('mentor_dashboard')
 
 
@@ -492,6 +501,10 @@ def submit_content(request):
             body=body,
             status=status
         )
+
+        # ✅ Added: Save blog cover image if provided
+        if request.FILES.get('images'):
+            content.images = request.FILES['images']
         
         # ✅ FIXED: Set published_at when publishing
         if status == 'published':
@@ -526,6 +539,10 @@ def edit_content(request, content_id):
         if title and body:
             content.title = title
             content.body = body
+            
+            # Added: Save blog cover image on edit
+            if request.FILES.get('content_image'):
+                content.images = request.FILES['content_image']
             
             # Logic for publishing vs drafting
             if submit_type == 'publish':
@@ -608,16 +625,22 @@ def book_session(request, id):
             duration=duration,
             topic=topic,
             notes=note,
-            token_fee=token_fee,
+            fee_amount=token_fee,
             status='pending'
         )
         
         messages.success(request, f"✅ Session request sent to {mentor.username}! You'll be notified once they accept.")
         return redirect('user_sessions')
     
+    availability_slots = AvailabilitySlot.objects.filter(
+        mentor=mentor,
+        is_active=True
+    ).order_by('day_of_week', 'start_time')
+
     context = {
         'mentor': mentor,
         'mentor_profile': mentor_profile,
+        'availability_slots': availability_slots,
         'today': timezone.now().date().isoformat(),
     }
     return render(request, 'book_appointments.html', context)

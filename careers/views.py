@@ -81,134 +81,6 @@ FIELD_TO_CSV = {
 CSV_TO_FIELD = {v: k for k, v in FIELD_TO_CSV.items()}
 
 
-def career_predict(request):
-    RADIO_OPTIONS = ["Strongly Disagree", "Not Sure", "Average", "Maybe", "Strongly Agree"]
-    if request.method == "POST":
-        form = CareerForm(request.POST)
-
-        if form.is_valid():
-            user_data = []
-            
-            # ✅ CRITICAL: Process features in the exact CSV order
-            for csv_column in FEATURE_ORDER:
-                # Find corresponding form field
-                form_field = CSV_TO_FIELD.get(csv_column)
-                
-                if not form_field:
-                    print(f"⚠️ Warning: No form field mapped to CSV column '{csv_column}'")
-                    user_data.append(0)
-                    continue
-                
-                # Get the value from cleaned form data
-                value = form.cleaned_data.get(form_field)
-                
-                if value is None:
-                    print(f"⚠️ Warning: No value for form field '{form_field}'")
-                    user_data.append(0)
-                    continue
-
-                # ✅ Handle numeric inputs (int fields)
-                if isinstance(value, int):
-                    user_data.append(value)
-                    print(f"✓ {csv_column}: {value} (numeric)")
-                    continue
-
-                # ✅ Handle Yes/No style fields
-                if form_field in [
-                    "self_learning_capability",
-                    "Extra_courses_did",
-                    "Taken_inputs_from_seniors",
-                    "worked_in_teams",
-                    "Introvert",
-                ]:
-                    mapped = YESNO_MAP.get(value, "no")
-                    try:
-                        encoded = encoders[csv_column].transform([mapped])[0]
-                        user_data.append(encoded)
-                        print(f"✓ {csv_column}: '{value}' → '{mapped}' → {encoded}")
-                    except KeyError as e:
-                        print(f"❌ Encoder missing: {csv_column} - {e}")
-                        user_data.append(0)
-                    except ValueError as e:
-                        print(f"❌ Value error for {csv_column}: '{mapped}' - {e}")
-                        user_data.append(0)
-                    continue
-
-                # ✅ Handle skill scale fields
-                if form_field in [
-                    "reading_and_writing_skills",
-                    "memory_capability_score",
-                ]:
-                    mapped = SCALE_MAP.get(value, "medium")
-                    try:
-                        encoded = encoders[csv_column].transform([mapped])[0]
-                        user_data.append(encoded)
-                        print(f"✓ {csv_column}: '{value}' → '{mapped}' → {encoded}")
-                    except KeyError as e:
-                        print(f"❌ Encoder missing: {csv_column} - {e}")
-                        user_data.append(0)
-                    except ValueError as e:
-                        print(f"❌ Value error for {csv_column}: '{mapped}' - {e}")
-                        user_data.append(0)
-                    continue
-
-                # ✅ Handle normal categorical fields
-                try:
-                    encoded = encoders[csv_column].transform([str(value)])[0]
-                    user_data.append(encoded)
-                    print(f"✓ {csv_column}: '{value}' → {encoded}")
-                except KeyError as e:
-                    print(f"❌ Encoder missing: {csv_column} - {e}")
-                    user_data.append(0)
-                except ValueError as e:
-                    print(f"❌ Unknown value for {csv_column}: '{value}' - {e}")
-                    # Try to use first class as default
-                    if csv_column in encoders:
-                        user_data.append(0)
-                    else:
-                        user_data.append(0)
-
-            print(f"\n✅ Final encoded input ({len(user_data)} features):")
-            print(user_data)
-            print(f"Expected features: {len(FEATURE_ORDER)}")
-
-            # ✅ Validate feature count
-            if len(user_data) != len(FEATURE_ORDER):
-                return render(
-                    request,
-                    "careers/result.html",
-                    {
-                        "career": "Error: Feature mismatch",
-                        "error": f"Expected {len(FEATURE_ORDER)} features, got {len(user_data)}"
-                    },
-                )
-
-            # Make prediction
-            try:
-                prediction = model.predict([user_data])[0]
-                predicted_job = encoders["Suggested Job Role"].inverse_transform([prediction])[0]
-
-                print(f"✅ Prediction: {predicted_job}")
-
-                return render(
-                    request,
-                    "careers/result.html",
-                    {"career": predicted_job},
-                )
-            except Exception as e:
-                print(f"❌ Prediction error: {e}")
-                return render(
-                    request,
-                    "careers/result.html",
-                    {"career": "Prediction failed", "error": str(e)},
-                )
-
-    else:
-        form = CareerForm()
-
-    return render(request, "careers/careerform.html", {"form": form})
-
-
 def careers_view(request):
     return render(request, 'roadmap.html')
 
@@ -285,3 +157,113 @@ def evaluate_code(request):
             return JsonResponse({'error': f'AI Evaluation failed: {str(e)}'}, status=500)
             
     return JsonResponse({'error': 'Unauthorized'}, status=403)
+
+
+
+#CareerQuiz
+
+import json
+import logging
+from django.shortcuts import render, redirect
+from django.http import JsonResponse
+from django.views.decorators.http import require_http_methods
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
+from django.views import View
+
+from .questions import QUESTIONS, CATEGORIES, TOTAL_QUESTIONS
+from .groq_service import get_career_prediction, ROADMAPS
+from .models import CareerAssessment
+
+logger = logging.getLogger(__name__)
+
+
+def get_client_ip(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        return x_forwarded_for.split(',')[0]
+    return request.META.get('REMOTE_ADDR')
+
+
+def assessment_view(request):
+    """Render the full assessment page with all 30 questions."""
+    context = {
+        "questions": QUESTIONS,
+        "categories": CATEGORIES,
+        "total_questions": TOTAL_QUESTIONS,
+    }
+    return render(request, "career_predictor/assessment.html", context)
+
+
+@require_http_methods(["POST"])
+def predict_view(request):
+    """Handle prediction form submission and return JSON result."""
+    try:
+        body = json.loads(request.body)
+        answers = body.get("answers", {})
+
+        # Basic validation
+        if len(answers) < TOTAL_QUESTIONS:
+            return JsonResponse({
+                "error": f"Please answer all {TOTAL_QUESTIONS} questions. You answered {len(answers)}."
+            }, status=400)
+
+        # Get prediction from Groq
+        prediction = get_career_prediction(answers)
+
+        if "error" in prediction:
+            return JsonResponse({"error": prediction["error"]}, status=500)
+
+        # Save to database
+        try:
+            top_careers = prediction.get("top_careers", [])
+            assessment = CareerAssessment.objects.create(
+                session_key=request.session.session_key or "",
+                answers=answers,
+                top_career_1=top_careers[0]["role"] if len(top_careers) > 0 else "",
+                top_career_2=top_careers[1]["role"] if len(top_careers) > 1 else "",
+                top_career_3=top_careers[2]["role"] if len(top_careers) > 2 else "",
+                score_1=top_careers[0].get("score", 0) if len(top_careers) > 0 else 0,
+                score_2=top_careers[1].get("score", 0) if len(top_careers) > 1 else 0,
+                score_3=top_careers[2].get("score", 0) if len(top_careers) > 2 else 0,
+                raw_prediction=prediction.get("raw", ""),
+                ip_address=get_client_ip(request),
+                user=request.user if request.user.is_authenticated else None,
+            )
+            prediction["assessment_id"] = assessment.id
+        except Exception as e:
+            logger.error(f"DB save error: {e}")
+            # Continue even if saving fails
+
+        return JsonResponse(prediction)
+
+    except json.JSONDecodeError:
+        return JsonResponse({"error": "Invalid request format."}, status=400)
+    except Exception as e:
+        logger.error(f"Prediction error: {e}")
+        return JsonResponse({"error": "Something went wrong. Please try again."}, status=500)
+
+
+def roadmap_view(request, role_slug):
+    """AJAX endpoint to get roadmap for a specific role."""
+    # Convert slug back to role name
+    role_name = role_slug.replace("-", " ").title()
+
+    # Try exact match
+    if role_name in ROADMAPS:
+        return JsonResponse({
+            "role": role_name,
+            "description": ROADMAPS[role_name]["description"],
+            "roadmap": ROADMAPS[role_name]["roadmap"],
+        })
+
+    # Try fuzzy match
+    for key in ROADMAPS:
+        if key.lower() == role_name.lower():
+            return JsonResponse({
+                "role": key,
+                "description": ROADMAPS[key]["description"],
+                "roadmap": ROADMAPS[key]["roadmap"],
+            })
+
+    return JsonResponse({"error": "Role not found"}, status=404)

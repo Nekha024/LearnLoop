@@ -3,46 +3,45 @@
 
 <style>
     .user-controls {
-    gap: 10px;
-    font-size: 14px;
-}
+        gap: 10px;
+        font-size: 14px;
+    }
 
-.nav-username {
-    color: #ffffff;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
+    .nav-username {
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
 
-.nav-divider {
-    width: 1px;
-    height: 18px;
-    background-color: #ccc;
-}
+    .nav-divider {
+        width: 1px;
+        height: 18px;
+        background-color: #ccc;
+    }
 
-.nav-logout {
-    color: #dc3545;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    font-weight: 500;
-}
+    .nav-logout {
+        color: #dc3545;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-weight: 500;
+    }
 
-.nav-logout:hover {
-    color: #a71d2a;
-    text-decoration: underline;
-}
-
+    .nav-logout:hover {
+        color: #a71d2a;
+        text-decoration: underline;
+    }
 </style>
-    <!-- Hero Section -->
+
     <section id="home" class="hero-section">
         <div class="hero-overlay"></div>
         <div class="container">
             <div class="row align-items-center min-vh-100">
                 <div class="col-lg-6 hero-content">
                     <h1 class="hero-title fade-in">Discover Your Perfect <span class="gradient-text">IT Career</span></h1>
-                    <p class="hero-subtitle fade-in-delay-1">Navigate through endless possibilities in the technology world. Find your passion, build your future.</p>
+                    <p class="hero-subtitle fade-in-delay-1">Navigate through endless possibilities in India's booming technology world. Find your passion, build your future.</p>
                     <div class="hero-buttons fade-in-delay-2">
                         <a href="#questionnaire" class="btn btn-primary btn-lg pulse-btn">
                             <i class="fas fa-clipboard-question"></i> Take Career Quiz
@@ -57,8 +56,8 @@
                             <p>IT Career Paths</p>
                         </div>
                         <div class="stat-item">
-                            <h3 class="counter" data-target="1000">0</h3>
-                            <p>Job Opportunities</p>
+                            <h3 class="counter" data-target="1500">0</h3>
+                            <p>Daily Job Openings</p>
                         </div>
                         <div class="stat-item">
                             <h3 class="counter" data-target="95">0</h3>
@@ -93,12 +92,11 @@
         </div>
     </section>
 
-    <!-- Questionnaire Redirect Section -->
     <section id="questionnaire" class="questionnaire-section">
         <div class="container">
             <div class="section-header text-center">
                 <h2 class="section-title">Find Your Perfect IT Career Match</h2>
-                <p class="section-subtitle">Take our comprehensive career assessment quiz</p>
+                <p class="section-subtitle">Take our comprehensive career assessment quiz tailored for the Indian IT sector</p>
             </div>
             <div class="row align-items-center">
                 <div class="col-lg-6">
@@ -119,21 +117,21 @@
                                 <i class="fas fa-check-circle"></i>
                                 <div>
                                     <h5>Personalized Recommendations</h5>
-                                    <p>Get tailored career suggestions based on your skills and interests</p>
+                                    <p>Get suggestions based on skills trending in Indian MNCs and Startups</p>
                                 </div>
                             </div>
                             <div class="benefit-item">
                                 <i class="fas fa-check-circle"></i>
                                 <div>
                                     <h5>Skill Assessment</h5>
-                                    <p>Understand your current skill level and areas for improvement</p>
+                                    <p>Understand your readiness for the competitive Indian job market</p>
                                 </div>
                             </div>
                             <div class="benefit-item">
                                 <i class="fas fa-check-circle"></i>
                                 <div>
                                     <h5>Career Roadmap</h5>
-                                    <p>Receive a customized learning path for your chosen IT field</p>
+                                    <p>Receive a customized learning path with relevant local certifications</p>
                                 </div>
                             </div>
                             <div class="benefit-item">
@@ -144,7 +142,7 @@
                                 </div>
                             </div>
                         </div>
-                        <a href="{% url 'career_predict' %}" class="btn btn-primary btn-lg mt-4 quiz-btn">
+                        <a href="{% url 'careers:assessment' %}" class="btn btn-primary btn-lg mt-4 quiz-btn">
                             <i class="fas fa-play"></i> Start Career Quiz Now
                         </a>
                     </div>
@@ -153,12 +151,11 @@
         </div>
     </section>
 
-    <!-- IT Career Fields Section -->
     <section id="careers" class="careers-section">
         <div class="container">
             <div class="section-header text-center">
                 <h2 class="section-title">Explore IT Career Fields</h2>
-                <p class="section-subtitle">Discover diverse opportunities in the technology industry</p>
+                <p class="section-subtitle">Discover diverse opportunities in the Indian technology industry</p>
             </div>
             <div class="row g-4">
                 <div class="col-lg-4 col-md-6">
@@ -167,7 +164,7 @@
                             <i class="fas fa-code"></i>
                         </div>
                         <h4>Software Development</h4>
-                        <p>Build applications, websites, and software solutions that power the digital world.</p>
+                        <p>Build applications for India's digital revolution, from fintech to e-commerce.</p>
                         <ul class="career-list">
                             <li>Full Stack Developer</li>
                             <li>Frontend Developer</li>
@@ -175,7 +172,7 @@
                             <li>Mobile App Developer</li>
                         </ul>
                         <div class="card-footer">
-                            <span class="salary"><i class="fas fa-dollar-sign"></i> $70k - $150k</span>
+                            <span class="salary"><i class="fas fa-indian-rupee-sign"></i> 5L - 25L PA</span>
                             <span class="demand"><i class="fas fa-chart-line"></i> High Demand</span>
                         </div>
                     </div>
@@ -187,7 +184,7 @@
                             <i class="fas fa-shield-alt"></i>
                         </div>
                         <h4>Cybersecurity</h4>
-                        <p>Protect organizations from cyber threats and secure critical digital infrastructure.</p>
+                        <p>Protect Indian enterprises and government data from evolving cyber threats.</p>
                         <ul class="career-list">
                             <li>Security Analyst</li>
                             <li>Ethical Hacker</li>
@@ -195,7 +192,7 @@
                             <li>Incident Responder</li>
                         </ul>
                         <div class="card-footer">
-                            <span class="salary"><i class="fas fa-dollar-sign"></i> $80k - $160k</span>
+                            <span class="salary"><i class="fas fa-indian-rupee-sign"></i> 6L - 28L PA</span>
                             <span class="demand"><i class="fas fa-chart-line"></i> Very High</span>
                         </div>
                     </div>
@@ -207,15 +204,15 @@
                             <i class="fas fa-database"></i>
                         </div>
                         <h4>Data Science & Analytics</h4>
-                        <p>Extract insights from data to drive business decisions and innovation.</p>
+                        <p>Analyze data to drive innovation in one of the world's largest consumer markets.</p>
                         <ul class="career-list">
                             <li>Data Scientist</li>
                             <li>Data Analyst</li>
                             <li>Machine Learning Engineer</li>
-                            <li>Business Intelligence Analyst</li>
+                            <li>BI Analyst</li>
                         </ul>
                         <div class="card-footer">
-                            <span class="salary"><i class="fas fa-dollar-sign"></i> $75k - $155k</span>
+                            <span class="salary"><i class="fas fa-indian-rupee-sign"></i> 7L - 30L PA</span>
                             <span class="demand"><i class="fas fa-chart-line"></i> Very High</span>
                         </div>
                     </div>
@@ -227,15 +224,15 @@
                             <i class="fas fa-cloud"></i>
                         </div>
                         <h4>Cloud Computing</h4>
-                        <p>Design and manage scalable cloud infrastructure and services.</p>
+                        <p>Manage scalable cloud infrastructure for India's rapidly migrating enterprises.</p>
                         <ul class="career-list">
                             <li>Cloud Architect</li>
                             <li>Cloud Engineer</li>
                             <li>DevOps Engineer</li>
-                            <li>Site Reliability Engineer</li>
+                            <li>SRE Engineer</li>
                         </ul>
                         <div class="card-footer">
-                            <span class="salary"><i class="fas fa-dollar-sign"></i> $85k - $170k</span>
+                            <span class="salary"><i class="fas fa-indian-rupee-sign"></i> 8L - 35L PA</span>
                             <span class="demand"><i class="fas fa-chart-line"></i> Very High</span>
                         </div>
                     </div>
@@ -247,7 +244,7 @@
                             <i class="fas fa-brain"></i>
                         </div>
                         <h4>Artificial Intelligence & ML</h4>
-                        <p>Create intelligent systems that learn and adapt to solve complex problems.</p>
+                        <p>Create next-gen intelligent systems for Indian startups and global R&D hubs.</p>
                         <ul class="career-list">
                             <li>AI Research Scientist</li>
                             <li>ML Engineer</li>
@@ -255,7 +252,7 @@
                             <li>Computer Vision Engineer</li>
                         </ul>
                         <div class="card-footer">
-                            <span class="salary"><i class="fas fa-dollar-sign"></i> $90k - $180k</span>
+                            <span class="salary"><i class="fas fa-indian-rupee-sign"></i> 10L - 40L PA</span>
                             <span class="demand"><i class="fas fa-chart-line"></i> Explosive</span>
                         </div>
                     </div>
@@ -267,7 +264,7 @@
                             <i class="fas fa-network-wired"></i>
                         </div>
                         <h4>Network & Infrastructure</h4>
-                        <p>Build and maintain the backbone of enterprise IT systems and networks.</p>
+                        <p>Maintain the backbone of enterprise IT systems in India's growing tech hubs.</p>
                         <ul class="career-list">
                             <li>Network Engineer</li>
                             <li>Systems Administrator</li>
@@ -275,7 +272,7 @@
                             <li>Infrastructure Engineer</li>
                         </ul>
                         <div class="card-footer">
-                            <span class="salary"><i class="fas fa-dollar-sign"></i> $65k - $140k</span>
+                            <span class="salary"><i class="fas fa-indian-rupee-sign"></i> 4L - 18L PA</span>
                             <span class="demand"><i class="fas fa-chart-line"></i> High Demand</span>
                         </div>
                     </div>
@@ -284,12 +281,11 @@
         </div>
     </section>
 
-    <!-- Career Opportunities Section -->
     <section id="opportunities" class="opportunities-section">
         <div class="container">
             <div class="section-header text-center">
                 <h2 class="section-title">Career Opportunities & Growth</h2>
-                <p class="section-subtitle">Understand the landscape of IT job opportunities</p>
+                <p class="section-subtitle">Understand the landscape of the Indian IT job market</p>
             </div>
             <div class="row g-4">
                 <div class="col-lg-3 col-md-6">
@@ -297,8 +293,8 @@
                         <div class="opp-icon">
                             <i class="fas fa-briefcase"></i>
                         </div>
-                        <h3 class="counter-large" data-target="3.5">0</h3>
-                        <p>Million IT Jobs Worldwide</p>
+                        <h3 class="counter-large" data-target="5.4">0</h3>
+                        <p>Million IT Employees in India</p>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6">
@@ -306,17 +302,17 @@
                         <div class="opp-icon">
                             <i class="fas fa-percentage"></i>
                         </div>
-                        <h3 class="counter-large" data-target="22">0</h3>
-                        <p>Projected Growth by 2030</p>
+                        <h3 class="counter-large" data-target="15">0</h3>
+                        <p>Projected Growth by 2027</p>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6">
                     <div class="opportunity-card">
                         <div class="opp-icon">
-                            <i class="fas fa-money-bill-wave"></i>
+                            <i class="fas fa-indian-rupee-sign"></i>
                         </div>
-                        <h3 class="counter-large" data-target="95">0</h3>
-                        <p>Average Salary ($k/year)</p>
+                        <h3 class="counter-large" data-target="12">0</h3>
+                        <p>Average Salary (Lakhs/Year)</p>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6">
@@ -324,8 +320,8 @@
                         <div class="opp-icon">
                             <i class="fas fa-globe"></i>
                         </div>
-                        <h3 class="counter-large" data-target="100">0</h3>
-                        <p>Remote Work Opportunities</p>
+                        <h3 class="counter-large" data-target="70">0</h3>
+                        <p>% Hybrid/Remote Jobs</p>
                     </div>
                 </div>
             </div>
@@ -333,7 +329,7 @@
             <div class="row mt-5">
                 <div class="col-lg-6">
                     <div class="job-trends">
-                        <h3><i class="fas fa-chart-bar"></i> Top Trending IT Jobs 2025</h3>
+                        <h3><i class="fas fa-chart-bar"></i> Top Trending IT Jobs in India 2025</h3>
                         <div class="trend-item">
                             <div class="trend-header">
                                 <span>AI/ML Engineer</span>
@@ -354,7 +350,7 @@
                         </div>
                         <div class="trend-item">
                             <div class="trend-header">
-                                <span>Cloud Architect</span>
+                                <span>Cloud Architect (AWS/Azure)</span>
                                 <span class="trend-badge rising">RISING</span>
                             </div>
                             <div class="progress-bar-custom">
@@ -372,7 +368,7 @@
                         </div>
                         <div class="trend-item">
                             <div class="trend-header">
-                                <span>Full Stack Developer</span>
+                                <span>Full Stack (MERN/Java)</span>
                                 <span class="trend-badge stable">STABLE</span>
                             </div>
                             <div class="progress-bar-custom">
@@ -383,13 +379,13 @@
                 </div>
                 <div class="col-lg-6">
                     <div class="salary-info">
-                        <h3><i class="fas fa-dollar-sign"></i> Salary Ranges by Experience</h3>
+                        <h3><i class="fas fa-indian-rupee-sign"></i> Salary Ranges by Experience (LPA)</h3>
                         <div class="salary-card">
                             <div class="salary-level">
                                 <i class="fas fa-user-graduate"></i>
                                 <div>
-                                    <h5>Entry Level (0-2 years)</h5>
-                                    <p class="salary-range">$50,000 - $75,000</p>
+                                    <h5>Fresher (0-2 years)</h5>
+                                    <p class="salary-range">₹3,50,000 - ₹8,00,000</p>
                                 </div>
                             </div>
                         </div>
@@ -397,8 +393,8 @@
                             <div class="salary-level">
                                 <i class="fas fa-user-tie"></i>
                                 <div>
-                                    <h5>Mid Level (3-5 years)</h5>
-                                    <p class="salary-range">$75,000 - $120,000</p>
+                                    <h5>Mid Level (3-7 years)</h5>
+                                    <p class="salary-range">₹8,00,000 - ₹20,00,000</p>
                                 </div>
                             </div>
                         </div>
@@ -406,8 +402,8 @@
                             <div class="salary-level">
                                 <i class="fas fa-user-crown"></i>
                                 <div>
-                                    <h5>Senior Level (6-10 years)</h5>
-                                    <p class="salary-range">$120,000 - $180,000</p>
+                                    <h5>Senior Level (8-12 years)</h5>
+                                    <p class="salary-range">₹20,00,000 - ₹45,00,000</p>
                                 </div>
                             </div>
                         </div>
@@ -415,8 +411,8 @@
                             <div class="salary-level">
                                 <i class="fas fa-crown"></i>
                                 <div>
-                                    <h5>Expert/Lead (10+ years)</h5>
-                                    <p class="salary-range">$180,000 - $250,000+</p>
+                                    <h5>Lead/Architect (12+ years)</h5>
+                                    <p class="salary-range">₹45,00,000 - ₹80,00,000+</p>
                                 </div>
                             </div>
                         </div>
@@ -426,7 +422,6 @@
         </div>
     </section>
 
-    <!-- Skills & Requirements Section -->
     <section id="skills" class="skills-section">
         <div class="container">
             <div class="section-header text-center">
@@ -440,7 +435,7 @@
                         <div class="skill-tags">
                             <span class="skill-tag">Python</span>
                             <span class="skill-tag">JavaScript</span>
-                            <span class="skill-tag">Java</span>
+                            <span class="skill-tag">Java (Spring Boot)</span>
                             <span class="skill-tag">C++</span>
                             <span class="skill-tag">Go</span>
                             <span class="skill-tag">Rust</span>
@@ -453,14 +448,14 @@
                     <div class="skill-category">
                         <h4><i class="fas fa-tools"></i> Frameworks & Tools</h4>
                         <div class="skill-tags">
-                            <span class="skill-tag">React</span>
+                            <span class="skill-tag">React / Angular</span>
                             <span class="skill-tag">Node.js</span>
                             <span class="skill-tag">Django</span>
                             <span class="skill-tag">Docker</span>
                             <span class="skill-tag">Kubernetes</span>
                             <span class="skill-tag">Git</span>
                             <span class="skill-tag">TensorFlow</span>
-                            <span class="skill-tag">AWS</span>
+                            <span class="skill-tag">AWS / Azure / GCP</span>
                         </div>
                     </div>
                 </div>
@@ -475,7 +470,7 @@
                             <span class="skill-tag">Critical Thinking</span>
                             <span class="skill-tag">Time Management</span>
                             <span class="skill-tag">Leadership</span>
-                            <span class="skill-tag">Creativity</span>
+                            <span class="skill-tag">Client Management</span>
                         </div>
                     </div>
                 </div>
@@ -483,44 +478,348 @@
         </div>
     </section>
 
-    <!-- Resources Section -->
+    <style>
+        .resource-card.interactive {
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        .resource-card.interactive:hover, .resource-card.interactive.active {
+            transform: translateY(-5px);
+            border-color: #6a5cff;
+            box-shadow: 0 10px 20px rgba(106, 92, 255, 0.2);
+            background: #ffffff;
+        }
+        .resource-pane {
+            display: none;
+            animation: fadeInTab 0.4s ease-out forwards;
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 30px;
+            border: 1px solid #e2e8f0;
+            color: #1f2937;
+            margin-top: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.05);
+        }
+        .resource-pane.active {
+            display: block;
+        }
+        @keyframes fadeInTab {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .res-list-item {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 18px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            border: 1px solid #e2e8f0;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .res-list-item:hover {
+            background: #ffffff;
+            transform: translateX(5px);
+            border-color: #a5b4fc;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .res-list-item i.fa-brands, .res-list-item i.fas, .res-list-item i.fab {
+            font-size: 28px;
+            color: #6a5cff;
+            background: rgba(106, 92, 255, 0.1);
+            padding: 12px;
+            border-radius: 12px;
+        }
+        .res-list-item h5 {
+            margin: 0 0 6px 0;
+            color: #0f172a;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        .res-list-item p {
+            margin: 0;
+            font-size: 13.5px;
+            color: #64748b;
+            line-height: 1.5;
+        }
+        .badge.diff-beginner { background: rgba(16, 185, 129, 0.15); color: #059669; border: 1px solid #10b981;}
+        .badge.diff-inter { background: rgba(245, 158, 11, 0.15); color: #d97706; border: 1px solid #f59e0b;}
+        .badge.diff-adv { background: rgba(239, 68, 68, 0.15); color: #dc2626; border: 1px solid #ef4444;}
+    </style>
+
     <section id="resources" class="resources-section">
         <div class="container">
             <div class="section-header text-center">
                 <h2 class="section-title">Learning Resources</h2>
-                <p class="section-subtitle">Start your IT career journey with these platforms</p>
+                <p class="section-subtitle">Start your IT career journey with these curated platforms</p>
             </div>
-            <div class="row g-4">
+            
+            <div class="row g-4 mb-4">
                 <div class="col-lg-3 col-md-6">
-                    <div class="resource-card">
+                    <div class="resource-card interactive" onclick="showResource('res-courses', this)">
                         <i class="fas fa-graduation-cap"></i>
                         <h5>Online Courses</h5>
-                        <p>Coursera, Udemy, edX, LinkedIn Learning</p>
+                        <p>Categorized by career & difficulty</p>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6">
-                    <div class="resource-card">
+                    <div class="resource-card interactive" onclick="showResource('res-certs', this)">
                         <i class="fas fa-certificate"></i>
                         <h5>Certifications</h5>
-                        <p>AWS, Azure, Google Cloud, CompTIA, Cisco</p>
+                        <p>Industry recognized credentials</p>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6">
-                    <div class="resource-card">
+                    <div class="resource-card interactive" onclick="showResource('res-docs', this)">
                         <i class="fas fa-book"></i>
                         <h5>Documentation</h5>
-                        <p>MDN, Stack Overflow, GitHub, Dev.to</p>
+                        <p>Official developer guides</p>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6">
-                    <div class="resource-card">
+                    <div class="resource-card interactive" onclick="showResource('res-comm', this)">
                         <i class="fas fa-users"></i>
                         <h5>Communities</h5>
-                        <p>Reddit, Discord, Slack, Tech Meetups</p>
+                        <p>Indian tech networks & forums</p>
                     </div>
                 </div>
+            </div>
+
+            <!-- Content Panes -->
+            <div class="resource-content-container">
+                
+                <!-- Courses -->
+                <div id="res-courses" class="resource-pane">
+                    <h4 class="mb-4 text-dark"><i class="fas fa-graduation-cap" style="color:#6a5cff; margin-right:8px;"></i> Recommended Courses</h4>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5 style="color: #4f46e5; margin-bottom: 20px; font-weight: 700;">Software Development</h5>
+                            <div class="res-list-item">
+                                <i class="fab fa-html5"></i>
+                                <div>
+                                    <h5>Complete Web Dev Bootcamp <span class="badge diff-beginner ms-2">Beginner</span></h5>
+                                    <p>Udemy • Covers HTML, CSS, JS, Node, React. Great starting point.</p>
+                                </div>
+                            </div>
+                            <div class="res-list-item">
+                                <i class="fab fa-react"></i>
+                                <div>
+                                    <h5>Advanced React Patterns <span class="badge diff-adv ms-2">Advanced</span></h5>
+                                    <p>Frontend Masters • Build scalable, high-performance web apps.</p>
+                                </div>
+                            </div>
+                            <div class="res-list-item">
+                                <i class="fab fa-java"></i>
+                                <div>
+                                    <h5>Spring Boot Microservices <span class="badge diff-inter ms-2">Intermediate</span></h5>
+                                    <p>Coursera • Learn enterprise backend architecture and APIs.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h5 style="color: #4f46e5; margin-bottom: 20px; font-weight: 700;">Data Science & AI</h5>
+                            <div class="res-list-item">
+                                <i class="fab fa-python"></i>
+                                <div>
+                                    <h5>Python for Data Science <span class="badge diff-beginner ms-2">Beginner</span></h5>
+                                    <p>NPTEL • Solid foundation of Python, Pandas, and Matplotlib.</p>
+                                </div>
+                            </div>
+                            <div class="res-list-item">
+                                <i class="fas fa-brain"></i>
+                                <div>
+                                    <h5>Machine Learning Specialization <span class="badge diff-inter ms-2">Intermediate</span></h5>
+                                    <p>Coursera • The most popular ML foundational course by Andrew Ng.</p>
+                                </div>
+                            </div>
+                            <div class="res-list-item">
+                                <i class="fas fa-network-wired"></i>
+                                <div>
+                                    <h5>Deep Learning Specialization <span class="badge diff-adv ms-2">Advanced</span></h5>
+                                    <p>DeepLearning.AI • Master neural networks, CNNs, and RNNs.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Certifications -->
+                <div id="res-certs" class="resource-pane">
+                    <h4 class="mb-4 text-dark"><i class="fas fa-certificate text-warning" style="margin-right:8px;"></i> Top Global Certifications</h4>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="res-list-item">
+                                <i class="fab fa-aws"></i>
+                                <div>
+                                    <h5>AWS Certified Solutions Architect</h5>
+                                    <p>Cloud Computing • Highly valued in Indian MNCs and startups.</p>
+                                </div>
+                            </div>
+                            <div class="res-list-item">
+                                <i class="fab fa-google"></i>
+                                <div>
+                                    <h5>Google Professional Cloud Architect</h5>
+                                    <p>Cloud Computing • Consistently a top-paying global credential.</p>
+                                </div>
+                            </div>
+                            <div class="res-list-item">
+                                <i class="fab fa-microsoft"></i>
+                                <div>
+                                    <h5>Microsoft Certified: Azure Administrator</h5>
+                                    <p>Cloud Computing • Very high demand in enterprise environments.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="res-list-item">
+                                <i class="fas fa-shield-alt"></i>
+                                <div>
+                                    <h5>CompTIA Security+</h5>
+                                    <p>Cybersecurity • A foundational, vendor-neutral security standard.</p>
+                                </div>
+                            </div>
+                            <div class="res-list-item">
+                                <i class="fas fa-lock"></i>
+                                <div>
+                                    <h5>CISSP</h5>
+                                    <p>Cybersecurity • The gold standard for senior security professionals.</p>
+                                </div>
+                            </div>
+                            <div class="res-list-item">
+                                <i class="fas fa-dharmachakra"></i>
+                                <div>
+                                    <h5>Certified Kubernetes Administrator (CKA)</h5>
+                                    <p>DevOps • Practical, hands-on exam for container orchestration.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Documentation -->
+                <div id="res-docs" class="resource-pane">
+                    <h4 class="mb-4 text-dark"><i class="fas fa-book text-success" style="margin-right:8px;"></i> Must-Bookmark Documentation</h4>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="res-list-item">
+                                <i class="fas fa-globe"></i>
+                                <div>
+                                    <h5>MDN Web Docs</h5>
+                                    <p>Mozilla • The definitive resource for HTML, CSS, and vanilla JS.</p>
+                                </div>
+                            </div>
+                            <div class="res-list-item">
+                                <i class="fab fa-react"></i>
+                                <div>
+                                    <h5>React.js Official Docs</h5>
+                                    <p>Meta • Excellent resource for modern React and hook patterns.</p>
+                                </div>
+                            </div>
+                            <div class="res-list-item">
+                                <i class="fab fa-python"></i>
+                                <div>
+                                    <h5>Django Documentation</h5>
+                                    <p>Django Project • Extremely detailed backend framework manuals.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="res-list-item">
+                                <i class="fab fa-docker"></i>
+                                <div>
+                                    <h5>Docker Official Docs</h5>
+                                    <p>Docker • Essential guides for containerization and microservices.</p>
+                                </div>
+                            </div>
+                            <div class="res-list-item">
+                                <i class="fab fa-android"></i>
+                                <div>
+                                    <h5>Android Developer Guides</h5>
+                                    <p>Google • Extensive Kotlin and Java mobile development reference.</p>
+                                </div>
+                            </div>
+                            <div class="res-list-item">
+                                <i class="fas fa-database"></i>
+                                <div>
+                                    <h5>PostgreSQL Documentation</h5>
+                                    <p>PostgreSQL • In-depth manuals for robust relational DB design.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Communities -->
+                <div id="res-comm" class="resource-pane">
+                    <h4 class="mb-4 text-dark"><i class="fas fa-users text-danger" style="margin-right:8px;"></i> Indian Tech Communities</h4>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="res-list-item">
+                                <i class="fab fa-reddit-alien"></i>
+                                <div>
+                                    <h5>r/DevelopersIndia</h5>
+                                    <p>Reddit • Largest active forum for Indian devs discussing jobs & tech.</p>
+                                </div>
+                            </div>
+                            <div class="res-list-item">
+                                <i class="fab fa-discord"></i>
+                                <div>
+                                    <h5>Indian Pythonista Discord</h5>
+                                    <p>Discord • A highly active community for Python, ML, and AI in India.</p>
+                                </div>
+                            </div>
+                            <div class="res-list-item">
+                                <i class="fas fa-users-cog"></i>
+                                <div>
+                                    <h5>GDG India (Google Dev Groups)</h5>
+                                    <p>Meetups • Local physical tech chapters in every major Indian city.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="res-list-item">
+                                <i class="fas fa-user-secret"></i>
+                                <div>
+                                    <h5>Nullcon & null Community</h5>
+                                    <p>Infosec • India's largest cybersecurity open security meetup group.</p>
+                                </div>
+                            </div>
+                            <div class="res-list-item">
+                                <i class="fab fa-js-square"></i>
+                                <div>
+                                    <h5>Bangalore JS / React India</h5>
+                                    <p>Meetup/Slack • Vibrant frontend developer networks and events.</p>
+                                </div>
+                            </div>
+                            <div class="res-list-item">
+                                <i class="fab fa-linkedin"></i>
+                                <div>
+                                    <h5>Topmate / MentorCruise India</h5>
+                                    <p>Networking • Find 1-on-1 mentorship from top Indian tech leads.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </section>
+
+    <script>
+        function showResource(tabId, el) {
+            // Remove active state from all tabs
+            document.querySelectorAll('.resource-card.interactive').forEach(card => card.classList.remove('active'));
+            // Add active state to clicked tab
+            el.classList.add('active');
+
+            // Hide all panes
+            document.querySelectorAll('.resource-pane').forEach(pane => pane.classList.remove('active'));
+            // Show target pane
+            document.getElementById(tabId).classList.add('active');
+        }
+    </script>
 {% endblock %}
-    

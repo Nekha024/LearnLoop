@@ -1,0 +1,23 @@
+reverse
+
+def solution(s):
+    rev = ""
+    for ch in s:
+        rev = ch + rev
+    return rev
+
+
+    sum of 2
+
+    def solution(a, b):
+    # Write your code here
+    return a + b
+
+    check even or odd
+
+    def solution(n):
+    # Write your code here
+    if n % 2 == 0:
+        return "Even"
+    else:
+        return "Odd"

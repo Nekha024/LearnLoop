@@ -36,4 +36,34 @@ class UserCodingProfile(models.Model):
         if avg >= 80: return "Good"
         elif avg >= 50: return "Average"
         return "Low"
-    
+
+
+from django.db import models
+from django.contrib.auth.models import User
+import json
+
+
+class CareerAssessment(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
+    session_key = models.CharField(max_length=100, blank=True)
+    answers = models.JSONField()
+    top_career_1 = models.CharField(max_length=100, blank=True)
+    top_career_2 = models.CharField(max_length=100, blank=True)
+    top_career_3 = models.CharField(max_length=100, blank=True)
+    score_1 = models.IntegerField(default=0)
+    score_2 = models.IntegerField(default=0)
+    score_3 = models.IntegerField(default=0)
+    raw_prediction = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    ip_address = models.GenericIPAddressField(null=True, blank=True)
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = "Career Assessment"
+        verbose_name_plural = "Career Assessments"
+
+    def __str__(self):
+        return f"Assessment #{self.id} - {self.top_career_1} ({self.created_at.strftime('%Y-%m-%d')})"
+
+    def get_answers_display(self):
+        return json.dumps(self.answers, indent=2)

@@ -1,232 +1,317 @@
 {% extends 'dashboard/userbase.html' %}
 {% block style %}
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<style>
+    /* ========== BASE ========== */
+    body {
+        font-family: "Poppins", "Inter", sans-serif;
+        background: radial-gradient(ellipse at top, #0f172a 0%, #020617 70%);
+        color: #e2e8f0;
+        min-height: 100vh;
+    }
 
-        body {
-            font-family: "Poppins", "Inter", sans-serif;
-            background: radial-gradient(circle at top left, #283048, #1b1b2f 60%, #0f0f17);
-            color: #eaeaea;
-            min-height: 100vh;
-        }
+    /* ========== HEADER ========== */
+    .blog-hero {
+        padding: 100px 40px 50px;
+        text-align: center;
+        max-width: 800px;
+        margin: 0 auto;
+        animation: fadeUp 0.6s ease both;
+    }
 
-       
-        .blog-wrapper {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
+    .blog-hero h1 {
+        font-size: 3rem;
+        font-weight: 800;
+        margin-bottom: 15px;
+        background: linear-gradient(90deg, #818cf8, #c084fc);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        line-height: 1.2;
+    }
 
-        .page-header {
-            text-align: center;
-            margin-bottom: 50px;
-        }
+    .blog-hero p {
+        font-size: 1.1rem;
+        color: #9ca3af;
+        line-height: 1.6;
+    }
 
-        .page-title {
-            font-size: 3rem;
-            font-weight: 700;
-            background: linear-gradient(90deg, #6a5cff, #c763ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 10px;
-        }
+    /* ========== GRID ========== */
+    .blog-wrapper {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 40px 80px;
+    }
 
-        .page-subtitle {
-            font-size: 1.1rem;
-            color: #b8b8ff;
-        }
+    .blog-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+        gap: 32px;
+        animation: fadeUp 0.8s ease both;
+    }
 
-        .blog-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 30px;
-        }
+    /* ========== CARD ========== */
+    .blog-card {
+        background: rgba(15, 23, 42, 0.85);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 20px;
+        overflow: hidden;
+        backdrop-filter: blur(12px);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+        transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        text-decoration: none;
+        display: flex;
+        flex-direction: column;
+        cursor: pointer;
+    }
 
-        .blog-card {
-            backdrop-filter: blur(14px);
-            background: rgba(255, 255, 255, 0.08);
-            border-radius: 20px;
-            padding: 30px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 0 25px rgba(120, 80, 255, 0.15);
-            transition: 0.3s ease;
-            cursor: pointer;
-        }
+    .blog-card:hover {
+        transform: translateY(-8px);
+        border-color: rgba(129, 140, 248, 0.4);
+        box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6), 0 0 30px rgba(129, 140, 248, 0.15);
+    }
 
-        .blog-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 0 35px rgba(120, 80, 255, 0.3);
-            border-color: #a565ff;
-        }
+    /* Card Image */
+    .blog-image-wrapper {
+        width: 100%;
+        height: 200px;
+        background: rgba(2, 6, 23, 0.6);
+        position: relative;
+        overflow: hidden;
+    }
 
-        .blog-meta {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 15px;
-        }
+    .blog-image-wrapper img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
 
-        .author-avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 1.2rem;
-            color: white;
-            flex-shrink: 0;
-        }
+    .blog-card:hover .blog-image-wrapper img {
+        transform: scale(1.08); /* slight zoom on hover */
+    }
 
-        .author-info h5 {
-            color: #ffffff;
-            font-size: 1rem;
-            margin-bottom: 3px;
-        }
+    .blog-image-placeholder {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+        color: white;
+    }
+    
+    .blog-image-placeholder svg {
+        width: 48px;
+        height: 48px;
+        opacity: 0.5;
+    }
 
-        .author-info p {
-            color: #b8b8ff;
-            font-size: 0.85rem;
-        }
+    /* Card Content */
+    .blog-content {
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+    }
 
-        .blog-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: #ffffff;
-            margin-bottom: 12px;
-            line-height: 1.3;
-        }
+    .blog-meta {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 16px;
+    }
 
-        .blog-excerpt {
-            color: #d7d7d7;
-            line-height: 1.6;
-            margin-bottom: 15px;
-        }
+    .author-avatar {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #6366f1, #a855f7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 1.1rem;
+        color: white;
+        flex-shrink: 0;
+        box-shadow: 0 0 10px rgba(99, 102, 241, 0.3);
+    }
 
-        .blog-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-top: 15px;
-            border-top: 1px solid rgba(255,255,255,0.1);
-        }
+    .author-info h5 {
+        color: #f1f5f9;
+        font-size: 0.95rem;
+        margin: 0 0 2px 0;
+        font-weight: 600;
+    }
 
-        .blog-stats {
-            display: flex;
-            gap: 15px;
-            font-size: 0.9rem;
-            color: #b8b8ff;
-        }
+    .author-info p {
+        color: #9ca3af;
+        font-size: 0.8rem;
+        margin: 0;
+    }
 
-        .blog-stats span {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
+    .blog-title {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #ffffff;
+        margin-bottom: 12px;
+        line-height: 1.4;
+        transition: color 0.2s;
+    }
 
-        .read-more {
-            color: #a565ff;
-            text-decoration: none;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            transition: 0.2s;
-        }
+    .blog-card:hover .blog-title {
+        color: #c7d2fe;
+    }
 
-        .read-more:hover {
-            color: #c763ff;
-            gap: 8px;
-        }
+    .blog-excerpt {
+        color: #cbd5e1;
+        line-height: 1.6;
+        font-size: 0.95rem;
+        margin-bottom: 20px;
+        flex: 1;
+    }
 
-        .empty-state {
-            text-align: center;
-            padding: 80px 20px;
-            color: #999;
-        }
+    .blog-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 16px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        margin-top: auto;
+    }
 
-        .empty-state h3 {
-            font-size: 2rem;
-            margin-bottom: 15px;
-        }
+    .blog-stats {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.85rem;
+        color: #9ca3af;
+    }
 
-        @media (max-width: 768px) {
-            .blog-grid {
-                grid-template-columns: 1fr;
-            }
+    .read-more {
+        color: #818cf8;
+        font-size: 0.9rem;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        transition: 0.2s;
+    }
 
-            .page-title {
-                font-size: 2rem;
-            }
-        }
-    </style>
+    .blog-card:hover .read-more {
+        color: #c084fc;
+        gap: 6px;
+    }
+
+    /* ========== EMPTY STATE ========== */
+    .empty-state {
+        text-align: center;
+        padding: 80px 20px;
+        color: #9ca3af;
+    }
+
+    .empty-state .icon { display: block; font-size: 3rem; margin-bottom: 16px; }
+    .empty-state h3 { font-size: 1.8rem; color: #f1f5f9; margin-bottom: 10px; }
+    .empty-state p { font-size: 1.1rem; }
+
+    /* ========== ANIMATION ========== */
+    @keyframes fadeUp {
+        from { opacity: 0; transform: translateY(24px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ========== RESPONSIVE ========== */
+    @media (max-width: 768px) {
+        .blog-hero { padding: 90px 20px 30px; }
+        .blog-hero h1 { font-size: 2.2rem; }
+        .blog-wrapper { padding: 0 20px 60px; }
+        .blog-grid { grid-template-columns: 1fr; }
+    }
+</style>
 {% endblock %}
+
 {% block content %}
 
+<!-- HERO -->
+<div class="blog-hero">
+    <h1>Insights &amp; Articles</h1>
+    <p>Read the latest knowledge, tutorials, and expert advice shared directly by our industry professional mentors.</p>
+</div>
 
+<!-- MAIN GRID -->
 <div class="blog-wrapper">
-    <div class="page-header">
-        <h1 class="page-title">Mentor Insights & Articles</h1>
-        <p class="page-subtitle">Learn from industry experts and experienced mentors</p>
-    </div>
-
     {% if blog_posts %}
     <div class="blog-grid">
         {% for post in blog_posts %}
-        <div class="blog-card" onclick="window.location.href='{% url 'blog_detail' post.id %}'">
-            <div class="blog-meta">
-                <div class="author-avatar">
-                    {% if post.author.profile_photo %}
-                    <img src="{{ post.author.profile_photo.url }}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
-                    {% else %}
-                    {{ post.author.username.0|upper }}
-                    {% endif %}
-                </div>
-                <div class="author-info">
-                    <h5>{{ post.author.username }}</h5>
-                    <p>
-                        {% if post.published_at %}
-                            {{ post.published_at|date:"M d, Y" }}
-                        {% else %}
-                            {{ post.created_at|date:"M d, Y" }}
-                        {% endif %}
-                    </p>
-                </div>
+        <a href="{% url 'blog_detail' post.id %}" class="blog-card" style="text-decoration:none;">
+            
+            <!-- BLOB COVER IMAGE -->
+            <div class="blog-image-wrapper">
+                {% if post.images %}
+                    <img src="{{ post.images.url }}" alt="{{ post.title }}">
+                {% else %}
+                    <div class="blog-image-placeholder">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                            <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                            <polyline points="21 15 16 10 5 21"></polyline>
+                        </svg>
+                    </div>
+                {% endif %}
             </div>
 
-            <h3 class="blog-title">{{ post.title }}</h3>
-            <p class="blog-excerpt">{{ post.body|truncatewords:30|striptags }}</p>
+            <!-- CARD BODY -->
+            <div class="blog-content">
+                <!-- Meta User -->
+                <div class="blog-meta">
+                    <div class="author-avatar">
+                        {% if post.author.profile_photo %}
+                            <img src="{{ post.author.profile_photo.url }}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+                        {% else %}
+                            {{ post.author.username.0|upper }}
+                        {% endif %}
+                    </div>
+                    <div class="author-info">
+                        <h5>{{ post.author.username }}</h5>
+                        <p>
+                            {% if post.published_at %}
+                                {{ post.published_at|date:"M d, Y" }}
+                            {% else %}
+                                {{ post.created_at|date:"M d, Y" }}
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
 
-            <div class="blog-footer">
-                <div class="blog-stats">
-                    <span>
-                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <!-- Title & Excerpt -->
+                <h3 class="blog-title">{{ post.title }}</h3>
+                <p class="blog-excerpt">{{ post.body|truncatewords:20|striptags }}</p>
+
+                <!-- Footer Stats & Link -->
+                <div class="blog-footer">
+                    <div class="blog-stats">
+                        <svg width="15" height="15" fill="currentColor" viewBox="0 0 16 16">
                             <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"/>
                             <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/>
                         </svg>
                         {{ post.views_count|default:0 }}
+                    </div>
+                    <span class="read-more">
+                        Read full article
+                        <svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+                        </svg>
                     </span>
                 </div>
-                <a href="{% url 'blog_detail' post.id %}" class="read-more">
-                    Read More
-                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                        <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
-                    </svg>
-                </a>
             </div>
-        </div>
+            
+        </a>
         {% endfor %}
     </div>
     {% else %}
     <div class="empty-state">
-        <h3>📝 No articles published yet</h3>
-        <p>Mentors haven't published any blog posts yet. Check back soon!</p>
+        <span class="icon">📝</span>
+        <h3>No articles published yet</h3>
+        <p>Mentors haven't published any insights yet. Check back soon!</p>
     </div>
     {% endif %}
 </div>

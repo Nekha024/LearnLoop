@@ -1,222 +1,468 @@
 {% extends 'dashboard/userbase.html' %}
 {% block style %}
-
 <style>
-    .sessions-container {
-        max-width: 1000px;
-        margin: 40px auto;
-        padding: 20px;
-        padding-top:40px;
+    .sessions-page-wrapper {
+        padding: 40px 20px;
+        background-color: #f8fafc;
+        margin-top: 100px;
+        min-height: calc(100vh - 70px);
     }
-
+    
+    .page-header-wrapper {
+        margin-bottom: 40px;
+        text-align: center;
+    }
+    
     .page-title {
-        font-size: 2rem;
-        font-weight: 700;
-        margin-bottom: 30px;
-        color: #333;
+        font-size: 2.2rem;
+        font-weight: 800;
+        color: #1e293b;
+        margin-bottom: 8px;
+        letter-spacing: -0.5px;
     }
-
-    .session-section {
-        background: white;
-        border-radius: 12px;
-        padding: 25px;
-        margin-bottom: 25px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    
+    .page-subtitle {
+        color: #64748b;
+        font-size: 1.1rem;
     }
 
     .section-title {
-        font-size: 1.3rem;
-        font-weight: 600;
-        margin-bottom: 15px;
-        color: #4d79ff;
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: #334155;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #e2e8f0;
     }
 
-    .session-item {
-        border: 1px solid #e6e6e6;
-        border-radius: 8px;
-        padding: 15px;
-        margin-bottom: 15px;
-        transition: box-shadow 0.2s;
+    .session-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 24px;
+        margin-bottom: 50px;
     }
 
-    .session-item:hover {
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    .session-card {
+        background: #ffffff;
+        border-radius: 16px;
+        padding: 24px;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
     }
+
+    .session-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 20px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+        border-color: #cbd5e1;
+    }
+
+    .card-top-accent {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+    }
+    .accent-pending { background: #f59e0b; }
+    .accent-confirmed { background: #10b981; }
+    .accent-completed { background: #6366f1; }
+    .accent-declined { background: #ef4444; }
 
     .session-header {
         display: flex;
         justify-content: space-between;
-        align-items: center;
-        margin-bottom: 10px;
+        align-items: flex-start;
+        margin-bottom: 20px;
     }
 
-    .mentor-name {
-        font-size: 1.1rem;
-        font-weight: 600;
-        color: #333;
+    .mentor-info {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .mentor-avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: #e0e7ff;
+        color: #4f46e5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+
+    .mentor-details h4 {
+        margin: 0;
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: #0f172a;
+    }
+
+    .mentor-details p {
+        margin: 0;
+        font-size: 0.85rem;
+        color: #64748b;
     }
 
     .status-badge {
-        padding: 4px 12px;
+        padding: 6px 12px;
         border-radius: 20px;
-        font-size: 0.85rem;
-        font-weight: 500;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
     }
 
-    .status-pending {
-        background: #fff3cd;
-        color: #856404;
+    .badge-pending { background: #fef3c7; color: #b45309; }
+    .badge-confirmed { background: #d1fae5; color: #047857; }
+    .badge-completed { background: #e0e7ff; color: #4338ca; }
+    .badge-declined { background: #fee2e2; color: #b91c1c; }
+
+    .session-meta {
+        margin-bottom: 24px;
+        flex-grow: 1;
     }
 
-    .status-accepted {
-        background: #d1f2eb;
-        color: #0c5460;
-    }
-
-    .status-completed {
-        background: #d4edda;
-        color: #155724;
-    }
-
-    .status-declined {
-        background: #f8d7da;
-        color: #721c24;
-    }
-
-    .session-details {
+    .meta-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        margin-bottom: 12px;
         font-size: 0.95rem;
-        color: #666;
-        margin-bottom: 10px;
+        color: #475569;
+    }
+
+    .meta-item i {
+        color: #64748b;
+        margin-top: 3px;
+        width: 16px;
+        text-align: center;
+    }
+
+    .meta-item.topic {
+        background: #f8fafc;
+        padding: 10px 12px;
+        border-radius: 8px;
+        border: 1px solid #f1f5f9;
+        margin-top: 16px;
+        font-style: italic;
+    }
+
+    .card-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: auto;
+    }
+
+    .btn-action {
+        flex: 1;
+        padding: 10px 16px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        text-align: center;
+        text-decoration: none;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        border: none;
+        cursor: pointer;
     }
 
     .btn-cancel {
-        padding: 6px 16px;
-        background: #dc3545;
-        color: white;
-        border: none;
-        border-radius: 6px;
-        font-size: 0.9rem;
-        cursor: pointer;
-        text-decoration: none;
-        display: inline-block;
+        background: #ffffff;
+        color: #ef4444;
+        border: 1px solid #fecaca;
     }
 
     .btn-cancel:hover {
-        background: #c82333;
+        background: #fef2f2;
+        border-color: #ef4444;
+        color: #dc2626;
+    }
+
+    .btn-chat {
+        background: #4f46e5;
+        color: #ffffff;
+    }
+
+    .btn-chat:hover {
+        background: #4338ca;
+        color: #ffffff;
+        box-shadow: 0 4px 6px rgba(79, 70, 229, 0.2);
+    }
+    
+    .btn-history {
+        background: #f1f5f9;
+        color: #475569;
+        border: 1px solid #e2e8f0;
+    }
+    
+    .btn-history:hover {
+        background: #e2e8f0;
+        color: #334155;
     }
 
     .empty-state {
         text-align: center;
-        padding: 40px 20px;
-        color: #999;
+        padding: 60px 20px;
+        background: #ffffff;
+        border-radius: 16px;
+        border: 1px dashed #cbd5e1;
+        color: #64748b;
+    }
+
+    .empty-state i {
+        font-size: 3rem;
+        color: #cbd5e1;
+        margin-bottom: 16px;
+    }
+    
+    .empty-state h5 {
+        color: #334155;
+        font-weight: 600;
+        margin-bottom: 8px;
     }
 </style>
 {% endblock %}
+
 {% block content %}
-<div class="sessions-container">
-    <h1 class="page-title">My Sessions</h1>
-
-    <!-- Messages -->
-    {% if messages %}
-        {% for message in messages %}
-        <div class="alert alert-{{ message.tags }}" style="padding: 12px 20px; border-radius: 8px; margin-bottom: 20px; 
-             {% if message.tags == 'success' %}background: #d1fae5; color: #065f46;
-             {% elif message.tags == 'error' %}background: #fee2e2; color: #991b1b;
-             {% else %}background: #dbeafe; color: #1e40af;{% endif %}">
-            {{ message }}
+<div class="sessions-page-wrapper">
+    <div class="container max-w-6xl mx-auto">
+        
+        <div class="page-header-wrapper">
+            <h1 class="page-title">My Mentorship Sessions</h1>
+            <p class="page-subtitle">Track and manage your career guidance appointments</p>
         </div>
-        {% endfor %}
-    {% endif %}
 
-    <!-- Pending Sessions -->
-    <div class="session-section">
-        <h2 class="section-title">⏳ Pending Requests ({{ pending_sessions.count }})</h2>
-        {% if pending_sessions %}
-            {% for session in pending_sessions %}
-            <div class="session-item">
-                <div class="session-header">
-                    <div class="mentor-name">{{ session.mentor.username }}</div>
-                    <span class="status-badge status-pending">Pending</span>
-                </div>
-                <div class="session-details">
-                    <strong>Date:</strong> {{ session.scheduled_date|date:"M d, Y" }} at {{ session.scheduled_time|time:"h:i A" }}<br>
-                    <strong>Duration:</strong> {{ session.duration }} minutes<br>
-                    {% if session.topic %}<strong>Topic:</strong> {{ session.topic }}<br>{% endif %}
-                    <strong>Fee:</strong> {{ session.token_fee }} tokens
-                </div>
-                <a href="{% url 'cancel_session' session.id %}" onclick="return confirm('Cancel this booking?');" class="btn-cancel">Cancel Request</a>
+        {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show shadow-sm" style="border-radius: 12px; margin-bottom: 30px; border: none;
+                 {% if message.tags == 'success' %}background: #d1fae5; color: #065f46;
+                 {% elif message.tags == 'error' %}background: #fee2e2; color: #991b1b;
+                 {% else %}background: #dbeafe; color: #1e40af;{% endif %}">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
             {% endfor %}
-        {% else %}
-            <div class="empty-state">No pending requests.</div>
         {% endif %}
-    </div>
 
-    <!-- Upcoming Accepted Sessions -->
-    <div class="session-section">
-        <h2 class="section-title">📅 Upcoming Sessions ({{ upcoming_sessions.count }})</h2>
+        <!-- Upcoming Accepted Sessions -->
+        <h2 class="section-title"><i class="fas fa-calendar-check text-success"></i> Upcoming Sessions <span class="badge bg-secondary rounded-pill ms-2" style="font-size:0.8rem;">{{ upcoming_sessions.count }}</span></h2>
         {% if upcoming_sessions %}
-            {% for session in upcoming_sessions %}
-            <div class="session-item">
-                <div class="session-header">
-                    <div class="mentor-name">{{ session.mentor.username }}</div>
-                    <span class="status-badge status-accepted">Confirmed</span>
+            <div class="session-grid">
+                {% for session in upcoming_sessions %}
+                <div class="session-card">
+                    <div class="card-top-accent accent-confirmed"></div>
+                    <div class="session-header">
+                        <div class="mentor-info">
+                            <div class="mentor-avatar">{{ session.mentor.username|make_list|first }}</div>
+                            <div class="mentor-details">
+                                <h4>{{ session.mentor.username|title }}</h4>
+                                <p>Mentor</p>
+                            </div>
+                        </div>
+                        <span class="status-badge badge-confirmed">Confirmed</span>
+                    </div>
+                    
+                    <div class="session-meta">
+                        <div class="meta-item">
+                            <i class="far fa-calendar-alt"></i>
+                            <div>
+                                <strong>Date & Time</strong>
+                                <div style="color: #0f172a; font-weight: 500;">{{ session.scheduled_date|date:"D, M d, Y" }} at {{ session.scheduled_time|time:"h:i A" }}</div>
+                            </div>
+                        </div>
+                        <div class="meta-item">
+                            <i class="far fa-clock"></i>
+                            <div>
+                                <strong>Duration</strong>
+                                <div>{{ session.duration }} mins</div>
+                            </div>
+                        </div>
+                        {% if session.topic %}
+                        <div class="meta-item topic">
+                            <i class="far fa-comment-dots" style="margin-top: 2px;"></i>
+                            <div>"{{ session.topic }}"</div>
+                        </div>
+                        {% endif %}
+                        {% if session.meeting_link %}
+                        <div class="meta-item mt-3">
+                            <i class="fas fa-video text-primary"></i>
+                            <div>
+                                <a href="{{ session.meeting_link }}" target="_blank" class="text-primary fw-bold text-decoration-none">Join Meeting Link &rarr;</a>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="card-actions">
+                        <a href="{% url 'chat_room' session.id %}" class="btn-action btn-chat">
+                            <i class="far fa-paper-plane"></i> Message
+                        </a>
+                    </div>
                 </div>
-                <div class="session-details">
-                    <strong>Date:</strong> {{ session.scheduled_date|date:"M d, Y" }} at {{ session.scheduled_time|time:"h:i A" }}<br>
-                    <strong>Duration:</strong> {{ session.duration }} minutes<br>
-                    {% if session.topic %}<strong>Topic:</strong> {{ session.topic }}<br>{% endif %}
-                    {% if session.meeting_link %}<strong>Meeting Link:</strong> <a href="{{ session.meeting_link }}" target="_blank">Join Here</a><br>{% endif %}
-                    <strong>Fee:</strong> {{ session.token_fee }} tokens
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="session-grid">
+                <div class="empty-state mb-5" style="grid-column: 1 / -1;">
+                    <i class="far fa-calendar-times"></i>
+                    <h5>No Upcoming Sessions</h5>
+                    <p>You don't have any confirmed sessions coming up.</p>
                 </div>
             </div>
-            {% endfor %}
-        {% else %}
-            <div class="empty-state">No upcoming sessions.</div>
         {% endif %}
-    </div>
 
-    <!-- Past Completed Sessions -->
-    <div class="session-section">
-        <h2 class="section-title">✅ Completed Sessions ({{ past_sessions.count }})</h2>
+        <!-- Pending Sessions -->
+        <h2 class="section-title"><i class="fas fa-hourglass-half text-warning"></i> Pending Requests <span class="badge bg-secondary rounded-pill ms-2" style="font-size:0.8rem;">{{ pending_sessions.count }}</span></h2>
+        {% if pending_sessions %}
+            <div class="session-grid">
+                {% for session in pending_sessions %}
+                <div class="session-card">
+                    <div class="card-top-accent accent-pending"></div>
+                    <div class="session-header">
+                        <div class="mentor-info">
+                            <div class="mentor-avatar" style="background: #fef3c7; color: #d97706;">{{ session.mentor.username|make_list|first }}</div>
+                            <div class="mentor-details">
+                                <h4>{{ session.mentor.username|title }}</h4>
+                                <p>Mentor</p>
+                            </div>
+                        </div>
+                        <span class="status-badge badge-pending">Pending</span>
+                    </div>
+                    
+                    <div class="session-meta">
+                        <div class="meta-item">
+                            <i class="far fa-calendar-alt"></i>
+                            <div>
+                                <strong>Requested For</strong>
+                                <div style="color: #0f172a; font-weight: 500;">{{ session.scheduled_date|date:"D, M d, Y" }} at {{ session.scheduled_time|time:"h:i A" }}</div>
+                            </div>
+                        </div>
+                        <div class="meta-item">
+                            <i class="far fa-clock"></i>
+                            <div>
+                                <strong>Duration</strong>
+                                <div>{{ session.duration }} mins</div>
+                            </div>
+                        </div>
+                        {% if session.topic %}
+                        <div class="meta-item topic">
+                            <i class="far fa-comment-dots" style="margin-top: 2px;"></i>
+                            <div>"{{ session.topic }}"</div>
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="card-actions">
+                        <a href="{% url 'cancel_session' session.id %}" onclick="return confirm('Are you sure you want to withdraw this request?');" class="btn-action btn-cancel">
+                            <i class="fas fa-times"></i> Withdraw Request
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="session-grid">
+                <div class="empty-state mb-5" style="grid-column: 1 / -1;">
+                    <i class="far fa-paper-plane"></i>
+                    <h5>No Pending Requests</h5>
+                    <p>All your requests have been processed.</p>
+                </div>
+            </div>
+        {% endif %}
+
+        <!-- Past Completed Sessions -->
+        <h2 class="section-title"><i class="fas fa-check-circle text-primary"></i> Past Sessions <span class="badge bg-secondary rounded-pill ms-2" style="font-size:0.8rem;">{{ past_sessions.count }}</span></h2>
         {% if past_sessions %}
-            {% for session in past_sessions %}
-            <div class="session-item">
-                <div class="session-header">
-                    <div class="mentor-name">{{ session.mentor.username }}</div>
-                    <span class="status-badge status-completed">Completed</span>
+            <div class="session-grid">
+                {% for session in past_sessions %}
+                <div class="session-card" style="background: #f8fafc; border-style: dashed;">
+                    <div class="card-top-accent accent-completed" style="opacity: 0.5;"></div>
+                    <div class="session-header">
+                        <div class="mentor-info">
+                            <div class="mentor-avatar" style="background: #e2e8f0; color: #64748b;">{{ session.mentor.username|make_list|first }}</div>
+                            <div class="mentor-details">
+                                <h4 style="color: #475569;">{{ session.mentor.username|title }}</h4>
+                                <p>Mentor</p>
+                            </div>
+                        </div>
+                        <span class="status-badge badge-completed" style="background: #f1f5f9; color: #475569;"><i class="fas fa-check me-1"></i> Completed</span>
+                    </div>
+                    
+                    <div class="session-meta">
+                        <div class="meta-item">
+                            <i class="far fa-calendar-check"></i>
+                            <div>
+                                <strong>Session Date</strong>
+                                <div>{{ session.scheduled_date|date:"M d, Y" }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card-actions">
+                        <a href="{% url 'chat_room' session.id %}" class="btn-action btn-history">
+                            <i class="fas fa-history"></i> Chat History
+                        </a>
+                    </div>
                 </div>
-                <div class="session-details">
-                    <strong>Date:</strong> {{ session.scheduled_date|date:"M d, Y" }}<br>
-                    <strong>Duration:</strong> {{ session.duration }} minutes<br>
-                    {% if session.topic %}<strong>Topic:</strong> {{ session.topic }}<br>{% endif %}
-                    <strong>Completed:</strong> {{ session.completed_at|date:"M d, Y" }}
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="session-grid">
+                <div class="empty-state mb-5" style="grid-column: 1 / -1;">
+                    <i class="fas fa-history"></i>
+                    <h5>No Past Sessions</h5>
+                    <p>You haven't completed any mentorship sessions yet.</p>
+                </div>
+            </div>
+        {% endif %}
+
+        <!-- Declined Sessions -->
+        {% if declined_sessions %}
+        <h2 class="section-title"><i class="far fa-times-circle text-danger"></i> Declined Requests</h2>
+        <div class="session-grid">
+            {% for session in declined_sessions %}
+            <div class="session-card" style="background: #fff5f5; border-color: #fecaca; opacity: 0.8;">
+                <div class="card-top-accent accent-declined"></div>
+                <div class="session-header">
+                    <div class="mentor-info">
+                        <div class="mentor-avatar" style="background: #fee2e2; color: #ef4444;">{{ session.mentor.username|make_list|first }}</div>
+                        <div class="mentor-details">
+                            <h4>{{ session.mentor.username|title }}</h4>
+                        </div>
+                    </div>
+                    <span class="status-badge badge-declined">Declined</span>
+                </div>
+                <div class="session-meta">
+                    <div class="meta-item">
+                        <i class="far fa-calendar-times"></i>
+                        <div>
+                            <strong>Requested Date</strong>
+                            <div>{{ session.scheduled_date|date:"D, M d, Y" }}</div>
+                        </div>
+                    </div>
                 </div>
             </div>
             {% endfor %}
-        {% else %}
-            <div class="empty-state">No completed sessions yet.</div>
-        {% endif %}
-    </div>
-
-    <!-- Declined Sessions -->
-    {% if declined_sessions %}
-    <div class="session-section">
-        <h2 class="section-title">❌ Declined Requests</h2>
-        {% for session in declined_sessions %}
-        <div class="session-item">
-            <div class="session-header">
-                <div class="mentor-name">{{ session.mentor.username }}</div>
-                <span class="status-badge status-declined">Declined</span>
-            </div>
-            <div class="session-details">
-                <strong>Requested for:</strong> {{ session.scheduled_date|date:"M d, Y" }}
-            </div>
         </div>
-        {% endfor %}
+        {% endif %}
+
     </div>
-    {% endif %}
-
 </div>
-
 {% endblock %}

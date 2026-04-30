@@ -40,12 +40,12 @@ class MentorProfile(models.Model):
     fee_30min = models.IntegerField(
         default=10,
         validators=[MinValueValidator(0), MaxValueValidator(1000)],
-        help_text="Token fee for 30-minute session"
+        help_text="Fee (in Rupee) for 30-minute session"
     )
     fee_60min = models.IntegerField(
         default=20,
         validators=[MinValueValidator(0), MaxValueValidator(2000)],
-        help_text="Token fee for 60-minute session"
+        help_text="Fee (in Rupee) for 60-minute session"
     )
     total_sessions = models.IntegerField(default=0)
     total_earnings = models.IntegerField(default=0)
@@ -130,7 +130,7 @@ class MentorshipSession(models.Model):
     scheduled_date = models.DateField()
     scheduled_time = models.TimeField()
     duration = models.IntegerField(choices=DURATION_CHOICES, default=30)
-    token_fee = models.IntegerField(default=0)
+    fee_amount = models.IntegerField(default=0)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
     topic = models.CharField(max_length=200, blank=True, null=True)
     notes = models.TextField(blank=True, null=True)  # ✅ Changed from 'note' to 'notes'
@@ -167,7 +167,7 @@ class ContentContribution(models.Model):
     body = models.TextField()
     images=models.ImageField(upload_to='contributions/images/', blank=True, null=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='draft')
-    token_reward = models.IntegerField(default=0)
+    reward_amount = models.IntegerField(default=0)
     views_count = models.IntegerField(default=0)
     
     created_at = models.DateTimeField(auto_now_add=True)

@@ -1,251 +1,471 @@
 {% extends 'dashboard/mentorbase.html'%}
-{% block style%}
 
-/* Header */
-.dashboard-header{
-    background:rgba(15,23,42,0.9);
-    border:1px solid rgba(255,255,255,0.08);
-    padding:25px 30px;
-    border-radius:20px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:35px;
-    box-shadow:0 20px 40px rgba(0,0,0,0.6);
+{% block style %}
+<style>
+
+/* ========== PAGE LAYOUT ========== */
+.content-page {
+    padding: 40px 48px 60px;
+    max-width: 1900px;
+    margin: auto;
 }
 
-.dashboard-header h1{
-    font-size:32px;
-    color:white;
+/* ========== PAGE HEADER ========== */
+.page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 36px;
 }
 
-.dashboard-header p{
-    color:#9ca3af;
+.page-header-left h1 {
+    font-size: 30px;
+    font-weight: 700;
+    background: linear-gradient(90deg, #a5b4fc, #6366f1);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin: 0 0 4px 0;
 }
 
-.user-chip{
-    background:linear-gradient(135deg,#4f46e5,#6366f1);
-    padding:10px 18px;
-    border-radius:30px;
-    font-weight:600;
+.page-header-left p {
+    color: #6b7280;
+    font-size: 14px;
+    margin: 0;
 }
 
-/* Stats */
-.stats-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-    gap:20px;
-    margin-bottom:40px;
+.contributor-chip {
+    background: linear-gradient(135deg, rgba(99,102,241,0.2), rgba(34,211,238,0.1));
+    border: 1px solid rgba(99,102,241,0.3);
+    color: #a5b4fc;
+    padding: 10px 22px;
+    border-radius: 30px;
+    font-size: 14px;
+    font-weight: 600;
 }
 
-.stat-card{
-    background:rgba(15,23,42,0.85);
-    padding:25px;
-    border-radius:18px;
-    border:1px solid rgba(255,255,255,0.08);
-    box-shadow:0 10px 30px rgba(0,0,0,0.6);
-    transition:.3s;
+/* ========== STATS STRIP ========== */
+.stats-strip {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-bottom: 36px;
 }
 
-.stat-card:hover{
-    transform:translateY(-6px);
+.stat-card {
+    background: rgba(15, 23, 42, 0.85);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 18px;
+    padding: 24px 28px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    transition: transform 0.2s, border-color 0.2s;
 }
 
-.stat-card h4{
-    color:#9ca3af;
+.stat-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(99,102,241,0.3);
 }
 
-.stat-card span{
-    font-size:32px;
-    font-weight:700;
-    color:#818cf8;
+.stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    display: grid;
+    place-items: center;
+    font-size: 22px;
+    flex-shrink: 0;
 }
 
-.stat-card.highlight{
-    background:linear-gradient(135deg,#4f46e5,#6366f1);
+.stat-icon.purple { background: rgba(99,102,241,0.15); }
+.stat-icon.green  { background: rgba(34,197,94,0.15); }
+
+.stat-info h4 {
+    font-size: 12px;
+    color: #6b7280;
+    margin: 0 0 4px 0;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
-.stat-card.highlight span{
-    color:white;
+.stat-info span {
+    font-size: 28px;
+    font-weight: 700;
+    color: #e2e8f0;
+    line-height: 1;
 }
 
-/* Main container */
-.content-view{
-    max-width:1000px;
-    margin:auto;
+/* ========== TWO-COLUMN MAIN LAYOUT ========== */
+.main-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    align-items: start;
 }
 
-.content-view h2{
-    font-size:34px;
-    margin-bottom:30px;
-    background:linear-gradient(90deg,#a5b4fc,#6366f1);
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
+/* ========== CARDS ========== */
+.panel-card {
+    background: rgba(15, 23, 42, 0.85);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 20px;
+    padding: 28px;
+    box-shadow: 0 20px 45px rgba(0,0,0,0.5);
 }
 
-/* Cards */
-.card{
-    background:rgba(15,23,42,0.85);
-    padding:30px;
-    border-radius:18px;
-    border:1px solid rgba(255,255,255,0.08);
-    margin-bottom:30px;
-    box-shadow:0 20px 40px rgba(0,0,0,.6);
+.panel-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #a5b4fc;
+    margin: 0 0 22px 0;
+    padding-bottom: 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
-/* Form */
-.form-group{
-    margin-bottom:20px;
+/* ========== FORM ========== */
+.form-group {
+    margin-bottom: 20px;
 }
 
-label{
-    font-weight:600;
-    margin-bottom:8px;
-    display:block;
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #c7d2fe;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
 }
 
-input, textarea{
-    width:100%;
-    padding:14px;
-    border-radius:10px;
-    background:#020617;
-    border:1px solid rgba(255,255,255,0.1);
-    color:white;
+.form-group input[type="text"],
+.form-group textarea {
+    width: 100%;
+    padding: 13px 16px;
+    border-radius: 12px;
+    background: rgba(2, 6, 23, 0.7);
+    border: 1px solid rgba(99,102,241,0.2);
+    color: #e2e8f0;
+    font-size: 15px;
+    font-family: inherit;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    box-sizing: border-box;
 }
 
-input:focus, textarea:focus{
-    outline:none;
-    border-color:#6366f1;
+.form-group input[type="text"]:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99,102,241,0.15);
+}
+
+.form-group input[type="text"]::placeholder,
+.form-group textarea::placeholder {
+    color: #4b5563;
+}
+
+.form-group textarea {
+    min-height: 140px;
+    resize: vertical;
+    line-height: 1.6;
+}
+
+/* File upload */
+.file-upload-wrapper {
+    border: 2px dashed rgba(99,102,241,0.25);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    background: rgba(2, 6, 23, 0.4);
+}
+
+.file-upload-wrapper:hover {
+    border-color: rgba(99,102,241,0.5);
+    background: rgba(99,102,241,0.05);
+}
+
+.file-upload-wrapper input[type="file"] {
+    display: none;
+}
+
+.file-upload-label {
+    cursor: pointer;
+    font-size: 14px;
+    color: #6b7280;
+}
+
+.file-upload-label span {
+    color: #818cf8;
+    font-weight: 600;
 }
 
 /* Buttons */
-.btn{
-    padding:14px;
-    border-radius:10px;
-    font-weight:600;
-    border:none;
-    cursor:pointer;
+.btn-row {
+    display: flex;
+    gap: 12px;
+    margin-top: 6px;
 }
 
-.btn-primary{
-    background:#4f46e5;
-    color:white;
+.btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: inherit;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    transition: all 0.22s ease;
 }
 
-.btn-primary:hover{
-    background:#4338ca;
+.btn-primary {
+    background: linear-gradient(135deg, #6366f1, #4f46e5);
+    color: white;
+    box-shadow: 0 4px 14px rgba(99,102,241,0.4);
 }
 
-.btn-gray{
-    background:rgba(255,255,255,0.08);
-    color:white;
+.btn-primary:hover {
+    box-shadow: 0 6px 20px rgba(99,102,241,0.55);
+    transform: translateY(-1px);
 }
 
-/* Submissions */
-.content-list{
-    list-style:none;
+.btn-secondary {
+    background: rgba(255,255,255,0.06);
+    color: #9ca3af;
+    border: 1px solid rgba(255,255,255,0.08);
 }
 
-.content-item{
-    display:flex;
-    justify-content:space-between;
-    padding:18px;
-    background:rgba(2,6,23,.6);
-    border-radius:14px;
-    border:1px solid rgba(255,255,255,0.08);
-    margin-bottom:12px;
+.btn-secondary:hover {
+    background: rgba(255,255,255,0.1);
+    color: #e2e8f0;
 }
 
-.status-badge{
-    padding:6px 12px;
-    border-radius:20px;
-    font-size:12px;
-    font-weight:600;
+/* ========== SUBMISSIONS LIST ========== */
+.contrib-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
-.published{ background:rgba(34,197,94,.15); color:#22c55e; }
-.pending{ background:rgba(251,191,36,.15); color:#facc15; }
-.draft{ background:rgba(255,255,255,.1); color:white; }
-
-.edit-link{
-    margin-left:15px;
-    color:#818cf8;
-    text-decoration:none;
+.contrib-item {
+    background: rgba(2, 6, 23, 0.55);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 14px;
+    padding: 16px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    transition: border-color 0.2s;
 }
 
+.contrib-item:hover {
+    border-color: rgba(99,102,241,0.25);
+}
+
+.contrib-title {
+    font-weight: 600;
+    color: #e2e8f0;
+    font-size: 14.5px;
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.contrib-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.status-badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: capitalize;
+    white-space: nowrap;
+}
+
+.published { background: rgba(34,197,94,0.15);  color: #4ade80; }
+.pending   { background: rgba(251,191,36,0.15);  color: #fbbf24; }
+.draft     { background: rgba(255,255,255,0.08); color: #9ca3af; }
+.rejected  { background: rgba(239,68,68,0.12);   color: #f87171; }
+
+.edit-btn {
+    color: #818cf8;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(99,102,241,0.2);
+    background: rgba(99,102,241,0.1);
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.edit-btn:hover {
+    background: rgba(99,102,241,0.2);
+    color: #a5b4fc;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 32px 16px;
+    color: #4b5563;
+    font-size: 14px;
+}
+
+.empty-state .icon {
+    font-size: 36px;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.limit-note {
+    font-size: 12px;
+    color: #4b5563;
+    margin-top: 14px;
+    text-align: center;
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 860px) {
+    .main-grid  { grid-template-columns: 1fr; }
+    .stats-strip{ grid-template-columns: 1fr; }
+    .content-page { padding: 24px 20px 40px; }
+}
+
+</style>
 {% endblock %}
+
 {% block content %}
+<div class="content-page">
 
-<div class="dashboard-header">
-    <div>
-        <h1>Creator Dashboard</h1>
-        <p>Write, publish and earn tokens</p>
-    </div>
-    <div class="user-chip">✨ Contributor</div>
-</div>
-
-<div class="stats-grid">
-    <div class="stat-card">
-        <h4>Total Posts</h4>
-        <span>{{ contributions|length }}</span>
-    </div>
-    <div class="stat-card">
-        <h4>Published</h4>
-        <span>{{ contributions|length }}</span>
-    </div>
-    <div class="stat-card highlight">
-        <h4>Total Tokens</h4>
-        <span>🔥 {{ total_tokens|default:"120" }}</span>
-    </div>
-</div>
-
-<div id="content" class="content-view">
-    <h2>Content Contribution</h2>
-
-    <div class="card">
-       <form method="POST" action="{% url 'submit_content' %}" enctype="multipart/form-data">
-    {% csrf_token %}
-
-    <div class="form-group">
-        <label>Title</label>
-        <input type="text" name="title" required>
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="page-header-left">
+            <h1>Content Contribution</h1>
+            <p>Write and publish articles, tutorials, and guides for learners.</p>
+        </div>
+        <div class="contributor-chip">✨ Contributor</div>
     </div>
 
-    <div class="form-group">
-        <label>Content</label>
-        <textarea rows="8" name="body" required></textarea>
+    <!-- Stats -->
+    <div class="stats-strip">
+        <div class="stat-card">
+            <div class="stat-icon purple">📝</div>
+            <div class="stat-info">
+                <h4>Total Posts</h4>
+                <span>{{ contributions|length }}</span>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon green">🌐</div>
+            <div class="stat-info">
+                <h4>Published</h4>
+                <span>{% with contributions|length as total %}{{ total }}{% endwith %}</span>
+            </div>
+        </div>
     </div>
 
-    <div class="form-group">
-        <label>Image</label>
-        <input type="file" name="images" accept="image/*">
-    </div>
+    <!-- Main Two-Column Grid -->
+    <div class="main-grid">
 
-    <div style="display:flex;gap:15px;">
-        <button class="btn btn-primary" type="submit" name="submit_type" value="publish">
-            Submit
-        </button>
-        <button class="btn btn-gray" type="submit" name="submit_type" value="draft">
-            Save Draft
-        </button>
-    </div>
-</form>
-    </div>
+        <!-- LEFT: Submit Form -->
+        <div class="panel-card">
+            <div class="panel-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                </svg>
+                Write New Content
+            </div>
 
-    <div class="card">
-        <ul class="content-list">
-            {% for contrib in contributions %}
-            <li class="content-item">
-                <div><strong>{{ contrib.title }}</strong></div>
-                <div>
-                    <span class="status-badge {{ contrib.status }}">{{ contrib.status }}</span>
-                    <a href="{% url 'edit_content' contrib.id %}" class="edit-link">Edit</a>
+            <form method="POST" action="{% url 'submit_content' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="id_title">Title</label>
+                    <input id="id_title" type="text" name="title" required placeholder="e.g. Getting Started with Django REST Framework">
                 </div>
-            </li>
-            {% endfor %}
-        </ul>
-    </div>
+
+                <div class="form-group">
+                    <label for="id_body">Content</label>
+                    <textarea id="id_body" name="body" rows="8" required placeholder="Write your article, tutorial, or guide here..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Cover Image (optional)</label>
+                    <div class="file-upload-wrapper" onclick="document.getElementById('id_images').click()">
+                        <label class="file-upload-label" for="id_images">
+                            🖼️ <span>Click to upload</span> or drag and drop<br>
+                            <small>PNG, JPG, GIF up to 5MB</small>
+                        </label>
+                        <input id="id_images" type="file" name="images" accept="image/*"
+                               onchange="document.querySelector('.file-upload-label').innerHTML = '✅ ' + this.files[0].name">
+                    </div>
+                </div>
+
+                <div class="btn-row">
+                    <button class="btn btn-primary" type="submit" name="submit_type" value="publish">
+                        🚀 Publish
+                    </button>
+                    <button class="btn btn-secondary" type="submit" name="submit_type" value="draft">
+                        💾 Save Draft
+                    </button>
+                </div>
+                <p class="limit-note">You can have up to <strong>5</strong> contributions at a time.</p>
+            </form>
+        </div>
+
+        <!-- RIGHT: My Submissions -->
+        <div class="panel-card">
+            <div class="panel-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                    <line x1="16" y1="13" x2="8" y2="13"/>
+                    <line x1="16" y1="17" x2="8" y2="17"/>
+                    <polyline points="10 9 9 9 8 9"/>
+                </svg>
+                My Submissions
+            </div>
+
+            <ul class="contrib-list">
+                {% for contrib in contributions %}
+                <li class="contrib-item">
+                    <div class="contrib-title" title="{{ contrib.title }}">{{ contrib.title }}</div>
+                    <div class="contrib-actions">
+                        <span class="status-badge {{ contrib.status }}">{{ contrib.status }}</span>
+                        <a href="{% url 'edit_content' contrib.id %}" class="edit-btn">✏️ Edit</a>
+                    </div>
+                </li>
+                {% empty %}
+                <div class="empty-state">
+                    <span class="icon">📄</span>
+                    No content submitted yet.<br>Write your first article on the left!
+                </div>
+                {% endfor %}
+            </ul>
+        </div>
+
+    </div><!-- /main-grid -->
+
 </div>
-
-
 {% endblock %}

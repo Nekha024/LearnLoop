@@ -47,7 +47,7 @@ class AvailabilitySlotAdmin(admin.ModelAdmin):
 
 @admin.register(MentorshipSession)
 class MentorshipSessionAdmin(admin.ModelAdmin):
-    list_display = ['id', 'mentor', 'student', 'scheduled_date', 'scheduled_time', 'duration', 'status', 'token_fee']
+    list_display = ['id', 'mentor', 'student', 'scheduled_date', 'scheduled_time', 'duration', 'status', 'fee_amount']
     list_filter = ['status', 'duration', 'scheduled_date', 'created_at']
     search_fields = ['mentor__username', 'student__username', 'topic']
     readonly_fields = ['created_at', 'updated_at', 'completed_at']
@@ -60,7 +60,7 @@ class MentorshipSessionAdmin(admin.ModelAdmin):
             'fields': ('scheduled_date', 'scheduled_time', 'duration')
         }),
         ('Details', {
-            'fields': ('topic', 'notes', 'meeting_link', 'token_fee')
+            'fields': ('topic', 'notes', 'meeting_link', 'fee_amount')
         }),
         ('Status', {
             'fields': ('status', 'created_at', 'updated_at', 'completed_at')
@@ -92,7 +92,7 @@ class MentorshipSessionAdmin(admin.ModelAdmin):
 class ContentContributionAdmin(admin.ModelAdmin):
     list_display = [
         'title', 'author', 'status',
-        'token_reward', 'views_count',
+        'reward_amount', 'views_count',
         'created_at', 'published_at'
     ]
 
@@ -110,7 +110,7 @@ class ContentContributionAdmin(admin.ModelAdmin):
             'fields': ('author', 'title', 'body', 'images')  # 👈 renamed
         }),
         ('Status & Rewards', {
-            'fields': ('status', 'token_reward', 'views_count')
+            'fields': ('status', 'reward_amount', 'views_count')
         }),
         ('Timestamps', {
             'fields': ('created_at', 'updated_at', 'published_at')

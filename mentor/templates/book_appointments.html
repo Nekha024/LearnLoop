@@ -245,6 +245,43 @@
         color: #1e5a9e;
     }
 
+    /* Availability Slots */
+    .slots-box {
+        background: #f5f3ff;
+        border: 1px solid #ddd6fe;
+        border-radius: 10px;
+        padding: 14px;
+        margin-top: 15px;
+    }
+
+    .slots-box h5 {
+        font-size: 0.9rem;
+        color: #5b21b6;
+        margin-bottom: 10px;
+        font-weight: 600;
+    }
+
+    .slot-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        background: #ede9fe;
+        color: #6d28d9;
+        border: 1px solid #c4b5fd;
+        border-radius: 20px;
+        padding: 4px 11px;
+        font-size: 12px;
+        font-weight: 600;
+        margin: 3px 3px 3px 0;
+    }
+
+    .no-slots {
+        font-size: 13px;
+        color: #9ca3af;
+        text-align: center;
+        padding: 8px 0;
+    }
+
     /* Animations */
     @keyframes fadeIn {
         0% { opacity: 0; transform: translateY(20px); }
@@ -299,6 +336,21 @@
                 {% csrf_token %}
 
                 <div class="form-group">
+                    <label for="duration">Session Duration <span class="required">*</span></label>
+                    <select id="duration" name="duration" class="form-control" required>
+                        <option value="30">30 Minutes</option>
+                        <option value="60">60 Minutes</option>
+                    </select>
+                    <p class="help-text">Select the duration of your mentoring session.</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="topic">Topic (optional)</label>
+                    <input type="text" id="topic" name="topic" class="form-control" placeholder="e.g. Career guidance, Python project review…">
+                    <p class="help-text">What would you like to discuss?</p>
+                </div>
+
+                <div class="form-group">
                     <label for="date">Date <span class="required">*</span></label>
                     <input type="date" id="date" name="date" class="form-control" required>
                     <p class="help-text">Select your preferred date</p>
@@ -311,16 +363,16 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="note">Note (optional)</label>
-                    <textarea id="note" name="note" class="form-control" rows="4" placeholder="Any specific topics or questions you'd like to discuss..."></textarea>
-                    <p class="help-text">Help your mentor prepare for the session</p>
+                    <label for="note">Additional Notes (optional)</label>
+                    <textarea id="note" name="note" class="form-control" rows="3" placeholder="Any specific questions or things to prepare for..."></textarea>
                 </div>
 
-                <button type="submit" class="btn-submit">Confirm Booking</button>
+                <button type="submit" class="btn-submit">📅 Confirm Booking</button>
                 <a href="{% url 'mentor_detail' mentor.id %}" class="btn-back">← Back to Profile</a>
             </form>
         </div>
 
+        
         <!-- RIGHT: Mentor Card -->
         <div class="mentor-card">
 
@@ -343,10 +395,34 @@
                 {% endif %}
             </div>
 
+            {% if mentor_profile %}
+            <div class="fee-info">
+                <h5>💰 Session Fees (₹)</h5>
+                <p>🕐 30 min — <strong>₹{{ mentor_profile.fee_30min }}</strong></p>
+                <p>🕑 60 min — <strong>₹{{ mentor_profile.fee_60min }}</strong></p>
+            </div>
+            {% endif %}
+
+            <div class="slots-box">
+                <h5>📅 Available Time Slots</h5>
+                {% if availability_slots %}
+                <div>
+                    {% for slot in availability_slots %}
+                    <span class="slot-pill">
+                        📆 {{ slot.get_day_of_week_display }}
+                        &nbsp;{{ slot.start_time|time:'h:i A' }} – {{ slot.end_time|time:'h:i A' }}
+                    </span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="no-slots">No availability slots added yet.</p>
+                {% endif %}
+            </div>
+
         </div>
 
     </div>
-
+    
 </div>
 
 <script>
@@ -356,6 +432,15 @@
     
     // Set default date to today
     document.getElementById('date').value = today;
+
+
+
+    const now = new Date();
+
+const hours = String(now.getHours()).padStart(2,'0');
+const minutes = String(now.getMinutes()).padStart(2,'0');
+
+document.getElementById("time").value = `${hours}:${minutes}`;
 </script>
 
 {% endblock %}

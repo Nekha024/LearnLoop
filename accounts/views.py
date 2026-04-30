@@ -19,7 +19,7 @@ def auth_view(request):
             signup_form = CustomUserCreationForm(request.POST)
             if signup_form.is_valid():
                 user = signup_form.save()
-                messages.success(request, "Account created successfully! You can now log in.")
+                messages.success(request, "Account created successfully ! You can now log in.")
                 signup_form = CustomUserCreationForm()
             else:
                 messages.error(request, "Signup failed. Please fix the errors below.")

@@ -2,133 +2,59 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from .models import CustomUser
 
-class CustomUserCreationForm(UserCreationForm):
+class DynamicPlaceholderMixin:
+    def apply_placeholders(self):
+        for field_name in self.fields:
+            self.fields[field_name].help_text = None
+            label = self.fields[field_name].label or field_name.replace('_', ' ').title()
+            self.fields[field_name].widget.attrs.update({'placeholder': label})
+            
+            # Field choices
+            if hasattr(self.fields[field_name], 'choices'):
+                choices = list(self.fields[field_name].choices)
+                if choices and (choices[0][0] in ('', 'unknown') or choices[0][1] in ('---------', 'Unknown')):
+                    choices[0] = ('', f"Select {label}")
+                elif not choices or (choices[0][0] != '' and choices[0][0] != 'unknown'):
+                    choices.insert(0, ('', f"Select {label}"))
+                self.fields[field_name].choices = choices
+
+            # Widget choices (needed for some widget types)
+            if hasattr(self.fields[field_name].widget, 'choices'):
+                w_choices = list(self.fields[field_name].widget.choices)
+                if w_choices and (w_choices[0][0] in ('', 'unknown') or w_choices[0][1] in ('---------', 'Unknown')):
+                    w_choices[0] = ('', f"Select {label}")
+                elif not w_choices or (w_choices[0][0] != '' and w_choices[0][0] != 'unknown'):
+                    w_choices.insert(0, ('', f"Select {label}"))
+                self.fields[field_name].widget.choices = w_choices
+                
+            if isinstance(self.fields[field_name].widget, (forms.FileInput, forms.ClearableFileInput)):
+                self.fields[field_name].widget.attrs.update({'class': 'file-input'})
+
+class CustomUserCreationForm(UserCreationForm, DynamicPlaceholderMixin):
     class Meta:
         model = CustomUser
         fields = ('username', 'email','phone_number', 'password1', 'password2')
     
-    #Method to remove the Help Texts from passwords and username
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs) # Call the parent's init first
-        
-        # Turn off the username help text
-        if 'username' in self.fields:
-            self.fields['username'].help_text = None
-            self.fields['username'].label = None
-        
-        # Turn off the password bullet points (on 'password1')
-        if 'password1' in self.fields:
-            self.fields['password1'].help_text = None
-            
-        # (Optional) Turn off the password confirmation help text
-        if 'password2' in self.fields:
-            self.fields['password2'].help_text = None
-        
-        if 'phone_number' in self.fields:
-            self.fields['phone_number'].help_text = None
-            
-        # Adding placeholders to the form fields
-        self.fields['username'].widget.attrs.update(
-            {'placeholder': 'Username'}
-        )
-        self.fields['email'].widget.attrs.update(
-            {'placeholder': 'Email address'}
-        )
-        self.fields['phone_number'].widget.attrs.update(
-            {'placeholder': 'Phone number'}
-        )
-        self.fields['password1'].widget.attrs.update(
-            {'placeholder': 'Password'}
-        )
-        self.fields['password2'].widget.attrs.update(
-            {'placeholder': 'Repeat Password'}
-        )
+        super().__init__(*args, **kwargs)
+        self.apply_placeholders()
 
-class CustomAuthenticationForm(AuthenticationForm):
+class CustomAuthenticationForm(AuthenticationForm, DynamicPlaceholderMixin):
     username = forms.CharField(widget=forms.TextInput(attrs={'autofocus': True}))
     password = forms.CharField(widget=forms.PasswordInput)
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['username'].widget.attrs.update(
-            {'placeholder': 'Username'}
-        )
-        self.fields['password'].widget.attrs.update(
-            {'placeholder': 'Password'}
-        )
-        
+        self.apply_placeholders()
 
-class MentorCreationForm(UserCreationForm):
+class MentorCreationForm(UserCreationForm, DynamicPlaceholderMixin):
     class Meta:
         model = CustomUser
         fields = ('username', 'email', 'phone_number', 'previous_experience','gender','profile_photo','profession','experience_years','expertise','bio','linkedin','portfolio','intro_video', 'password1', 'password2')
         
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs) # Call the parent's init first
-        
-        # Turn off the username help text
-        # if 'username' in self.fields:
-        #     self.fields['username'].help_text = None
-        
-        # # Turn off the password bullet points (on 'password1')
-        # if 'password1' in self.fields:
-        #     self.fields['password1'].help_text = None
-            
-        # # (Optional) Turn off the password confirmation help text
-        # if 'password2' in self.fields:
-        #     self.fields['password2'].help_text = None
-        
-        # if 'phone_number' in self.fields:
-        #     self.fields['phone_number'].help_text = None
-        
-        # Put the names of all fields you want to clear in a list
-        fields_to_clear = ['username', 'password1', 'password2', 'phone_number']
-        # Loop through the list and set help_text to None if the field exists
-        for field_name in fields_to_clear:
-            if field_name in self.fields:
-                self.fields[field_name].help_text = None
-        
-        self.fields['username'].widget.attrs.update(
-            {'placeholder': 'Username'}
-        )
-        
-        self.fields['gender'].widget.attrs.update(
-            {'placeholder': 'Gender'}
-        )   
-        self.fields['email'].widget.attrs.update(
-            {'placeholder': 'Email address'}
-        )
-        self.fields['phone_number'].widget.attrs.update(
-            {'placeholder': 'Phone number'}
-        )
-        
-        self.fields['previous_experience'].widget.attrs.update(
-            {'placeholder': 'Previous Experience'}
-        )
-        self.fields['password1'].widget.attrs.update(
-            {'placeholder': 'Password'}
-        )
-        self.fields['password2'].widget.attrs.update(
-            {'placeholder': 'Repeat Password'}
-        )
-        self.fields['profession'].widget.attrs.update(
-            {'placeholder': 'Profession'}
-        )
-        self.fields['experience_years'].widget.attrs.update(
-            {'placeholder': 'Years of Experience'}
-        )
-        self.fields['expertise'].widget.attrs.update(
-            {'placeholder': 'Area of Expertise'}
-        )
-        self.fields['bio'].widget.attrs.update(
-            {'placeholder': 'Brief Bio'}
-        )
-        self.fields['linkedin'].widget.attrs.update(
-            {'placeholder': 'LinkedIn Profile URL'}
-        )
-        self.fields['portfolio'].widget.attrs.update(
-            {'placeholder': 'Portfolio URL'}
-        )
+        super().__init__(*args, **kwargs)
+        self.apply_placeholders()
         
     def save(self, commit=True):
         user = super().save(commit=False)
@@ -137,9 +63,13 @@ class MentorCreationForm(UserCreationForm):
             user.save()
         return user
 
-class MentorLoginForm(AuthenticationForm):
+class MentorLoginForm(AuthenticationForm, DynamicPlaceholderMixin):
     username = forms.CharField(widget=forms.TextInput(attrs={'autofocus': True}))
     password = forms.CharField(widget=forms.PasswordInput)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.apply_placeholders()
 
 
 from django import forms

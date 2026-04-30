@@ -1,283 +1,311 @@
-    {% extends 'dashboard/userbase.html' %}
-    {% block style %}
-    <style>
-        /* --- Modern Neon-Glow IT Theme --- */
+{% extends 'dashboard/userbase.html' %}
+{% block style %}
+<style>
 
-        :root {
-            --bg1: #0d1224;
-            --bg2: #131b34;
-            --card: rgba(255,255,255,0.06);
-            --border: rgba(255,255,255,0.12);
-            --text: #e9ecf5;
-            --text-dim: #9aa4c7;
-            --brand1: #6a5cff;
-            --brand2: #c763ff;
-            --success: #10b981;
-            --radius: 18px;
-        }
+/* ========== BASE ========== */
+body {
+    font-family: "Poppins", "Inter", sans-serif;
+    background: radial-gradient(ellipse at top, #0f172a 0%, #020617 70%);
+    color: #e2e8f0;
+    min-height: 100vh;
+}
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+/* ========== HERO ========== */
+.browse-hero {
+    padding: 110px 40px 50px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
 
-        body {
-            font-family: "Inter", "Poppins", sans-serif;
-            background: radial-gradient(circle at top left, var(--bg2), var(--bg1));
-            color: var(--text);
-          
-        }
+.browse-hero h1 {
+    font-size: 3rem;
+    font-weight: 800;
+    line-height: 1.2;
+    max-width: 680px;
+    margin-bottom: 16px;
+}
 
-        
+.browse-hero h1 .accent {
+    background: linear-gradient(90deg, #818cf8, #c084fc);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
 
-        /* HERO */
-        .mentor-hero {
-            padding: 90px 20px 40px;
-            text-align: left;
-            width: 90%;
-            max-width: 1200px;
-            margin: auto;
-        }
+.browse-hero p {
+    font-size: 1.05rem;
+    color: #6b7280;
+    max-width: 600px;
+    line-height: 1.7;
+    margin-bottom: 36px;
+}
 
-        .mentor-hero h1 {
-            font-size: 3rem;
-            font-weight: 800;
-            max-width: 700px;
-            line-height: 1.2;
-        }
+/* Stats bar */
+.stats-bar {
+    display: flex;
+    gap: 48px;
+    flex-wrap: wrap;
+}
 
-        .mentor-hero span {
-            background: linear-gradient(90deg, var(--brand1), var(--brand2));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
 
-        .mentor-hero p {
-            font-size: 1.1rem;
-            max-width: 650px;
-            margin-top: 12px;
-            color: var(--text-dim);
-            line-height: 1.6;
-        }
+.stat-number {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #a5b4fc;
+    line-height: 1;
+}
 
-        /* Stats Bar */
-        .stats-bar {
-            display: flex;
-            gap: 40px;
-            margin-top: 30px;
-        }
+.stat-label {
+    font-size: 0.85rem;
+    color: #4b5563;
+    letter-spacing: 0.4px;
+}
 
-        .stat-item {
-            display: flex;
-            flex-direction: column;
-        }
+/* ========== MENTOR GRID ========== */
+.grid-section {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 10px 40px 80px;
+}
 
-        .stat-number {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--brand2);
-        }
+.section-heading {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #4b5563;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 28px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
 
-        .stat-label {
-            font-size: 0.9rem;
-            color: var(--text-dim);
-        }
+.mentor-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(295px, 1fr));
+    gap: 28px;
+}
 
-        /* Mentor Grid */
-        .containers { 
-            width: 90%; 
-            max-width: 1200px; 
-            margin: 50px auto; 
-        }
+/* ========== MENTOR CARD ========== */
+.mentor-card {
+    background: rgba(15, 23, 42, 0.85);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 22px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+}
 
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 32px;
-        }
+/* top neon bar on hover */
+.mentor-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #6366f1, #c084fc);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.35s ease;
+    z-index: 1;
+}
 
-        /* Mentor Card */
-        .mentor-card {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 24px;
-            backdrop-filter: blur(10px);
-            text-align: center;
-            transition: all 0.35s ease;
-            position: relative;
-            overflow: hidden;
-        }
+.mentor-card:hover::before { transform: scaleX(1); }
 
-        .mentor-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--brand1), var(--brand2));
-            transform: scaleX(0);
-            transition: transform 0.35s ease;
-        }
+.mentor-card:hover {
+    transform: translateY(-7px);
+    border-color: rgba(99,102,241,0.35);
+    box-shadow: 0 25px 60px rgba(0,0,0,0.7), 0 0 30px rgba(99,102,241,0.15);
+}
 
-        .mentor-card:hover::before {
-            transform: scaleX(1);
-        }
+/* ---- Photo ---- */
+.card-photo {
+    height: 190px;
+    position: relative;
+    overflow: hidden;
+    background: rgba(2,6,23,0.6);
+}
 
-        .mentor-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 0 30px rgba(120,90,255,0.3);
-            border-color: var(--brand1);
-        }
+.card-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
 
-        .mentor-img-wrapper {
-            height: 200px;
-            border-radius: var(--radius);
-            overflow: hidden;
-            margin-bottom: 20px;
-            background: rgba(255,255,255,0.08);
-            position: relative;
-        }
+.mentor-card:hover .card-photo img {
+    transform: scale(1.07);
+}
 
-        .mentor-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: 0.35s ease;
-        }
+.avatar-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4rem;
+    font-weight: 800;
+    color: white;
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+}
 
-        .mentor-card:hover .mentor-img {
-            transform: scale(1.08);
-        }
+.verified-chip {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: rgba(16,185,129,0.9);
+    color: white;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11.5px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    backdrop-filter: blur(4px);
+    z-index: 2;
+}
 
-        .placeholder-img {
-            font-size: 4rem;
-            display: flex;
-            height: 100%;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            font-weight: 700;
-        }
+/* ---- Body ---- */
+.card-body {
+    padding: 22px 22px 14px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
 
-        /* Badge */
-        .verified-badge {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            background: var(--success);
-            color: white;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
+.card-name {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #f1f5f9;
+    margin: 0 0 4px 0;
+}
 
-        .mentor-name { 
-            font-size: 1.3rem; 
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
+.card-role {
+    font-size: 13px;
+    color: #6b7280;
+    margin-bottom: 14px;
+}
 
-        .mentor-role { 
-            color: var(--text-dim); 
-            font-size: 0.95rem; 
-            margin-bottom: 12px;
-        }
+/* Skill tags */
+.skill-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 16px;
+}
 
-        .mentor-expertise {
-            font-size: 0.85rem;
-            color: var(--brand2);
-            margin-bottom: 18px;
-            line-height: 1.5;
-            min-height: 40px;
-        }
+.skill-tag {
+    background: rgba(99,102,241,0.1);
+    border: 1px solid rgba(99,102,241,0.2);
+    color: #a5b4fc;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11.5px;
+    font-weight: 600;
+}
 
-        .mentor-stats {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-bottom: 18px;
-            font-size: 0.85rem;
-        }
+/* Stats row */
+.card-stats {
+    display: flex;
+    gap: 18px;
+    margin-bottom: 16px;
+    font-size: 13px;
+}
 
-        .mentor-stats span {
-            color: var(--text-dim);
-        }
+.card-stat {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: #6b7280;
+}
 
-        .btn-mentor {
-            display: inline-block;
-            padding: 12px 30px;
-            border-radius: 50px;
-            border: 1px solid var(--brand1);
-            text-decoration: none;
-            color: var(--text);
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
+/* Fee row */
+.fee-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+}
 
-        .btn-mentor:hover {
-            background: linear-gradient(90deg, var(--brand1), var(--brand2));
-            border-color: transparent;
-            box-shadow: 0 0 15px rgba(120,90,255,0.5);
-            transform: translateY(-2px);
-        }
+.fee-pill {
+    background: rgba(16,185,129,0.1);
+    border: 1px solid rgba(16,185,129,0.22);
+    color: #6ee7b7;
+    padding: 5px 13px;
+    border-radius: 20px;
+    font-size: 12.5px;
+    font-weight: 700;
+}
 
-        /* Empty State */
-        .empty-state {
-            grid-column: 1 / -1;
-            text-align: center;
-            padding: 80px 20px;
-        }
+.fee-pill .dur {
+    font-weight: 400;
+    color: #4b5563;
+    font-size: 11px;
+}
 
-        .empty-state h2 {
-            font-size: 2rem;
-            margin-bottom: 15px;
-            color: var(--text-dim);
-        }
+/* CTA Button */
+.btn-view {
+    display: block;
+    text-align: center;
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid rgba(99,102,241,0.35);
+    color: #a5b4fc;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.25s ease;
+    background: rgba(99,102,241,0.08);
+    margin-top: auto;
+}
 
-        .empty-state p {
-            color: var(--text-dim);
-            font-size: 1.1rem;
-        }
+.btn-view:hover {
+    background: linear-gradient(135deg, #6366f1, #4f46e5);
+    border-color: transparent;
+    color: white;
+    box-shadow: 0 4px 18px rgba(99,102,241,0.45);
+    transform: translateY(-1px);
+}
 
-        /* Responsive */
-        @media (max-width: 768px) {
-            .mentor-hero h1 {
-                font-size: 2rem;
-            
-            }
+/* ========== EMPTY STATE ========== */
+.empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 80px 20px;
+}
 
-            .stats-bar {
-                gap: 20px;
-            }
+.empty-state .icon { font-size: 3rem; display: block; margin-bottom: 16px; }
+.empty-state h2 { font-size: 1.6rem; color: #374151; margin-bottom: 8px; }
+.empty-state p { color: #4b5563; }
 
-            .stat-number {
-                font-size: 1.5rem;
-            }
+/* ========== RESPONSIVE ========== */
+@media (max-width: 768px) {
+    .browse-hero { padding: 90px 20px 40px; }
+    .browse-hero h1 { font-size: 2rem; }
+    .grid-section { padding: 10px 20px 60px; }
+    .stats-bar { gap: 28px; }
+    .stat-number { font-size: 1.5rem; }
+    .mentor-grid { grid-template-columns: 1fr; gap: 20px; }
+}
 
-            .grid {
-                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-                gap: 20px;
-            }
-        }
-    </style>
-    {% endblock %}
+</style>
+{% endblock %}
 
 {% block content %}
 
-<!-- HERO SECTION -->
-<div class="mentor-hero">
-    <h1>Meet Your <span>Expert Mentors</span></h1>
-    <p>Learn from real industry professionals who guide you through your journey, step by confident step. Book 1-on-1 sessions and accelerate your growth.</p>
-    
+<!-- ===== HERO ===== -->
+<div class="browse-hero">
+    <h1>Meet Your <span class="accent">Expert Mentors</span></h1>
+    <p>Learn from real industry professionals who guide you step by step. Book 1-on-1 sessions and accelerate your career growth.</p>
+
     <div class="stats-bar">
         <div class="stat-item">
             <span class="stat-number">{{ mentors|length }}</span>
@@ -294,58 +322,78 @@
     </div>
 </div>
 
-<!-- MENTOR GRID -->
-<div class="containers">
-    <div class="grid">
+<!-- ===== GRID ===== -->
+<div class="grid-section">
+    <div class="section-heading">{{ mentors|length }} mentor{{ mentors|length|pluralize }} available</div>
+
+    <div class="mentor-grid">
         {% for item in mentors %}
         <div class="mentor-card">
-            <div class="mentor-img-wrapper">
+
+            <!-- Photo -->
+            <div class="card-photo">
                 {% if item.mentor.profile_photo %}
-                    <img src="{{ item.mentor.profile_photo.url }}" class="mentor-img" alt="{{ item.mentor.username }}">
+                <img src="{{ item.mentor.profile_photo.url }}" alt="{{ item.mentor.username }}">
                 {% else %}
-                    <div class="placeholder-img">{{ item.mentor.username.0|upper }}</div>
+                <div class="avatar-placeholder">{{ item.mentor.username.0|upper }}</div>
                 {% endif %}
-                <span class="verified-badge">
-                    <svg width="12" height="12" fill="currentColor" viewBox="0 0 16 16">
+                <span class="verified-chip">
+                    <svg width="10" height="10" fill="currentColor" viewBox="0 0 16 16">
                         <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"/>
                     </svg>
                     Verified
                 </span>
             </div>
 
-            <h3 class="mentor-name">
-                {% if item.mentor.first_name and item.mentor.last_name %}
-                    {{ item.mentor.first_name }} {{ item.mentor.last_name }}
-                {% else %}
-                    {{ item.mentor.username }}
+            <!-- Body -->
+            <div class="card-body">
+                <h3 class="card-name">
+                    {% if item.mentor.first_name and item.mentor.last_name %}
+                        {{ item.mentor.first_name }} {{ item.mentor.last_name }}
+                    {% else %}
+                        {{ item.mentor.username }}
+                    {% endif %}
+                </h3>
+                <p class="card-role">{{ item.mentor.profession|default:"Professional Mentor" }} · {{ item.mentor.experience_years|default:"N/A" }} yrs</p>
+
+                <!-- Skills -->
+                {% if item.profile and item.profile.expertise %}
+                <div class="skill-tags">
+                    {% for skill in item.profile.expertise.split %}
+                    <span class="skill-tag">{{ skill }}</span>
+                    {% endfor %}
+                </div>
+                {% elif item.mentor.expertise %}
+                <div class="skill-tags">
+                    <span class="skill-tag">{{ item.mentor.expertise|truncatewords:4 }}</span>
+                </div>
                 {% endif %}
-            </h3>
 
-            <p class="mentor-role">
-                {{ item.mentor.profession|default:"Professional Mentor" }}
-            </p>
+                <!-- Stats -->
+                <div class="card-stats">
+                    {% if item.profile %}
+                    <span class="card-stat">💼 {{ item.profile.total_sessions }} sessions</span>
+                    <span class="card-stat">⭐ {{ item.profile.rating|floatformat:1 }}</span>
+                    {% else %}
+                    <span class="card-stat">💼 {{ item.mentor.experience_years|default:"N/A" }} yrs exp</span>
+                    {% endif %}
+                </div>
 
-            <p class="mentor-expertise">
+                <!-- Fees in ₹ -->
                 {% if item.profile %}
-                    {{ item.profile.expertise|truncatewords:8 }}
-                {% else %}
-                    Experienced in guiding students through their learning journey
+                <div class="fee-row">
+                    <span class="fee-pill">₹{{ item.profile.fee_30min }} <span class="dur">/ 30 min</span></span>
+                    <span class="fee-pill">₹{{ item.profile.fee_60min }} <span class="dur">/ 60 min</span></span>
+                </div>
                 {% endif %}
-            </p>
 
-            <div class="mentor-stats">
-                {% if item.profile %}
-                    <span>💼 {{ item.profile.total_sessions }} sessions</span>
-                    <span>⭐ {{ item.profile.rating|floatformat:1 }}</span>
-                {% else %}
-                    <span>💼 {{ item.mentor.experience_years|default:"5+" }} years exp</span>
-                {% endif %}
+                <a href="{% url 'mentor_detail' item.mentor.id %}" class="btn-view">View Profile →</a>
             </div>
 
-            <a href="{% url 'mentor_detail' item.mentor.id %}" class="btn-mentor">View Profile</a>
         </div>
         {% empty %}
         <div class="empty-state">
+            <span class="icon">🔍</span>
             <h2>No mentors available right now.</h2>
             <p>Come back later — the best are worth waiting for.</p>
         </div>

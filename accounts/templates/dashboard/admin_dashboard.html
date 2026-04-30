@@ -4,19 +4,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Professional Admin Dashboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <title>LearnLoop | Admin Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <style>
         :root {
-            --primary-color: #2c3e50;
-            --secondary-color: #3498db;
-            --background-color: #ecf0f1;
-            --card-color: #ffffff;
-            --success-color: #2ecc71;
-            --warning-color: #f39c12;
-            --font-family: 'Roboto', sans-serif;
+            --primary: #4f46e5;
+            --primary-light: #6366f1;
+            --primary-dark: #3730a3;
+            --secondary: #0ea5e9;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --background: #f8fafc;
+            --sidebar: #1e293b;
+            --card: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --radius-xl: 16px;
+            --radius-lg: 12px;
+            --radius-md: 8px;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --font: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        .dark-mode {
+            --background: #0f172a;
+            --sidebar: #020617;
+            --card: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #334155;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.3);
         }
 
         * {
@@ -26,555 +49,1425 @@
         }
 
         body {
-            font-family: var(--font-family);
-            background-color: var(--background-color);
+            font-family: var(--font);
+            background-color: var(--background);
+            color: var(--text-main);
             display: flex;
             min-height: 100vh;
-            color: #333;
+            transition: background-color 0.3s ease;
         }
 
+        /* Sidebar Styles */
         .sidebar {
-            width: 250px;
-            background-color: var(--primary-color);
+            width: 280px;
+            background-color: var(--sidebar);
             color: white;
-            padding: 20px 0;
             display: flex;
             flex-direction: column;
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            height: 100vh;
+            left: 0;
+            top: 0;
+            z-index: 100;
+            transition: all 0.3s ease;
         }
 
-        .logo {
-            text-align: center;
-            padding: 10px 20px 30px;
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--secondary-color);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            margin-bottom: 20px;
+        .sidebar-header {
+            padding: 2.5rem 2rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
-        .nav-link {
-            display: block;
-            padding: 15px 20px;
+        .logo-box {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.2rem;
             color: white;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            background: linear-gradient(to right, #fff, #94a3b8);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 0 1rem;
+        }
+
+        .nav-group-label {
+            padding: 1.5rem 1rem 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #475569;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0.875rem 1rem;
+            color: #94a3b8;
             text-decoration: none;
-            transition: background-color 0.2s, color 0.2s;
+            border-radius: var(--radius-md);
+            margin-bottom: 4px;
             font-weight: 500;
-            border-left: 5px solid transparent;
+            transition: all 0.2s ease;
             cursor: pointer;
         }
 
-        .nav-link:hover,
-        .nav-link.active {
-            background-color: #34495e;
-            border-left-color: var(--secondary-color);
+        .nav-item i {
+            width: 20px;
+            font-size: 1.1rem;
+            transition: transform 0.2s ease;
         }
 
-        .main-content {
-            flex-grow: 1;
-            padding: 30px;
+        .nav-item:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+            color: white;
         }
 
-        .header-bar {
+        .nav-item.active {
+            background-color: var(--primary);
+            color: white;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+        }
+
+        .nav-item:hover i {
+            transform: scale(1.1);
+        }
+
+        /* Profile Specific Styles */
+        .profile-header {
+            height: 200px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+            position: relative;
+            margin-bottom: 70px;
+        }
+
+        .profile-avatar-wrapper {
+            position: absolute;
+            bottom: -50px;
+            left: 40px;
+            border: 5px solid var(--card);
+            border-radius: 50%;
+            overflow: hidden;
+            background: var(--card);
+            box-shadow: var(--shadow);
+        }
+
+        .profile-avatar-large {
+            width: 120px;
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: 800;
+            color: white;
+            background: var(--primary);
+        }
+
+        .profile-info {
+            padding: 0 40px 40px;
+        }
+
+        .profile-name {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+
+        .profile-role {
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .profile-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .info-card {
+            background: var(--background);
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+        }
+
+        .info-card h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-main);
+        }
+
+        .info-item {
+            margin-bottom: 1.25rem;
+        }
+
+        .info-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 4px;
+        }
+
+        .info-value {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-container {
+            background: var(--card);
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-2xl);
+            overflow-y: auto;
+            position: relative;
+            transform: scale(0.95);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border: 1px solid var(--border);
+        }
+
+        .modal-overlay.active .modal-container {
+            transform: scale(1);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.2s;
+        }
+
+        .modal-close:hover {
+            background: var(--danger);
+            color: white;
+            transform: rotate(90deg);
+        }
+
+        .modal-header-hero {
+            height: 150px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            padding: 2rem;
+            display: flex;
+            align-items: flex-end;
+            position: relative;
+        }
+
+        .modal-avatar-box {
+            width: 100px;
+            height: 100px;
+            border-radius:var(--radius-lg);
+            border: 4px solid var(--card);
+            background: var(--card);
+            position: absolute;
+            bottom: -30px;
+            left: 2rem;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .modal-avatar-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .modal-title-area {
+            margin-left: 140px;
+            padding: 1.5rem 2rem;
+        }
+
+        .modal-title-area h2 {
+            font-size: 1.75rem;
+            font-weight: 800;
+            margin-bottom: 5px;
+        }
+
+        .modal-section {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .modal-section:last-child {
+            border-bottom: none;
+        }
+
+        .modal-section h4 {
+            font-size: 0.875rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .availability-grid {
             display: flex;
             flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .day-chip {
+            padding: 4px 12px;
+            border-radius: 12px;
+            background: var(--background);
+            border: 1px solid var(--border);
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .video-container {
+            width: 100%;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            background: #000;
+            margin-top: 1rem;
+        }
+
+        .video-container video {
+            width: 100%;
+            display: block;
+        }
+
+        .sidebar-footer {
+            padding: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Main Content Styles */
+        .main-wrapper {
+            flex: 1;
+            margin-left: 280px;
+            padding: 2rem;
+            max-width: 1600px;
+        }
+
+        header {
+            display: flex;
             justify-content: space-between;
             align-items: center;
-            padding-bottom: 20px;
-            margin-bottom: 30px;
-            border-bottom: 2px solid #ddd;
-            gap: 10px;
+            margin-bottom: 2.5rem;
         }
 
-        .header-bar h1 {
-            font-weight: 300;
-            font-size: 2rem;
-            color: var(--primary-color);
+        .page-title h1 {
+            font-size: 1.875rem;
+            font-weight: 800;
+            letter-spacing: -0.025em;
         }
 
-        .header-right {
+        .page-title p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-top: 4px;
+        }
+
+        .header-actions {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 1rem;
         }
 
-        #theme-toggle {
-            background-color: var(--secondary-color);
-            color: white;
-            padding: 6px 12px;
-            border: none;
+        .theme-btn {
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
-            font-size: 1.2rem;
+            border: 1px solid var(--border);
+            background: var(--card);
+            color: var(--text-main);
             cursor: pointer;
-            transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
         }
 
-        .user-info a {
-            color: var(--primary-color);
-            text-decoration: none;
-            padding: 8px 15px;
-            border: 1px solid var(--primary-color);
-            border-radius: 4px;
-            transition: background-color 0.2s, color 0.2s;
+        .theme-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
         }
 
-        .user-info a:hover {
-            background-color: var(--primary-color);
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 6px 16px 6px 6px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 30px;
+            cursor: pointer;
+        }
+
+        .avatar {
+            width: 32px;
+            height: 32px;
+            background: var(--primary);
             color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.875rem;
         }
 
+        /* Stats Grid */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-            margin-bottom: 40px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
         }
 
-        .card {
-            background: var(--card-color);
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s;
+        .stat-card {
+            background: var(--card);
+            padding: 1.5rem;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            transition: transform 0.2s, box-shadow 0.2s;
         }
 
-        .card:hover {
-            transform: translateY(-5px);
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
         }
 
-        .card-title {
-            font-size: 0.9rem;
-            color: #7f8c8d;
-            margin-bottom: 10px;
+        .stat-info h3 {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-muted);
             text-transform: uppercase;
+            letter-spacing: 0.025em;
+            margin-bottom: 0.5rem;
         }
 
-        .card-value {
-            font-size: 2.5rem;
+        .stat-info .value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--text-main);
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .icon-total { background: rgba(79, 70, 229, 0.1); color: var(--primary); }
+        .icon-pending { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
+        .icon-approved { background: rgba(16, 185, 129, 0.1); color: var(--success); }
+
+        /* Content Sections */
+        .section {
+            display: none;
+            animation: slideUp 0.4s ease-out;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .section.active {
+            display: block;
+            opacity: 1;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .content-card {
+            background: var(--card);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-header h2 {
+            font-size: 1.25rem;
             font-weight: 700;
-            color: var(--primary-color);
         }
 
-        .card.pending .card-value {
-            color: var(--warning-color);
-        }
-
-        .card.approved .card-value {
-            color: var(--success-color);
-        }
-
-        .table-container {
-            background: var(--card-color);
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            margin-bottom: 40px;
+        /* Table Styles */
+        .table-responsive {
             overflow-x: auto;
-        }
-
-        .table-container h3 {
-            margin-bottom: 20px;
-            color: var(--primary-color);
-            border-bottom: 1px solid #eee;
-            padding-bottom: 10px;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            min-width: 600px;
         }
 
-        th {
-            background-color: #f4f6f9;
-            color: var(--primary-color);
-            font-weight: 500;
+        thead th {
+            background: var(--background);
+            padding: 1rem 1.5rem;
             text-align: left;
-            padding: 12px 15px;
-            border-bottom: 2px solid #ddd;
-        }
-
-        td {
-            padding: 12px 15px;
-            border-bottom: 1px solid #eee;
-        }
-
-        tr:hover {
-            background-color: #fafafa;
-        }
-
-        .tag {
-            padding: 5px 10px;
-            border-radius: 15px;
             font-size: 0.75rem;
             font-weight: 700;
             text-transform: uppercase;
-            display: inline-block;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 10;
         }
 
-        .tag.tag-yes {
-            background-color: var(--success-color);
+        td {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+            font-size: 0.925rem;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: rgba(248, 250, 252, 0.5);
+        }
+
+        .dark-mode tr:hover td {
+            background: rgba(30, 41, 59, 0.5);
+        }
+
+        .mentor-identity {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .mentor-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--border);
+        }
+
+        .mentor-avatar.placeholder {
+            background: linear-gradient(135deg, var(--primary-light), var(--primary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
             color: white;
+            font-weight: 800;
+            font-size: 1.1rem;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
         }
 
-        .tag.tag-no {
-            background-color: #bdc3c7;
-            color: #333;
-        }
-
-        .tag.tag-approved {
-            background-color: rgba(46, 204, 113, 0.15);
-            color: var(--success-color);
-        }
-
-        .tag.tag-pending {
-            background-color: rgba(243, 156, 18, 0.15);
-            color: var(--warning-color);
-        }
-
-        .btn-approve {
-            background-color: var(--secondary-color);
-            color: white;
-            padding: 6px 12px;
-            border: none;
-            border-radius: 4px;
-            text-decoration: none;
-            font-size: 0.9rem;
-            transition: background-color 0.2s;
-        }
-
-        .btn-approve:hover {
-            background-color: #2980b9;
-        }
-
-        .section {
-            display: none;
-        }
-
-        .section.active {
+        .mentor-info .name {
+            font-weight: 700;
+            color: var(--text-main);
             display: block;
         }
 
-        .floating-message {
-            min-width: 250px;
-            margin-bottom: 10px;
-            padding: 12px 20px;
-            border-radius: 5px;
+        .mentor-info .email {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* Tags */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: capitalize;
+        }
+
+        .badge-pending { background: #fef3c7; color: #92400e; }
+        .badge-approved { background: #dcfce7; color: #166534; }
+        .badge-danger { background: #fee2e2; color: #991b1b; }
+        .badge-info { background: #e0f2fe; color: #075985; }
+
+        /* Action Buttons */
+        .actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-approve {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        .btn-approve:hover {
+            background: var(--success);
             color: white;
-            float: left;
-            font-weight: 500;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            opacity: 0;
-            transform: translateY(-20px);
-            animation: slideIn 0.5s forwards, fadeOut 0.5s forwards 3.5s;
+            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
         }
 
-        .floating-message.success {
-            background-color: #2ecc71;
+        .btn-delete {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
         }
 
-        .floating-message.error {
-            background-color: #e74c3c;
+        .btn-delete:hover {
+            background: var(--danger);
+            color: white;
+            box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
         }
 
-        .floating-message.info {
-            background-color: #3498db;
+        .btn-edit {
+            background: rgba(14, 165, 233, 0.1);
+            color: var(--secondary);
         }
 
-        @keyframes slideIn {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .btn-edit:hover {
+            background: var(--secondary);
+            color: white;
         }
 
-        @keyframes fadeOut {
-            to {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
+        /* Notifications */
+        .notification-toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            padding: 1rem 1.5rem;
+            background: var(--card);
+            color: var(--text-main);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 1000;
+            border-left: 4px solid var(--primary);
+            animation: slideInRight 0.3s ease-out;
+            border: 1px solid var(--border);
         }
 
-        body.dark-mode {
-            --primary-color: #ecf0f1;
-            --secondary-color: #3498db;
-            --background-color: #2c3e50;
-            --card-color: #34495e;
-            color: #ecf0f1;
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
         }
 
-        body.dark-mode .sidebar {
-            background-color: #1a252f;
-            color: #ecf0f1;
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
         }
 
-        body.dark-mode .nav-link:hover,
-        body.dark-mode .nav-link.active {
-            background-color: #2c3e50;
-            border-left-color: var(--secondary-color);
+        ::-webkit-scrollbar-track {
+            background: transparent;
         }
 
-        body.dark-mode table th {
-            background-color: #2c3e50;
-            color: #ecf0f1;
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 10px;
         }
 
-        body.dark-mode table td {
-            border-bottom: 1px solid #3c4a57;
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-muted);
         }
 
-        body.dark-mode .table-container {
-            background-color: var(--card-color);
-        }
-
-        /* Responsive */
+        /* Responsive Fixes */
         @media (max-width: 1024px) {
-            .stats-grid {
-                grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            }
+            .sidebar { width: 80px; }
+            .sidebar .logo-text, .sidebar .nav-item span, .sidebar .nav-group-label { display: none; }
+            .sidebar-header { padding: 1.5rem 1rem; justify-content: center; }
+            .main-wrapper { margin-left: 80px; }
+            .nav-item { justify-content: center; padding: 1rem; }
         }
 
-        @media (max-width: 768px) {
-            body {
-                flex-direction: column;
-            }
-
-            .sidebar {
-                width: 100%;
-                flex-direction: row;
-                overflow-x: auto;
-                padding: 10px 0;
-            }
-
-            .nav-link {
-                flex: 1;
-                text-align: center;
-                padding: 10px 5px;
-                border-left: none;
-                border-bottom: 3px solid transparent;
-            }
-
-            .nav-link.active {
-                border-bottom-color: var(--secondary-color);
-            }
-
-            .main-content {
-                padding: 15px;
-            }
-
-            .header-bar h1 {
-                font-size: 1.5rem;
-            }
-
-            .header-right {
-                flex-wrap: wrap;
-            }
+        @media (max-width: 640px) {
+            .main-wrapper { margin-left: 0; padding: 1rem; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.show { transform: translateX(0); }
+            header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+            .header-actions { width: 100%; justify-content: space-between; }
         }
     </style>
 </head>
 
 <body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo-box">L</div>
+            <span class="logo-text">LearnLoop</span>
+        </div>
 
-    <div class="sidebar">
-        <div class="logo">LearnLoop</div>
-        <div class="nav-link active" onclick="showSection('dashboard')">Dashboard</div>
-        <div class="nav-link" onclick="showSection('mentors')">Mentor Management</div>
-        <div class="nav-link" onclick="showSection('students')">Student Users</div>
-        <div class="nav-link" onclick="showSection('settings')">System Settings</div>
-    </div>
+        <nav class="sidebar-nav">
+            <div class="nav-group-label">Overview</div>
+            <a onclick="showSection('dashboard', this)" class="nav-item active">
+                <i class="fa-solid fa-gauge-high"></i>
+                <span>Dashboard</span>
+            </a>
+            <a onclick="showSection('profile', this)" class="nav-item">
+                <i class="fa-solid fa-circle-user"></i>
+                <span>My Profile</span>
+            </a>
 
-    <div class="main-content">
+            <div class="nav-group-label">Management</div>
+            <a onclick="showSection('mentors', this)" class="nav-item">
+                <i class="fa-solid fa-chalkboard-user"></i>
+                <span>Mentors</span>
+            </a>
+            <a onclick="showSection('students', this)" class="nav-item">
+                <i class="fa-solid fa-users"></i>
+                <span>Students</span>
+            </a>
 
-        <div class="header-bar">
-            <h1>Admin Dashboard</h1>
-            <div class="header-right">
-                <button id="theme-toggle"><i class="fa-solid fa-moon"></i></button>
-                <div class="user-info">
-                    <span>Welcome, {{ request.user.username }}</span>
-                    <a href="{% url 'auth' %}">Logout</a>
+            <div class="nav-group-label">System</div>
+            <a onclick="showSection('settings', this)" class="nav-item">
+                <i class="fa-solid fa-sliders"></i>
+                <span>Settings</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <a href="{% url 'logout' %}" class="nav-item" style="color: #ef4444;">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Logout</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-wrapper">
+        <header>
+            <div class="page-title">
+                <h1 id="current-title">Admin Dashboard</h1>
+                <p id="current-subtitle">Welcome back, Admin. Here's what's happening today.</p>
+            </div>
+            <div class="header-actions">
+                <button class="theme-btn" id="theme-toggle" title="Toggle Theme">
+                    <i class="fa-solid fa-moon"></i>
+                </button>
+                <div class="user-profile" onclick="showSection('profile')" style="cursor: pointer;">
+                    <div class="avatar">{{ request.user.username|slice:":1"|upper }}</div>
+                    <span style="font-weight: 600; font-size: 0.875rem;">{{ request.user.username }}</span>
+                </div>
+            </div>
+        </header>
+
+        {% if messages %}
+        <div id="messages-container">
+            {% for message in messages %}
+            <div class="notification-toast">
+                <i class="fa-solid fa-circle-check" style="color: var(--primary);"></i>
+                <span>{{ message }}</span>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Dashboard Section -->
+        <div class="section active" id="dashboard">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-info">
+                        <h3>Total Mentors</h3>
+                        <div class="value">{{ total_mentors_count|default:"0" }}</div>
+                    </div>
+                    <div class="stat-icon icon-total">
+                        <i class="fa-solid fa-user-graduate"></i>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-info">
+                        <h3>Pending Approvals</h3>
+                        <div class="value">{{ mentors|length }}</div>
+                    </div>
+                    <div class="stat-icon icon-pending">
+                        <i class="fa-solid fa-clock"></i>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-info">
+                        <h3>Approved Mentors</h3>
+                        <div class="value">{{ approved_mentors_count|default:"0" }}</div>
+                    </div>
+                    <div class="stat-icon icon-approved">
+                        <i class="fa-solid fa-check-circle"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <div class="card-header">
+                    <h2>Recent Mentor Registrations</h2>
+                    <a onclick="showSection('mentors')" style="color: var(--primary); font-size: 0.875rem; font-weight: 600; cursor: pointer;">View All</a>
+                </div>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Mentor</th>
+                                <th>Expertise</th>
+                                <th>Exp. Years</th>
+                                <th>Status</th>
+                                <th>Joined</th>
+                                <th style="text-align: right;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for mentor in all_mentors|slice:":5" %}
+                            <tr>
+                                <td>
+                                    <div class="mentor-identity">
+                                        {% if mentor.profile_photo %}
+                                        <img src="{{ mentor.profile_photo.url }}" class="mentor-avatar">
+                                        {% else %}
+                                        <div class="mentor-avatar placeholder">{{ mentor.username|slice:":1"|upper }}</div>
+                                        {% endif %}
+                                        <div class="mentor-info">
+                                            <span class="name">{{ mentor.username }}</span>
+                                            <span class="email">{{ mentor.email }}</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>{{ mentor.expertise }}</td>
+                                <td>{{ mentor.experience_years }} Years</td>
+                                <td>
+                                    {% if mentor.is_approved %}
+                                    <span class="badge badge-approved">Approved</span>
+                                    {% else %}
+                                    <span class="badge badge-pending">Pending</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ mentor.date_joined|date:"M d, Y" }}</td>
+                                <td style="text-align: right;">
+                                    <button class="btn-icon btn-edit view-mentor-btn" title="Quick View" 
+                                        data-id="{{ mentor.id }}"
+                                        data-username="{{ mentor.username|escapejs }}"
+                                        data-email="{{ mentor.email|escapejs }}"
+                                        data-profession="{{ mentor.profession|escapejs }}"
+                                        data-expertise="{{ mentor.expertise|escapejs }}"
+                                        data-experience="{{ mentor.experience_years }}"
+                                        data-gender="{{ mentor.gender|escapejs }}"
+                                        data-bio="{{ mentor.bio|escapejs }}"
+                                        data-linkedin="{{ mentor.linkedin|default_if_none:""|escapejs }}"
+                                        data-portfolio="{{ mentor.portfolio|default_if_none:""|escapejs }}"
+                                        data-photo="{% if mentor.profile_photo %}{{ mentor.profile_photo.url }}{% endif %}"
+                                        data-phone="{{ mentor.phone_number|escapejs }}"
+                                        data-days="{{ mentor.available_days|safe }}"
+                                        data-time="{{ mentor.available_from|time:"H:i" }} - {{ mentor.available_to|time:"H:i" }}"
+                                        data-duration="{{ mentor.get_session_duration_display }}"
+                                        data-video="{% if mentor.intro_video %}{{ mentor.intro_video.url }}{% endif %}">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5" style="text-align: center; padding: 3rem; color: var(--text-muted);">
+                                    No registrations yet.
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
 
-        <!-- Stats Cards -->
-        <div class="stats-grid section active" id="dashboard">
-            <div class="card">
-                <div class="card-title">Total Mentor Accounts</div>
-                <div class="card-value">{{ total_mentors_count|default:"0" }}</div>
-            </div>
-            <div class="card pending">
-                <div class="card-title">Pending Approvals</div>
-                <div class="card-value">{{ mentors|length }}</div>
-            </div>
-            <div class="card approved">
-                <div class="card-title">Approved Mentors</div>
-                <div class="card-value">{{ approved_mentors_count|default:"0" }}</div>
-            </div>
-        </div>
-
-        <!-- Django Messages -->
-        <div id="messages-container" style="position: fixed; top: 20px; right: 20px; z-index: 9999;">
-            {% if messages %}
-            {% for message in messages %}
-            <div class="floating-message {{ message.tags }}">{{ message }}</div>
-            {% endfor %}
-            {% endif %}
-        </div>
-
-        <!-- Mentor Management Section -->
-       <div class="table-container section" id="mentors">
-    <h3>Mentor Management</h3>
-    <table>
-        <thead>
-            <tr>
-                <th>Username</th>
-                <th>Email</th>
-                <th>Phone</th>
-                <th>Exp.</th> <th>Gender</th>
-                <th>Photo</th>
-                <th>Profession</th>
-                <th>Years</th>
-                <th>Expertise</th>
-                <th>Bio</th>
-                <th>LinkedIn</th> <th>Portfolio</th>
-                <th>Status</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for mentor in all_mentors %}
-            <tr>
-                <td>{{ mentor.username }}</td>
-                <td>{{ mentor.email }}</td>
-                <td>{{ mentor.phone_number }}</td>
-                <td>
-                    {% if mentor.previous_experience %}
-                        <span class="tag tag-yes">Yes</span>
-                    {% else %}
-                        <span class="tag tag-no">No</span>
-                    {% endif %}
-                </td>
-                <td>{{ mentor.gender }}</td>
-                <td>
-                    {% if mentor.profile_photo and mentor.profile_photo.name %}
-                        <img src="{{ mentor.profile_photo.url }}" width="80" height="80" style="object-fit: cover; border-radius: 4px;">
-                    {% else %}
-                        <span>No photo</span>
-                    {% endif %}
-                </td>
-                <td>{{ mentor.profession }}</td>
-                <td>{{ mentor.experience_years }}</td>
-                <td>{{ mentor.expertise }}</td>
-                <td>{{ mentor.bio|truncatechars:30 }}</td> <td>
-                    {% if mentor.linkedin %}
-                        <a href="{{ mentor.linkedin }}" target="_blank">View</a>
-                    {% else %}
-                        -
-                    {% endif %}
-                </td>
-                <td>
-                    {% if mentor.portfolio %}
-                        <a href="{{ mentor.portfolio }}" target="_blank">Link</a>
-                    {% else %}
-                        -
-                    {% endif %}
-                </td>
-                
-                <td>
-                    {% if mentor.is_approved %}
-                        <span class="tag tag-approved">Approved</span>
-                    {% else %}
-                        <span class="tag tag-pending">Pending</span>
-                    {% endif %}
-                </td>
-                <td>
-                    <div style="display: flex; gap: 5px;">
-                        {% if not mentor.is_approved %}
-                            <a href="{% url 'approve_mentor' mentor.id %}" class="btn-approve">Approve</a>
-                        {% else %}
-                            <!-- <span style="color: var(--success-color); font-weight: 500; font-size: 0.8rem;">✓ Done</span> -->
-                        {% endif %}
-                        <a href="{% url 'delete_mentor' mentor.id %}" 
-                           style="background-color: #e74c3c; color:white; padding:6px 12px; border-radius:4px; text-decoration:none;"
-                           onclick="return confirm('Are you sure?');">
-                           <i class="fa-solid fa-trash"></i>
-                        </a>
+        <!-- Mentors Table Section -->
+        <div class="section" id="mentors">
+            <div class="content-card">
+                <div class="card-header">
+                    <h2>Master Mentor Management</h2>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <!-- Optional Search/Filter would go here -->
                     </div>
-                </td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="14" style="text-align:center; padding: 30px;">
-                    No mentors found.
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
-
-        <!-- Student Users Section -->
-        <div class="table-container section" id="students">
-            <h3>Student Users</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Username</th>
-                        <th>Email</th>
-                        <th>Phone</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for user in users %}
-                    <tr>
-                        <td>{{ user.username }}</td>
-                        <td>{{ user.email }}</td>
-                        <td>{{ user.phone_number }}</td>
-                    </tr>
-                    {% empty %}
-                    <tr>
-                        <td colspan="3" style="text-align:center;">No student users found.</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                </div>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Mentor</th>
+                                <th>Professional Info</th>
+                                <th>Social/Links</th>
+                                <th>Status</th>
+                                <th style="text-align: right;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for mentor in all_mentors %}
+                            <tr>
+                                <td>
+                                    <div class="mentor-identity">
+                                        {% if mentor.profile_photo %}
+                                        <img src="{{ mentor.profile_photo.url }}" class="mentor-avatar">
+                                        {% else %}
+                                        <div class="mentor-avatar" style="background:#e2e8f0; display:flex; align-items:center; justify-content:center; color: #64748b; font-weight:bold;">{{ mentor.username|slice:":1"|upper }}</div>
+                                        {% endif %}
+                                        <div class="mentor-info">
+                                            <span class="name">{{ mentor.username }}</span>
+                                            <span class="email">{{ mentor.email }}</span>
+                                            <span style="font-size: 0.75rem; color: var(--text-muted);">{{ mentor.phone_number }}</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div style="display: flex; flex-direction: column;">
+                                        <span style="font-weight: 600;">{{ mentor.profession }}</span>
+                                        <span style="font-size: 0.8rem; color: var(--text-muted);">{{ mentor.expertise }}</span>
+                                        <span class="badge badge-info" style="align-self: flex-start; margin-top: 4px;">{{ mentor.experience_years }}y Exp</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="actions" style="gap: 4px;">
+                                        {% if mentor.linkedin %}
+                                        <a href="{{ mentor.linkedin }}" target="_blank" class="btn-icon btn-edit" title="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
+                                        {% endif %}
+                                        {% if mentor.portfolio %}
+                                        <a href="{{ mentor.portfolio }}" target="_blank" class="btn-icon btn-edit" title="Portfolio"><i class="fa-solid fa-globe"></i></a>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                                <td>
+                                    {% if mentor.is_approved %}
+                                    <span class="badge badge-approved"><i class="fa-solid fa-check" style="margin-right: 4px;"></i>Approved</span>
+                                    {% else %}
+                                    <span class="badge badge-pending"><i class="fa-solid fa-clock" style="margin-right: 4px;"></i>Pending</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div class="actions" style="justify-content: flex-end;">
+                                        <button class="btn-icon btn-edit view-mentor-btn" title="View Full Profile"
+                                            data-id="{{ mentor.id }}"
+                                            data-username="{{ mentor.username|escapejs }}"
+                                            data-email="{{ mentor.email|escapejs }}"
+                                            data-profession="{{ mentor.profession|escapejs }}"
+                                            data-expertise="{{ mentor.expertise|escapejs }}"
+                                            data-experience="{{ mentor.experience_years }}"
+                                            data-gender="{{ mentor.gender|escapejs }}"
+                                            data-bio="{{ mentor.bio|escapejs }}"
+                                            data-linkedin="{{ mentor.linkedin|default_if_none:""|escapejs }}"
+                                            data-portfolio="{{ mentor.portfolio|default_if_none:""|escapejs }}"
+                                            data-photo="{% if mentor.profile_photo %}{{ mentor.profile_photo.url }}{% endif %}"
+                                            data-phone="{{ mentor.phone_number|escapejs }}"
+                                            data-days="{{ mentor.available_days|safe }}"
+                                            data-time="{{ mentor.available_from|time:"H:i" }} - {{ mentor.available_to|time:"H:i" }}"
+                                            data-duration="{{ mentor.get_session_duration_display }}"
+                                            data-video="{% if mentor.intro_video %}{{ mentor.intro_video.url }}{% endif %}">
+                                            <i class="fa-solid fa-address-card"></i>
+                                        </button>
+                                        {% if not mentor.is_approved %}
+                                        <a href="{% url 'approve_mentor' mentor.id %}" class="btn-icon btn-approve" title="Approve Mentor"><i class="fa-solid fa-user-check"></i></a>
+                                        {% endif %}
+                                        <a href="{% url 'delete_mentor' mentor.id %}" class="btn-icon btn-delete" title="Delete Mentor" onclick="return confirm('Deleting {{ mentor.username }}. This action cannot be undone. Are you sure?');">
+                                            <i class="fa-solid fa-trash-can"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5" style="text-align: center; padding: 4rem;">
+                                    <img src="https://cdni.iconscout.com/illustration/premium/thumb/no-data-found-8867280-7223916.png" height="150" style="opacity: 0.5; margin-bottom: 1rem;"><br>
+                                    <span style="color: var(--text-muted); font-weight: 500;">No mentors registered yet.</span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
 
-        <!-- System Settings Section -->
-        <div class="table-container section" id="settings">
-            <h3>System Settings</h3>
-            <p>Settings functionality coming soon.</p>
+        <!-- Students Section -->
+        <div class="section" id="students">
+             <div class="content-card">
+                <div class="card-header">
+                    <h2>Student Registry</h2>
+                </div>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Student</th>
+                                <th>Contact Info</th>
+                                <th>Joined Date</th>
+                                <th style="text-align: right;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in users %}
+                            <tr>
+                                <td>
+                                    <div class="mentor-identity">
+                                        <div class="mentor-avatar placeholder">{{ user.username|slice:":1"|upper }}</div>
+                                        <div class="mentor-info">
+                                            <span class="name">{{ user.username }}</span>
+                                            <span class="email">{{ user.email }}</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>{{ user.phone_number }}</td>
+                                <td>{{ user.date_joined|date:"M d, Y" }}</td>
+                                <td style="text-align: right;">
+                                    <div class="actions" style="justify-content: flex-end;">
+                                        <button class="btn-icon btn-delete"><i class="fa-solid fa-ban"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr><td colspan="4" style="text-align: center; padding: 3rem;">No students found.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
 
+        <!-- Settings Section -->
+        <div class="section" id="settings">
+            <div class="content-card" style="padding: 3rem; text-align: center;">
+                <i class="fa-solid fa-gears" style="font-size: 4rem; color: var(--border); margin-bottom: 1.5rem;"></i>
+                <h2>System Settings</h2>
+                <p style="color: var(--text-muted); margin-bottom: 2rem;">Configure platform-wide parameters and preferences.</p>
+                <div style="background: var(--background); padding: 1.5rem; border-radius: var(--radius-md); display: inline-block; border: 1px dashed var(--border);">
+                    Settings module is under development.
+                </div>
+            </div>
+        </div>
+
+        <!-- Admin Profile Section -->
+        <div class="section" id="profile">
+            <div class="content-card">
+                <div class="profile-header">
+                    <div class="profile-avatar-wrapper">
+                        {% if request.user.profile_photo %}
+                        <img src="{{ request.user.profile_photo.url }}" class="profile-avatar-large">
+                        {% else %}
+                        <div class="profile-avatar-large">{{ request.user.username|slice:":1"|upper }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="profile-info">
+                    <div class="profile-name">{{ request.user.username }}</div>
+                    <div class="profile-role">
+                        <i class="fa-solid fa-shield-halved"></i>
+                        System Administrator
+                    </div>
+
+                    <div class="profile-grid">
+                        <div class="info-card">
+                            <h3><i class="fa-solid fa-user-gear"></i> Account Details</h3>
+                            <div class="info-item">
+                                <div class="info-label">Full Name</div>
+                                <div class="info-value">{{ request.user.get_full_name|default:request.user.username }}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Email Address</div>
+                                <div class="info-value">{{ request.user.email }}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Member Since</div>
+                                <div class="info-value">{{ request.user.date_joined|date:"F d, Y" }}</div>
+                            </div>
+                        </div>
+
+                        <div class="info-card">
+                            <h3><i class="fa-solid fa-shield-check"></i> Security & Roles</h3>
+                            <div class="info-item">
+                                <div class="info-label">Role</div>
+                                <div class="info-value"><span class="badge badge-approved">Learloop Admin</span></div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">System Status</div>
+                                <div class="info-value"><span class="badge badge-info">Active</span></div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Last Login</div>
+                                <div class="info-value">{{ request.user.last_login|date:"M d, Y H:i" }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Mentor Profile Modal -->
+    <div class="modal-overlay" id="mentor-modal">
+        <div class="modal-container">
+            <button class="modal-close" onclick="closeMentorModal()">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="modal-body">
+                <div class="modal-header-hero">
+                    <div class="modal-avatar-box" id="modal-photo-container">
+                        <!-- Dynamic Photo -->
+                    </div>
+                </div>
+                <div class="modal-title-area">
+                    <h2 id="modal-username">Mentor Name</h2>
+                    <div class="badge badge-info" id="modal-profession">Profession</div>
+                </div>
+
+                <div class="modal-section">
+                    <h4><i class="fa-solid fa-user"></i> Professional Summary</h4>
+                    <p id="modal-bio" style="font-size: 0.95rem; line-height: 1.6; color: var(--text-main);"></p>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem;">
+                        <div>
+                            <div class="info-label">Expertise</div>
+                            <div class="info-value" id="modal-expertise">-</div>
+                        </div>
+                        <div>
+                            <div class="info-label">Experience</div>
+                            <div class="info-value" id="modal-experience">-</div>
+                        </div>
+                        <div>
+                            <div class="info-label">Email</div>
+                            <div class="info-value" id="modal-email">-</div>
+                        </div>
+                        <div>
+                            <div class="info-label">Phone</div>
+                            <div class="info-value" id="modal-phone">-</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-section">
+                    <h4><i class="fa-solid fa-calendar-check"></i> Mentorship Availability</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div>
+                            <div class="info-label">Available Days</div>
+                            <div class="availability-grid" id="modal-days">
+                                <!-- Dynamic Days -->
+                            </div>
+                        </div>
+                        <div>
+                            <div class="info-label">Time Slot & Duration</div>
+                            <div class="info-value" id="modal-time">-</div>
+                            <div class="badge badge-info" style="margin-top: 8px;" id="modal-duration">-</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-section" id="modal-video-section">
+                    <h4><i class="fa-solid fa-video"></i> Introduction Video</h4>
+                    <div class="video-container">
+                        <video controls id="modal-video-player">
+                            <source src="" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                </div>
+
+                <div class="modal-section" style="background: var(--background); border-radius: 0 0 var(--radius-xl) var(--radius-xl);">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div class="actions">
+                            <a href="" id="modal-linkedin" target="_blank" class="btn-icon btn-edit"><i class="fa-brands fa-linkedin"></i></a>
+                            <a href="" id="modal-portfolio" target="_blank" class="btn-icon btn-edit"><i class="fa-solid fa-globe"></i></a>
+                        </div>
+                        <div id="modal-approve-action">
+                            <!-- Dynamic Approve Button -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
-        function showSection(id) {
+        function showSection(id, element) {
+            // Sections visibility
             const sections = document.querySelectorAll('.section');
-            sections.forEach(s => s.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
+            sections.forEach(s => {
+                s.style.opacity = '0';
+                s.classList.remove('active');
+            });
+            
+            const activeSection = document.getElementById(id);
+            activeSection.classList.add('active');
+            setTimeout(() => {
+                activeSection.style.opacity = '1';
+            }, 10);
 
-            const links = document.querySelectorAll('.nav-link');
+            // Update Navigation Menu
+            const links = document.querySelectorAll('.nav-item');
             links.forEach(l => l.classList.remove('active'));
-            event.target.classList.add('active');
+            
+            if (element) {
+                element.classList.add('active');
+            } else {
+                // Find and activate the link by clicking from code
+                const targetLink = document.querySelector(`.nav-item[onclick*="${id}"]`);
+                if (targetLink) targetLink.classList.add('active');
+            }
+
+            // Update Page Header Content
+            const title = document.getElementById('current-title');
+            const subtitle = document.getElementById('current-subtitle');
+            
+            switch(id) {
+                case 'dashboard':
+                    title.innerText = 'Admin Dashboard';
+                    subtitle.innerText = "General overview and key performance metrics for today.";
+                    break;
+                case 'profile':
+                    title.innerText = 'Admin Profile';
+                    subtitle.innerText = 'Manage your account details and security preferences.';
+                    break;
+                case 'mentors':
+                    title.innerText = 'Mentor Management';
+                    subtitle.innerText = 'Complete registry of education professionals and their verification flow.';
+                    break;
+                case 'students':
+                    title.innerText = 'Student Registry';
+                    subtitle.innerText = 'User accounts database for all students registered on LearnLoop.';
+                    break;
+                case 'settings':
+                    title.innerText = 'System Configuration';
+                    subtitle.innerText = 'Manage global environment variables and administrative settings.';
+                    break;
+            }
+
+            // Persistence
+            localStorage.setItem('last_section', id);
         }
 
-        setTimeout(() => {
-            const msgs = document.querySelectorAll('.floating-message');
-            msgs.forEach(m => m.remove());
-        }, 4000);
+        // Initialize on Load
+        document.addEventListener('DOMContentLoaded', () => {
+            const lastSection = localStorage.getItem('last_section');
+            if (lastSection && lastSection !== 'dashboard') {
+                showSection(lastSection);
+            }
+        });
 
-        // Theme toggle with icon
-        const themeToggle = document.getElementById('theme-toggle');
-        const themeIcon = themeToggle.querySelector('i');
+        // Theme Management Engine
+        const themeBtn = document.getElementById('theme-toggle');
+        const themeIcon = themeBtn.querySelector('i');
+        
+        const currentTheme = localStorage.getItem('theme');
+        if (currentTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+            themeIcon.classList.replace('fa-moon', 'fa-sun');
+        }
 
-        themeToggle.addEventListener('click', () => {
+        themeBtn.addEventListener('click', () => {
             document.body.classList.toggle('dark-mode');
-            themeIcon.classList.toggle('fa-moon');
-            themeIcon.classList.toggle('fa-sun');
+            const isDark = document.body.classList.contains('dark-mode');
+            
+            if (isDark) {
+                themeIcon.classList.replace('fa-moon', 'fa-sun');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                themeIcon.classList.replace('fa-sun', 'fa-moon');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+
+        // Notification Auto-cleanup
+        setTimeout(() => {
+            const toasts = document.querySelectorAll('.notification-toast');
+            toasts.forEach(t => {
+                t.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+                t.style.opacity = '0';
+                t.style.transform = 'translateX(50px)';
+                setTimeout(() => t.remove(), 600);
+            });
+        }, 5000);
+
+        // Mentor Modal Controller
+        function openMentorModal(id, username, email, profession, expertise, experience, gender, bio, linkedin, portfolio, photoUrl, phone, daysJson, timeRange, duration, videoUrl) {
+            const modal = document.getElementById('mentor-modal');
+            
+            // Basic Info
+            document.getElementById('modal-username').innerText = username;
+            document.getElementById('modal-email').innerText = email;
+            document.getElementById('modal-profession').innerText = profession;
+            document.getElementById('modal-expertise').innerText = expertise;
+            document.getElementById('modal-experience').innerText = experience + ' Years';
+            document.getElementById('modal-bio').innerText = bio || 'No bio provided.';
+            document.getElementById('modal-phone').innerText = phone || 'N/A';
+            document.getElementById('modal-time').innerText = timeRange;
+            document.getElementById('modal-duration').innerText = duration;
+
+            // Photo
+            const photoCont = document.getElementById('modal-photo-container');
+            if (photoUrl) {
+                photoCont.innerHTML = `<img src="${photoUrl}" alt="${username}">`;
+            } else {
+                photoCont.innerHTML = `<div class="mentor-avatar placeholder" style="width:100%; height:100%; font-size:2.5rem;">${username.charAt(0).toUpperCase()}</div>`;
+            }
+
+            // Links
+            const li = document.getElementById('modal-linkedin');
+            const port = document.getElementById('modal-portfolio');
+            if (linkedin) { li.href = linkedin; li.style.display = 'flex'; } else { li.style.display = 'none'; }
+            if (portfolio) { port.href = portfolio; port.style.display = 'flex'; } else { port.style.display = 'none'; }
+
+            // Days chips
+            const daysCont = document.getElementById('modal-days');
+            daysCont.innerHTML = '';
+            try {
+                // Ensure it's treated as an array even if it's a string from template
+                const days = typeof daysJson === 'string' ? JSON.parse(daysJson.replace(/'/g, '"')) : daysJson;
+                if (Array.isArray(days)) {
+                    days.forEach(day => {
+                        daysCont.innerHTML += `<span class="day-chip">${day.charAt(0).toUpperCase() + day.slice(1)}</span>`;
+                    });
+                } else {
+                    daysCont.innerHTML = '<span class="day-chip">Not specified</span>';
+                }
+            } catch(e) { 
+                console.error("Error parsing days:", e);
+                daysCont.innerHTML = '<span class="day-chip">Not specified</span>'; 
+            }
+
+            // Video player
+            const videoSect = document.getElementById('modal-video-section');
+            const videoPlayer = document.getElementById('modal-video-player');
+            if (videoUrl) {
+                videoSect.style.display = 'block';
+                videoPlayer.querySelector('source').src = videoUrl;
+                videoPlayer.load();
+            } else {
+                videoSect.style.display = 'none';
+                videoPlayer.pause();
+            }
+
+            // Show modal
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden'; // Prevent scroll
+        }
+
+        function closeMentorModal() {
+            const modal = document.getElementById('mentor-modal');
+            const videoPlayer = document.getElementById('modal-video-player');
+            videoPlayer.pause();
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close on overlay click
+        document.getElementById('mentor-modal').addEventListener('click', function(e) {
+            if (e.target === this) closeMentorModal();
+        });
+
+        // Event Listener for View Buttons
+        document.addEventListener('click', function(e) {
+            const btn = e.target.closest('.view-mentor-btn');
+            if (btn) {
+                openMentorModal(
+                    btn.dataset.id,
+                    btn.dataset.username,
+                    btn.dataset.email,
+                    btn.dataset.profession,
+                    btn.dataset.expertise,
+                    btn.dataset.experience,
+                    btn.dataset.gender,
+                    btn.dataset.bio,
+                    btn.dataset.linkedin,
+                    btn.dataset.portfolio,
+                    btn.dataset.photo,
+                    btn.dataset.phone,
+                    btn.dataset.days,
+                    btn.dataset.time,
+                    btn.dataset.duration,
+                    btn.dataset.video
+                );
+            }
         });
     </script>
-
 </body>
 
 </html>

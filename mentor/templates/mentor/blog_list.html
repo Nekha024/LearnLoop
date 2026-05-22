@@ -179,7 +179,7 @@
     {% if blog_posts %}
     <div class="blog-grid">
         {% for post in blog_posts %}
-        <div class="blog-card" onclick="window.location.href='{% url 'blog_detail' post.id %}'">
+        <div class="blog-card" onclick="window.location.href='{% url "blog_detail" post.id %}'">
             <div class="blog-meta">
                 <div class="author-avatar">
                     {% if post.author.profile_photo %}

@@ -1,4 +1,7 @@
 django-jazzmin
 joblib
+pillow
 numpy
 scikit-learn
+dotenv
+groq
